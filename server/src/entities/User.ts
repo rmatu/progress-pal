@@ -6,7 +6,6 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 
-//User can login either by email or by
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
@@ -28,10 +27,10 @@ export class User extends BaseEntity {
   password!: string;
 
   @Field(() => Boolean)
-  @Column()
-  isPremium!: boolean
+  @Column({type: 'boolean', default: false })
+  isPremium: boolean
 
   @Field(() => String)
-  @Column()
+  @Column({nullable: true})
   subscriptionStart: Date;
 }
