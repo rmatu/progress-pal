@@ -1,14 +1,12 @@
 import { UsernamePasswordInput } from "../resolvers/UsernamePasswordInput";
+import { EMAIL_REGEX } from "../constants";
 
 export const validateRegister = (options: UsernamePasswordInput) => {
-  // !TODO
-  // Make more complex email validation 
-  
-  if (!options.email.includes("@")) {
+  if (!EMAIL_REGEX.test(String(options.email).toLowerCase())) {
     return [
       {
         field: "email",
-        message: "invalid email",
+        message: "Invalid email",
       },
     ];
   }
@@ -17,7 +15,7 @@ export const validateRegister = (options: UsernamePasswordInput) => {
     return [
       {
         field: "username",
-        message: "length must be greater than 2",
+        message: "Length must be greater than 2",
       },
     ];
   }
@@ -26,7 +24,7 @@ export const validateRegister = (options: UsernamePasswordInput) => {
     return [
       {
         field: "password",
-        message: "length must be greater than 2",
+        message: "Length must be greater than 2",
       },
     ];
   }
@@ -35,7 +33,7 @@ export const validateRegister = (options: UsernamePasswordInput) => {
     return [
       {
         field: "username",
-        message: "Can not include an @ sign",
+        message: "Username can't include an @ sign",
       },
     ];
   }
