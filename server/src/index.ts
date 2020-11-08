@@ -1,7 +1,7 @@
 import "reflect-metadata";
-import { UserResolver } from './resolvers/user';
+import { UserResolver } from "./resolvers/user";
 import { createConnection } from "typeorm";
-import { ApolloServer } from "apollo-server-express"
+import { ApolloServer } from "apollo-server-express";
 import { __prod__ } from "./constants";
 import express from "express";
 import path from "path";
@@ -9,10 +9,10 @@ import session from "express-session";
 import connectRedis from "connect-redis";
 import Redis from "ioredis";
 import { buildSchema } from "type-graphql";
+import cors from "cors";
 
 //Entities
 import { User } from "./entities/User";
-
 
 const main = async () => {
   const conn = await createConnection({
@@ -24,16 +24,23 @@ const main = async () => {
     logging: true,
     synchronize: true,
     migrations: [path.join(__dirname, "./migrations/*")],
-    entities: [User]
-  })
+    entities: [User],
+  });
 
   // await conn.runMigrations();
 
   const app = express();
 
-  const RedisStore = connectRedis(session)
-  const redis = new Redis()
+  const RedisStore = connectRedis(session);
+  const redis = new Redis();
 
+  app.set("trust poxy", 1);
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    })
+  );
   app.use(
     session({
       name: "qid",
@@ -51,12 +58,11 @@ const main = async () => {
       secret: "pfokasfadlveqttauytsdltksmv",
       resave: false,
     })
-
-  )
+  );
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
       resolvers: [UserResolver],
-      validate: false
+      validate: false,
     }),
     context: ({ req, res }) => ({
       req,
@@ -71,10 +77,10 @@ const main = async () => {
   });
 
   app.listen(4000, () => {
-    console.log('server started on localhost:4000')
-  })
-}
+    console.log("server started on localhost:4000");
+  });
+};
 
 main().catch((err) => {
-  console.log(err)
-})
+  console.log(err);
+});
