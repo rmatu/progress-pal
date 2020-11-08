@@ -1,16 +1,41 @@
 import React from "react";
-import { Provider } from "urql";
-import { useMeQuery } from "./generated/graphql";
-import { client } from "./utils/createUrqlClient";
-import { Login } from "./containers/Auth/Login/Login";
+import {
+  useLoginMutation,
+  useLogoutMutation,
+  useMeQuery,
+} from "./generated/graphql";
 
 const App = () => {
-  let routes;
+  const [{ data }, me] = useMeQuery();
+  const [{ data: loginData }, login] = useLoginMutation();
+  const [, logout] = useLogoutMutation();
 
   return (
-    <Provider value={client}>
-      <Login />
-    </Provider>
+    <>
+      <button
+        onClick={async () => {
+          await me();
+          console.log("data", data);
+        }}
+      >
+        Me
+      </button>
+      <button
+        onClick={async () => {
+          await logout();
+        }}
+      >
+        logout
+      </button>
+      <button
+        onClick={async () =>
+          await login({ usernameOrEmail: "bob", password: "bob" })
+        }
+      >
+        login
+      </button>
+      <p>username: {loginData?.login.user?.username}</p>
+    </>
   );
 };
 

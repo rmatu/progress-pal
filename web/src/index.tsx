@@ -5,16 +5,20 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import GlobalStyles from "./theme/global";
 import theme from "./theme/theme";
-import { Provider } from "react-redux";
+import { Provider as ReduxProvider } from "react-redux";
 import store from "./redux/store";
+import { Provider as UrqlProvider } from "urql";
+import { client } from "./utils/createUrqlClient";
 
 ReactDOM.render(
-  <Provider store={store}>
-    <ThemeProvider theme={theme}>
-      <GlobalStyles />
-      <App />
-    </ThemeProvider>
-  </Provider>,
+  <UrqlProvider value={client}>
+    <ReduxProvider store={store}>
+      <ThemeProvider theme={theme}>
+        <GlobalStyles />
+        <App />
+      </ThemeProvider>
+    </ReduxProvider>
+  </UrqlProvider>,
   document.getElementById("root")
 );
 
