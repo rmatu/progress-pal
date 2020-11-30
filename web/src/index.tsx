@@ -7,18 +7,21 @@ import GlobalStyles from "./theme/global";
 import theme from "./theme/theme";
 import { Provider as ReduxProvider } from "react-redux";
 import store from "./redux/store";
-import { Provider as UrqlProvider } from "urql";
-import { client } from "./utils/createUrqlClient";
+import { ApolloProvider } from "@apollo/client";
+import { client } from "./utils/createApolloClient";
+import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(
-  <UrqlProvider value={client}>
+  <ApolloProvider client={client}>
     <ReduxProvider store={store}>
-      <ThemeProvider theme={theme}>
-        <GlobalStyles />
-        <App />
-      </ThemeProvider>
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <GlobalStyles />
+          <App />
+        </ThemeProvider>
+      </BrowserRouter>
     </ReduxProvider>
-  </UrqlProvider>,
+  </ApolloProvider>,
   document.getElementById("root")
 );
 

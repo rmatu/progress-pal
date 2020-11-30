@@ -1,42 +1,42 @@
+import { AnimatePresence } from "framer-motion";
 import React from "react";
-import {
-  useLoginMutation,
-  useLogoutMutation,
-  useMeQuery,
-} from "./generated/graphql";
+import { Redirect, Route, Switch } from "react-router-dom";
+import * as ROUTES from "./constants/routes";
+import { useMeQuery } from "./generated/graphql";
+
+//Components
+import Account from "./containers/Account/Account";
+import Login from "./containers/Auth/Login/Login";
+import Home from "./containers/Home/Home";
+import Layout from "./layout/Layout";
 
 const App = () => {
-  const [{ data }, me] = useMeQuery();
-  const [{ data: loginData }, login] = useLoginMutation();
-  const [, logout] = useLogoutMutation();
+  let routes;
+  const { data } = useMeQuery();
 
-  return (
-    <>
-      <button
-        onClick={async () => {
-          await me();
-          console.log("data", data);
-        }}
-      >
-        Me
-      </button>
-      <button
-        onClick={async () => {
-          await logout();
-        }}
-      >
-        logout
-      </button>
-      <button
-        onClick={async () =>
-          await login({ usernameOrEmail: "bob", password: "bob" })
-        }
-      >
-        login
-      </button>
-      <p>username: {loginData?.login.user?.username}</p>
-    </>
-  );
+  // If there is no cookie set in the browser, user is not logged
+  if (!data?.me) {
+    routes = (
+      <AnimatePresence>
+        <Switch>
+          <Route exact path={ROUTES.LOGIN} component={Login} />
+          <Redirect to={ROUTES.LOGIN} />
+        </Switch>
+      </AnimatePresence>
+    );
+  } else {
+    routes = (
+      <AnimatePresence>
+        <Switch>
+          <Route exact path={ROUTES.HOME} component={Home} />
+          <Route exact path={ROUTES.ACCOUNT} component={Account} />
+          <Redirect to={ROUTES.HOME} />
+        </Switch>
+      </AnimatePresence>
+    );
+  }
+
+  return <Layout>{routes}</Layout>;
 };
 
 export default App;
