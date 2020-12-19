@@ -1,7 +1,7 @@
 export const HOME = "/home";
 export const BODY_PARTS = "/bodyparts";
 export const ACCOUNT = "/account";
-export const SIGN_UP = "/signup";
-export const LOGIN = "/login";
+export const SIGN_UP = "/sign-up";
+export const SIGN_IN = "/sign-in";
 export const EXERCISES = "/exercises";
-export const FORGOT_PASSWORD = "/forgotpassword";
+export const FORGOT_PASSWORD = "/forgot-password";

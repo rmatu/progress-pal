@@ -10,6 +10,7 @@ import connectRedis from "connect-redis";
 import Redis from "ioredis";
 import { buildSchema } from "type-graphql";
 import cors from "cors";
+import { COOKIE_NAME } from "./constants";
 
 //Entities
 import { User } from "./entities/User";
@@ -43,7 +44,7 @@ const main = async () => {
   );
   app.use(
     session({
-      name: "qid",
+      name: COOKIE_NAME,
       store: new RedisStore({
         client: redis,
         disableTouch: true,
@@ -59,6 +60,7 @@ const main = async () => {
       resave: false,
     })
   );
+
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
       resolvers: [UserResolver],

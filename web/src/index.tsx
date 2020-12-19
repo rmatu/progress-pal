@@ -8,7 +8,7 @@ import theme from "./theme/theme";
 import { Provider as ReduxProvider } from "react-redux";
 import store from "./redux/store";
 import { ApolloProvider } from "@apollo/client";
-import { client } from "./utils/createApolloClient";
+import { client } from "./utils/client";
 import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(

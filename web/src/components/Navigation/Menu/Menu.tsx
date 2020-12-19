@@ -22,7 +22,7 @@ const Menu: React.FC<MenuProps> = () => {
   if (!data?.me) {
     return (
       <Ul open={open}>
-        <Li to={ROUTES.LOGIN} onClick={() => {}}>
+        <Li to={ROUTES.SIGN_IN} onClick={() => {}}>
           Login
         </Li>
       </Ul>
@@ -47,9 +47,10 @@ const Menu: React.FC<MenuProps> = () => {
         <Li
           onClick={async () => {
             await logout();
+            dispatch(toggleNavbar());
             await client.resetStore();
           }}
-          to={ROUTES.LOGIN}
+          to={ROUTES.SIGN_IN}
         >
           <CgLogOut />
           Logout

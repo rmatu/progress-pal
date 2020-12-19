@@ -56,7 +56,7 @@ export class UserResolver {
   }
 
   @Mutation(() => UserResponse)
-  async register(
+  async signUp(
     @Arg("options") options: UsernamePasswordInput,
     @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
@@ -104,7 +104,7 @@ export class UserResolver {
   }
 
   @Mutation(() => UserResponse)
-  async login(
+  async signIn(
     @Arg("usernameOrEmail") usernameOrEmail: string,
     @Arg("password") password: string,
     @Ctx() { req }: MyContext

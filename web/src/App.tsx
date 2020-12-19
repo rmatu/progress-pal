@@ -19,8 +19,8 @@ const App = () => {
     routes = (
       <AnimatePresence>
         <Switch>
-          <Route exact path={ROUTES.LOGIN} component={Login} />
-          <Redirect to={ROUTES.LOGIN} />
+          <Route exact path={ROUTES.SIGN_IN} component={Login} />
+          <Redirect to={ROUTES.SIGN_IN} />
         </Switch>
       </AnimatePresence>
     );

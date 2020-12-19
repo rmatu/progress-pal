@@ -1,15 +1,15 @@
 import React from "react";
 import {} from "./styles";
-import { useMeQuery, useLoginMutation } from "../../../generated/graphql";
+import { useMeQuery, useSignInMutation } from "../../../generated/graphql";
 
 interface LoginProps {}
 
 const Login: React.FC<LoginProps> = ({}) => {
   const { data, refetch } = useMeQuery();
-  const [login] = useLoginMutation();
+  const [login] = useSignInMutation();
 
   return (
-    <div className="navbar">
+    <>
       <p>{data?.me?.username}</p>
       <button
         onClick={async () => {
@@ -24,7 +24,7 @@ const Login: React.FC<LoginProps> = ({}) => {
       >
         Login
       </button>
-    </div>
+    </>
   );
 };
 
