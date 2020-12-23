@@ -16,6 +16,7 @@ export const FixedWrapper = styled.div`
 `;
 
 export const LogoText = styled.p`
+  color: #fff;
   font-size: 1.3rem;
   font-weight: bold;
   z-index: 999;

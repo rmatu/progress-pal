@@ -10,6 +10,7 @@ import connectRedis from "connect-redis";
 import Redis from "ioredis";
 import { buildSchema } from "type-graphql";
 import cors from "cors";
+import { origin } from "./env";
 import { COOKIE_NAME } from "./constants";
 
 //Entities
@@ -75,7 +76,8 @@ const main = async () => {
 
   apolloServer.applyMiddleware({
     app,
-    cors: false,
+    path: "/graphql",
+    cors: { credentials: true, origin },
   });
 
   app.listen(4000, () => {

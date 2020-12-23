@@ -12,12 +12,6 @@ export const AuthWrapper = styled.main`
   }
 `;
 
-export const ContentWrapper = styled.main`
-  display: block;
-  width: 100%;
-  height: 1000px;
-`;
-
 export const HeaderWrapper = styled.div`
   position: -webkit-sticky;
   position: sticky;
@@ -25,6 +19,6 @@ export const HeaderWrapper = styled.div`
   z-index: 100;
 `;
 
-export const ToCloseNavbar = styled.div`
-  height: 100%;
+export const RestContent = styled.div`
+  min-height: calc(100vh - 4.5rem);
 `;

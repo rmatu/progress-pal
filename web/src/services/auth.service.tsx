@@ -20,14 +20,16 @@ export const withAuth = <P extends object>(
       }
       return <Redirect to={ROUTES.SIGN_IN} />;
     }
-    const logout = useSignOut();
+    const signOut = useSignOut();
     const { data, error, loading } = useMeQuery();
 
     if (loading) return null;
     if (data === undefined) return null;
     if (error || !data.me) {
-      logout();
+      signOut();
+      return <Redirect to={ROUTES.SIGN_IN} />;
     }
+    return <Component {...(props as P)} />;
   };
 };
 export const useSignOut = () => {
