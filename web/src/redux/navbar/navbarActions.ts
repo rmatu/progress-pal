@@ -7,3 +7,8 @@ export const toggleNavbar = () => ({
 export const cleanUp = () => ({
   type: actions.CLEAN_UP_NAVBAR,
 });
+
+export const setVisibility = (visibility: boolean) => ({
+  type: actions.SET_VISIBILITY,
+  payload: visibility,
+});

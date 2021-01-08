@@ -11,7 +11,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const dispatch = useDispatch();
-  const open = useSelector((state: AppState) => state.navbar.open);
+  const { open, visible } = useSelector((state: AppState) => state.navbar);
 
   const handleCleanUp = () => {
     if (open) {
@@ -21,10 +21,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <>
-      <HeaderWrapper>
-        <Header />
-      </HeaderWrapper>
-
+      {visible && (
+        <HeaderWrapper>
+          <Header />
+        </HeaderWrapper>
+      )}
       <RestContent onClick={() => handleCleanUp()}>{children}</RestContent>
     </>
   );

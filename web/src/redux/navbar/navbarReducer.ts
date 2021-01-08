@@ -3,6 +3,7 @@ import { NavbarState, NavbarActionTypes } from "./navbarTypes";
 
 const navbarDefaultState: NavbarState = {
   open: false,
+  visible: false,
 };
 
 const navbarReducer = (
@@ -19,6 +20,11 @@ const navbarReducer = (
       return {
         ...state,
         open: false,
+      };
+    case actions.SET_VISIBILITY:
+      return {
+        ...state,
+        visible: action.payload,
       };
     default:
       return state;

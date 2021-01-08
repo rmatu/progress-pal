@@ -26,7 +26,7 @@ const Menu: React.FC<MenuProps> = () => {
           About
         </Li>
         <Li to={ROUTES.SIGN_IN} onClick={() => dispatch(toggleNavbar())}>
-          SIGN IN
+          Start for free
         </Li>
       </Ul>
     );
