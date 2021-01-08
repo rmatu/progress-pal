@@ -21,12 +21,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <>
-      {visible && (
-        <HeaderWrapper>
-          <Header />
-        </HeaderWrapper>
+      {visible ? (
+        <>
+          <HeaderWrapper>
+            <Header />
+          </HeaderWrapper>
+          <RestContent onClick={() => handleCleanUp()}>{children}</RestContent>
+        </>
+      ) : (
+        <div>{children}</div>
       )}
-      <RestContent onClick={() => handleCleanUp()}>{children}</RestContent>
     </>
   );
 };

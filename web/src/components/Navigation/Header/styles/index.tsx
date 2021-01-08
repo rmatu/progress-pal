@@ -2,11 +2,11 @@ import styled from "styled-components/macro";
 
 export const FixedWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.background};
-  padding: 0rem 2rem;
+  padding: 0em 2em;
   top: 0;
   left: 0;
   width: 100%;
-  height: 4.5rem;
+  height: 4.5em;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -31,8 +31,8 @@ export const HamburgerWrapper = styled.div`
   transition: all 0.1s;
   user-select: none;
   svg {
-    height: 2rem;
-    width: 2rem;
+    height: 2em;
+    width: 2em;
   }
   &:hover {
   }

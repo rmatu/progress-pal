@@ -38,7 +38,7 @@ body {
   color: #000;
   background-color: #fff;
 
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Raleway', sans-serif;
   font-weight: 400;
   line-height: 1.6;
   ::-webkit-scrollbar {
@@ -83,6 +83,7 @@ html{
 
   --background: ${(props) => props.theme.colors.background}
   --gray: ${(props) => props.theme.colors.gray}
+  --orange: ${(props) => props.theme.colors.orange}
 
 input:focus,
 select:focus,

@@ -8,16 +8,16 @@ export const StyledBurger = styled.button<BurgerProps>`
   display: none;
   flex-direction: column;
   justify-content: space-around;
-  width: 2rem;
-  height: 2rem;
+  width: 2em;
+  height: 2em;
   background: transparent;
   border: none;
   cursor: pointer;
   padding: 0;
   z-index: 999;
   span {
-    width: 2rem;
-    height: 0.25rem;
+    width: 2em;
+    height: 0.25em;
     background: white;
     border-radius: 10px;
     transition: all 0.3s ease-in-out;

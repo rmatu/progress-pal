@@ -5,6 +5,7 @@ declare module "styled-components" {
     colors: {
       background: string;
       gray: string;
+      orange: string;
     };
     mediaQueries: {
       phones: string;

@@ -10,13 +10,13 @@ export const Li = styled(NavLink)`
   cursor: pointer;
   transition: all 0.1s;
   color: white;
-  font-size: 1.2rem;
+  font-size: 1.2em;
   display: flex;
   justify-content: center;
   align-items: center;
   border-bottom: none;
   :not(:last-child) {
-    margin-right: 2rem;
+    margin-right: 2em;
   }
   &:hover {
   }
@@ -26,7 +26,7 @@ export const Li = styled(NavLink)`
   @media (max-width: 764px) {
     border: none !important;
     margin-right: 0;
-    width: 16rem;
+    width: 16em;
     padding: 0 2em;
     padding-top: 18px;
     padding-bottom: 18px;
@@ -39,12 +39,12 @@ export const Li = styled(NavLink)`
       margin-top: 2em;
     }
     :first-child {
-      margin-top: 5rem;
+      margin-top: 5em;
     }
     svg {
       height: 100%;
       display: inline-block;
-      margin-right: 0.4rem;
+      margin-right: 0.4em;
     }
   }
 `;
@@ -65,7 +65,7 @@ export const Ul = styled.ul<UlProps>`
     right: 0;
     height: 60vh;
     width: 100%;
-    padding-top: 3.5rem;
+    padding-top: 3.5em;
     transition: transform 0.3s ease-in-out;
     -webkit-box-shadow: 0px 3px 19px 0px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: 0px 3px 19px 0px rgba(0, 0, 0, 0.75);
