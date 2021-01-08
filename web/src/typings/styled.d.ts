@@ -2,7 +2,12 @@ import "styled-components";
 
 declare module "styled-components" {
   export interface DefaultTheme {
-    colors: {};
-    mediaQueries: {};
+    colors: {
+      background: string;
+      gray: string;
+    };
+    mediaQueries: {
+      phones: string;
+    };
   }
 }

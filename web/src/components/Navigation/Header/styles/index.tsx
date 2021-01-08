@@ -1,7 +1,7 @@
 import styled from "styled-components/macro";
 
 export const FixedWrapper = styled.div`
-  background-color: #21283e;
+  background-color: ${({ theme }) => theme.colors.background};
   padding: 0rem 2rem;
   top: 0;
   left: 0;
@@ -13,6 +13,7 @@ export const FixedWrapper = styled.div`
   -webkit-box-shadow: 0px 3px 19px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0px 3px 19px 0px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 3px 19px 0px rgba(0, 0, 0, 0.75);
+  border-bottom: solid 1px ${({ theme }) => theme.colors.gray};
 `;
 
 export const LogoText = styled.p`

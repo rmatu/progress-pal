@@ -35,6 +35,8 @@ body {
   scroll-behavior: smooth;
   text-rendering: optimizeSpeed;
   line-height: 1.5;
+  color: #000;
+  background-color: #fff;
 
   font-family: 'Montserrat', sans-serif;
   font-weight: 400;
@@ -78,6 +80,9 @@ html{
   height: -webkit-fill-available;
   font-size: 80%;
   box-sizing: border-box;
+
+  --background: ${(props) => props.theme.colors.background}
+  --gray: ${(props) => props.theme.colors.gray}
 
 input:focus,
 select:focus,
