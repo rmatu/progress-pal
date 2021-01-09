@@ -3,7 +3,7 @@ import styled from "styled-components/macro";
 export const Wrapper = styled.div`
   max-width: 100vw;
   min-height: 100vh;
-  background-color: #615757;
+  display: flex;
   color: white;
   position: relative;
 `;
@@ -38,14 +38,39 @@ export const GoBack = styled.div`
   }
 `;
 
-export const StyledH1 = styled.h1`
-  text-align: center;
-  font-size: 2.375rem;
-  margin-bottom: 1em;
-`;
-
 export const StyledP = styled.p`
   text-align: center;
   font-size: 1.25rem;
   margin-bottom: 1em;
+`;
+
+export const AuthWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #2f3136;
+  width: 100%;
+`;
+
+export const AuthText = styled.p`
+  color: ${({ theme }) => theme.colors.grayText};
+  font-size: 1.25rem;
+`;
+
+export const SocialIcons = styled.div`
+  margin-top: 1em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  svg {
+    cursor: pointer;
+    height: 4em;
+    width: 4em;
+    margin: 0 0.8em;
+  }
+`;
+
+export const RegistrationForm = styled.div`
+  max-width: 50em;
 `;
