@@ -7,6 +7,11 @@ export default createGlobalStyle`
 *::after {
   box-sizing: border-box;
 }
+
+textarea, select, input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="email"], input[type="month"], input[type="number"], input[type="password"], input[type="search"], input[type="tel"], input[type="text"], input[type="time"], input[type="url"], input[type="week"]{
+  outline:0;
+}
+
 /* Remove default padding */
 ul[class],
 ol[class] {

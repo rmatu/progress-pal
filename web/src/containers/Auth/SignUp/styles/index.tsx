@@ -9,7 +9,7 @@ export const Wrapper = styled.div`
 `;
 
 export const SignInChange = styled.div`
-  max-width: 27em;
+  width: 45em;
   height: 100vh;
   background: rgb(45, 52, 54);
   background: linear-gradient(
@@ -73,4 +73,14 @@ export const SocialIcons = styled.div`
 
 export const RegistrationForm = styled.div`
   max-width: 50em;
+`;
+
+export const FieldWrapper = styled.div`
+  width: 24em;
+`;
+
+export const FieldRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `;
