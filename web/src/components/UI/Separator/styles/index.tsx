@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "styled-components/macro";
 
 export const StyledSeparator = styled.div`
   display: flex;
@@ -6,7 +6,7 @@ export const StyledSeparator = styled.div`
   justify-content: center;
   width: 100%;
   height: auto;
-  margin-top: 2em;
+  margin: 2em 0 1em 0;
   svg {
     width: 100%;
   }
