@@ -4,6 +4,16 @@ import * as Yup from "yup";
  * * Sign In
  */
 
+export interface SignInFormTypes {
+  email: string;
+  password: string;
+}
+
+export const SignInInitialValues = {
+  email: "",
+  password: "",
+};
+
 export const SignInSchema = Yup.object().shape({
   email: Yup.string()
     .email("Invalid email.")
@@ -17,19 +27,19 @@ export const SignInSchema = Yup.object().shape({
  * * Sign Up
  */
 
-export const SignUpInitialValues = {
-  nickname: "",
-  email: "",
-  password: "",
-  confirmPassword: "",
-};
-
 export interface SignUpFormTypes {
   nickname: string;
   email: string;
   password: string;
   confirmPassword: string;
 }
+
+export const SignUpInitialValues = {
+  nickname: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
 
 export const SignUpSchema = Yup.object().shape({
   nickname: Yup.string()

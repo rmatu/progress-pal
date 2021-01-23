@@ -1,5 +1,5 @@
 import { Field, Formik } from "formik";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { ReactComponent as Cancel } from "../../../assets/svg/cancel.svg";
 import { ReactComponent as EyeIcon } from "../../../assets/svg/eye.svg";
@@ -70,7 +70,7 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
               setSubmitting(false);
             }}
           >
-            {({ isSubmitting, isValid = false }) => (
+            {({ isSubmitting, isValid }) => (
               <StyledForm>
                 <FieldRow>
                   <FieldWrapper>
