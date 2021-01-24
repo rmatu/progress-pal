@@ -3,10 +3,8 @@ import styled from "styled-components/macro";
 export const FixedWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.background};
   padding: 0em 2em;
-  top: 0;
-  left: 0;
   width: 100%;
-  height: 4.5em;
+  height: 6em;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -16,11 +14,12 @@ export const FixedWrapper = styled.div`
   border-bottom: solid 1px ${({ theme }) => theme.colors.gray};
 `;
 
-export const LogoText = styled.p`
-  color: #fff;
-  font-size: 1.3rem;
-  font-weight: bold;
-  z-index: 999;
+export const LogoWrapper = styled.div`
+  padding-top: 1.125em;
+  svg {
+    height: 5em;
+    width: 15em;
+  }
 `;
 
 export const HamburgerWrapper = styled.div`

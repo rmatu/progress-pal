@@ -11,7 +11,7 @@ export const Wrapper = styled(motion.div)`
 `;
 
 export const SignUpChangeWrapper = styled.div`
-  width: 45em;
+  min-width: 35em;
   height: 100vh;
   background: rgb(45, 52, 54);
   background: linear-gradient(
@@ -50,7 +50,7 @@ export const GoBack = styled.div`
 export const LogoContainer = styled.div`
   z-index: 10;
   position: absolute;
-  top: 2em;
+  top: 0.8em;
   left: 2em;
   svg {
     height: 5em;

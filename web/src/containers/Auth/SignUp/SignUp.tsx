@@ -39,9 +39,11 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
 
   return (
     <Wrapper>
-      <LogoContainer>
-        <Logo />
-      </LogoContainer>
+      <NavLink to={ROUTES.LANDING_PAGE}>
+        <LogoContainer>
+          <Logo />
+        </LogoContainer>
+      </NavLink>
       <NavLink to={ROUTES.LANDING_PAGE}>
         <GoBack>
           <Cancel />
@@ -90,8 +92,8 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
                     <FieldWrapper>
                       <Field
                         type="text"
-                        name="nickname"
-                        placeholder="Nickname"
+                        name="username"
+                        placeholder="Username"
                         component={Input}
                       ></Field>
                     </FieldWrapper>

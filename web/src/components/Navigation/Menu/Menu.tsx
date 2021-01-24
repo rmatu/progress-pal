@@ -22,9 +22,6 @@ const Menu: React.FC<MenuProps> = () => {
   if (!data?.me) {
     return (
       <Ul open={open}>
-        <Li to={ROUTES.HOME} onClick={() => dispatch(toggleNavbar())}>
-          About
-        </Li>
         <Li to={ROUTES.SIGN_IN} onClick={() => dispatch(toggleNavbar())}>
           Start for free
         </Li>

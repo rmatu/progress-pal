@@ -5,22 +5,20 @@ import * as Yup from "yup";
  */
 
 export interface SignInFormTypes {
-  email: string;
+  usernameOrEmail: string;
   password: string;
 }
 
 export const SignInInitialValues = {
-  email: "",
+  usernameOrEmail: "",
   password: "",
 };
 
 export const SignInSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Invalid email.")
-    .required("The email is required."),
+  usernameOrEmail: Yup.string().required("Username or email is required."),
   password: Yup.string()
     .required("The password is required.")
-    .min(8, "The password is to short"),
+    .min(3, "The password is to short"),
 });
 
 /**
@@ -28,22 +26,22 @@ export const SignInSchema = Yup.object().shape({
  */
 
 export interface SignUpFormTypes {
-  nickname: string;
+  username: string;
   email: string;
   password: string;
   confirmPassword: string;
 }
 
 export const SignUpInitialValues = {
-  nickname: "",
+  username: "",
   email: "",
   password: "",
   confirmPassword: "",
 };
 
 export const SignUpSchema = Yup.object().shape({
-  nickname: Yup.string()
-    .required("Your nickname is required.")
+  username: Yup.string()
+    .required("Your username is required.")
     .min(3, "Too short.")
     .max(25, "Too long."),
   email: Yup.string()

@@ -11,11 +11,14 @@ import { StyledForm } from "../../../components/UI/FormElements";
 import Input from "../../../components/UI/Input/Input";
 import Separator from "../../../components/UI/Separator/Separator";
 import * as ROUTES from "../../../constants/routes";
+import { useSignInMutation } from "../../../generated/graphql";
+import { useRouter } from "../../../hooks/useRouter";
 import {
   SignInFormTypes,
   SignInInitialValues,
   SignInSchema,
 } from "../../../utils/formSchemas";
+import { toErrorMap } from "../../../utils/toErrorMap";
 import {
   AuthText,
   AuthWrapper,
@@ -36,12 +39,16 @@ interface SignInProps {}
 
 const SignIn: React.FC<SignInProps> = ({}) => {
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(false);
+  const [signIn] = useSignInMutation();
+  const router = useRouter();
 
   return (
     <Wrapper>
-      <LogoContainer>
-        <Logo />
-      </LogoContainer>
+      <NavLink to={ROUTES.LANDING_PAGE}>
+        <LogoContainer>
+          <Logo />
+        </LogoContainer>
+      </NavLink>
       <NavLink to={ROUTES.LANDING_PAGE}>
         <GoBack>
           <Cancel />
@@ -63,8 +70,18 @@ const SignIn: React.FC<SignInProps> = ({}) => {
               isInitialValid={false}
               initialValues={SignInInitialValues}
               validationSchema={SignInSchema}
-              onSubmit={async (values: SignInFormTypes, { setSubmitting }) => {
-                setSubmitting(false);
+              onSubmit={async (
+                values: SignInFormTypes,
+                { setSubmitting, setErrors }
+              ) => {
+                const response = await signIn({ variables: values });
+                console.log(response);
+                if (response.data?.signIn.errors) {
+                  setErrors(toErrorMap(response.data?.signIn.errors));
+                } else if (response.data?.signIn.user) {
+                  router.push("/home");
+                }
+                await setSubmitting(false);
               }}
             >
               {({ isSubmitting, isValid }) => (
@@ -72,9 +89,9 @@ const SignIn: React.FC<SignInProps> = ({}) => {
                   <FieldRow>
                     <FieldWrapper>
                       <Field
-                        type="email"
-                        name="email"
-                        placeholder="Email"
+                        type="text"
+                        name="usernameOrEmail"
+                        placeholder="Username or Email"
                         component={Input}
                       ></Field>
                     </FieldWrapper>

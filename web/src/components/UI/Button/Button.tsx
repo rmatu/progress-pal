@@ -9,10 +9,12 @@ interface ButtonProps {
 
 const Button: React.FC<
   ButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>
-> = ({ children, marginTop, disabled }) => {
+> = ({ children, marginTop, disabled, ...rest }) => {
   return (
     <Wrapper marginTop={marginTop}>
-      <StyledButton disabled={disabled}>{children}</StyledButton>
+      <StyledButton disabled={disabled} {...rest}>
+        {children}
+      </StyledButton>
     </Wrapper>
   );
 };
