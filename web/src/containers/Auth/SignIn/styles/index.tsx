@@ -31,7 +31,7 @@ export const SignUpChangeContent = styled(motion.div)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 1em;
+  padding: 0 2em;
 `;
 
 export const GoBack = styled.div`

@@ -12,6 +12,17 @@ textarea, select, input[type="date"], input[type="datetime"], input[type="dateti
   outline:0;
 }
 
+input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: #757575;
+  }
+  a {
+    text-decoration: none;
+  }
+  
 /* Remove default padding */
 ul[class],
 ol[class] {
@@ -97,15 +108,6 @@ textarea:focus,
 button:focus {
     outline: none;
 }
-input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus,
-  input:-webkit-autofill:active {
-    transition: background-color 5000s ease-in-out 0s;
-    -webkit-text-fill-color: white;
-  }
-  a {
-    text-decoration: none;
-  }
+
 }
 `;

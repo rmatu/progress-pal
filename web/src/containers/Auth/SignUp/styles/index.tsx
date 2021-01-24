@@ -30,6 +30,7 @@ export const SignInChangeContent = styled(motion.div)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 0 2em;
 `;
 
 export const LogoContainer = styled.div`
