@@ -14,6 +14,7 @@ const baseStyle = css<Props>`
   margin-top: 0;
   margin-bottom: ${({ marginB }) => marginB};
   text-align: center;
+  padding: 0 0.5em;
 `;
 
 export const Heading1 = styled.h1`

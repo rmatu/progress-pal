@@ -12,6 +12,10 @@ export const FixedWrapper = styled.div`
   -moz-box-shadow: 0px 3px 19px 0px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 3px 19px 0px rgba(0, 0, 0, 0.75);
   border-bottom: solid 1px ${({ theme }) => theme.colors.gray};
+
+  @media (max-width: 420px) {
+    padding: 0 2em 0 1em;
+  }
 `;
 
 export const LogoWrapper = styled.div`
@@ -19,6 +23,13 @@ export const LogoWrapper = styled.div`
   svg {
     height: 5em;
     width: 15em;
+  }
+
+  @media (max-width: 420px) {
+    svg {
+      height: 4.5em;
+      width: 13em;
+    }
   }
 `;
 

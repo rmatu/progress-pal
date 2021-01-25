@@ -8,6 +8,10 @@ export const Wrapper = styled(motion.div)`
   color: white;
   position: relative;
   background-color: #2f3136;
+
+  @media (max-width: 920px) {
+    flex-direction: column-reverse;
+  }
 `;
 
 export const SignUpChangeWrapper = styled.div`
@@ -24,6 +28,19 @@ export const SignUpChangeWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 920px) {
+    padding-top: 3em;
+    height: 30em;
+    min-width: 100%;
+
+    background: rgb(45, 52, 54);
+    background: linear-gradient(
+      180deg,
+      rgba(45, 52, 54, 1) 0%,
+      rgba(0, 0, 0, 1) 100%
+    );
+  }
 `;
 
 export const SignUpChangeContent = styled(motion.div)`
@@ -31,7 +48,15 @@ export const SignUpChangeContent = styled(motion.div)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0 2em;
+
+  @media (max-width: 420px) {
+    h1 {
+      font-size: 2.5rem;
+    }
+    p {
+      font-size: 1.2rem;
+    }
+  }
 `;
 
 export const GoBack = styled.div`
@@ -41,6 +66,11 @@ export const GoBack = styled.div`
   width: 3em;
   top: 2em;
   right: 2em;
+
+  @media (max-width: 920px) {
+    height: 1.5em;
+    width: 1.5em;
+  }
 
   svg {
     fill: white;
@@ -56,12 +86,22 @@ export const LogoContainer = styled.div`
     height: 5em;
     width: 15em;
   }
+
+  @media (max-width: 420px) {
+    top: 1em;
+    left: 1em;
+    svg {
+      height: 4.5em;
+      width: 13em;
+    }
+  }
 `;
 
 export const StyledP = styled.p`
   text-align: center;
   font-size: 1.25rem;
   margin-bottom: 1em;
+  padding: 0 0.5em;
 `;
 
 export const AuthWrapper = styled.div`
@@ -71,6 +111,10 @@ export const AuthWrapper = styled.div`
   align-items: center;
   background-color: #2f3136;
   width: 100%;
+
+  @media (max-width: 920px) {
+    height: 100%;
+  }
 `;
 
 export const AuthContent = styled(motion.div)`
@@ -78,6 +122,11 @@ export const AuthContent = styled(motion.div)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 0 1em;
+
+  @media (max-width: 920px) {
+    padding: 3em 0;
+  }
 `;
 
 export const AuthText = styled.p`
@@ -100,14 +149,30 @@ export const SocialIcons = styled.div`
 
 export const LoginForm = styled.div`
   max-width: 35em;
+
+  @media (max-width: 1100px) {
+    max-width: 35em;
+  }
+
+  @media (max-width: 420px) {
+    max-width: 25em;
+  }
 `;
 
 export const FieldWrapper = styled.div`
   width: 100%;
+
+  @media (max-width: 1100px) {
+    width: 100%;
+  }
 `;
 
 export const FieldRow = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+
+  @media (max-width: 1100px) {
+    flex-direction: column;
+  }
 `;

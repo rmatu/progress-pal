@@ -102,6 +102,7 @@ export const StyledP = styled.p`
   text-align: center;
   font-size: 1.25rem;
   margin-bottom: 1em;
+  padding: 0 0.5em;
 `;
 
 export const AuthWrapper = styled.div`
@@ -122,6 +123,7 @@ export const AuthContent = styled(motion.div)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 0 1em;
 
   @media (max-width: 920px) {
     padding: 3em 0;
