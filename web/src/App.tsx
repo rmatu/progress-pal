@@ -1,5 +1,5 @@
 import React from "react";
-import { Route } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
 import * as ROUTES from "./constants/routes";
 import { withAuth } from "./services/auth.service";
 import { AnimatePresence } from "framer-motion";
@@ -15,6 +15,7 @@ const App: React.FC = () => (
     <Route exact path={ROUTES.SIGN_IN} component={SignIn} />
     <Route exact path={ROUTES.SIGN_UP} component={SignUp} />
     <Route exact path={ROUTES.HOME} component={withAuth(Home)} />
+    <Redirect to={ROUTES.LANDING_PAGE} />
   </AnimatePresence>
 );
 

@@ -11,11 +11,14 @@ import { StyledForm } from "../../../components/UI/FormElements";
 import Input from "../../../components/UI/Input/Input";
 import Separator from "../../../components/UI/Separator/Separator";
 import * as ROUTES from "../../../constants/routes";
+import { useMeQuery, useSignUpMutation } from "../../../generated/graphql";
+import { useRouter } from "../../../hooks/useRouter";
 import {
   SignUpFormTypes,
   SignUpInitialValues,
   SignUpSchema,
 } from "../../../utils/formSchemas";
+import { toErrorMap } from "../../../utils/toErrorMap";
 import {
   AuthText,
   AuthWrapper,
@@ -36,6 +39,9 @@ interface SignUpProps {}
 
 const SignUp: React.FC<SignUpProps> = ({}) => {
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(false);
+  const [signUp] = useSignUpMutation();
+  const router = useRouter();
+  const { refetch } = useMeQuery();
 
   return (
     <Wrapper>
@@ -82,7 +88,19 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
               isInitialValid={false}
               initialValues={SignUpInitialValues}
               validationSchema={SignUpSchema}
-              onSubmit={async (values: SignUpFormTypes, { setSubmitting }) => {
+              onSubmit={async (
+                { email, username, password }: SignUpFormTypes,
+                { setSubmitting, setErrors }
+              ) => {
+                const response = await signUp({
+                  variables: { options: { email, username, password } },
+                });
+                if (response.data?.signUp.errors) {
+                  setErrors(toErrorMap(response.data.signUp.errors));
+                } else if (response.data?.signUp.user) {
+                  await refetch();
+                  await router.push("/");
+                }
                 setSubmitting(false);
               }}
             >

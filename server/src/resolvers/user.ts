@@ -83,12 +83,23 @@ export class UserResolver {
     } catch (err) {
       //|| err.detail.includes("already exists")) {
       // duplicate username error
+      console.log(err.detail);
+      if (err.detail.includes("email")) {
+        return {
+          errors: [
+            {
+              field: "email",
+              message: "Email already taken",
+            },
+          ],
+        };
+      }
       if (err.code === "23505") {
         return {
           errors: [
             {
               field: "username",
-              message: "username already taken",
+              message: "Username already taken",
             },
           ],
         };

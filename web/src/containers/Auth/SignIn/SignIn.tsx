@@ -11,7 +11,7 @@ import { StyledForm } from "../../../components/UI/FormElements";
 import Input from "../../../components/UI/Input/Input";
 import Separator from "../../../components/UI/Separator/Separator";
 import * as ROUTES from "../../../constants/routes";
-import { useSignInMutation } from "../../../generated/graphql";
+import { useMeQuery, useSignInMutation } from "../../../generated/graphql";
 import { useRouter } from "../../../hooks/useRouter";
 import {
   SignInFormTypes,
@@ -39,6 +39,7 @@ interface SignInProps {}
 
 const SignIn: React.FC<SignInProps> = ({}) => {
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(false);
+  const { refetch } = useMeQuery();
   const [signIn] = useSignInMutation();
   const router = useRouter();
 
@@ -74,12 +75,13 @@ const SignIn: React.FC<SignInProps> = ({}) => {
                 values: SignInFormTypes,
                 { setSubmitting, setErrors }
               ) => {
+                // TODO: Update properly the meQuery
                 const response = await signIn({ variables: values });
-                console.log(response);
                 if (response.data?.signIn.errors) {
                   setErrors(toErrorMap(response.data?.signIn.errors));
                 } else if (response.data?.signIn.user) {
-                  router.push("/home");
+                  await refetch();
+                  await router.push("/home");
                 }
                 await setSubmitting(false);
               }}

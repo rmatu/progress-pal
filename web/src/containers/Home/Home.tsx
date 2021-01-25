@@ -1,5 +1,6 @@
 import { useApolloClient } from "@apollo/client";
 import React from "react";
+import Loader from "../../components/UI/Loader/Loader";
 import { useLogoutMutation, useMeQuery } from "../../generated/graphql";
 import {} from "./styles";
 
@@ -21,6 +22,9 @@ const Home: React.FC<HomeProps> = ({}) => {
         logout
       </button>
       <p>{data?.me?.username}</p>
+      <div>
+        <Loader />
+      </div>
     </>
   );
 };
