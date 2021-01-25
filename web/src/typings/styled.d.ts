@@ -8,6 +8,7 @@ declare module "styled-components" {
       orange: string;
       grayText: string;
       backgroundGray: string;
+      backgroundDarkerGray: string;
     };
     mediaQueries: {
       phones: string;

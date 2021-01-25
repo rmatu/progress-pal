@@ -103,6 +103,7 @@ html{
   --orange: ${(props) => props.theme.colors.orange}
   --grayText: ${(props) => props.theme.colors.grayText}
   --backgroundGray: ${(props) => props.theme.colors.backgroundGray}
+  --backgroundDarkerGray: ${(props) => props.theme.colors.backgroundDarkerGray}
 
 input:focus,
 select:focus,

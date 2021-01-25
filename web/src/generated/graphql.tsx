@@ -22,6 +22,7 @@ export type User = {
   username: Scalars['String'];
   email: Scalars['String'];
   isPremium: Scalars['Boolean'];
+  emailVerified: Scalars['Boolean'];
   subscriptionStart: Scalars['String'];
 };
 
@@ -124,7 +125,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me?: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'username'>
+    & Pick<User, 'id' | 'username' | 'isPremium' | 'emailVerified'>
   )> }
 );
 
@@ -250,6 +251,8 @@ export const MeDocument = gql`
   me {
     id
     username
+    isPremium
+    emailVerified
   }
 }
     `;

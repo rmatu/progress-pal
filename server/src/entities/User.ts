@@ -1,10 +1,5 @@
 import { Field, Int, ObjectType } from "type-graphql";
-import {
-  Column,
-  Entity,
-  BaseEntity,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, Entity, BaseEntity, PrimaryGeneratedColumn } from "typeorm";
 
 @ObjectType()
 @Entity()
@@ -19,7 +14,7 @@ export class User extends BaseEntity {
   username!: string;
 
   @Field(() => String)
-  @Column({ unique: true})
+  @Column({ unique: true })
   email!: string;
 
   // This could not be selected from GraphQL
@@ -27,10 +22,14 @@ export class User extends BaseEntity {
   password!: string;
 
   @Field(() => Boolean)
-  @Column({type: 'boolean', default: false })
-  isPremium: boolean
+  @Column({ type: "boolean", default: false })
+  isPremium: boolean;
+
+  @Field(() => Boolean)
+  @Column({ type: "boolean", default: false })
+  emailVerified: boolean;
 
   @Field(() => String)
-  @Column({nullable: true})
+  @Column({ nullable: true })
   subscriptionStart: Date;
 }

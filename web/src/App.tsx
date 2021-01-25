@@ -5,9 +5,10 @@ import { withAuth } from "./services/auth.service";
 import { AnimatePresence } from "framer-motion";
 
 //Components
-import { SignIn, SignUp } from "./containers/Auth";
+import { SignIn, SignUp, VerifyEmail } from "./containers/Auth";
 import Home from "./containers/Home/Home";
 import LandingPage from "./containers/LandingPage/LandingPage";
+import Account from "./containers/Account/Account";
 
 const App: React.FC = () => (
   <AnimatePresence>
@@ -30,10 +31,22 @@ const App: React.FC = () => (
       component={SignUp}
     />
     <Route
+      key={ROUTES.VERIFY_EMAIL}
+      exact
+      path={ROUTES.VERIFY_EMAIL}
+      component={VerifyEmail}
+    />
+    <Route
       key={ROUTES.HOME}
       exact
       path={ROUTES.HOME}
       component={withAuth(Home)}
+    />
+    <Route
+      key={ROUTES.ACCOUNT}
+      exact
+      path={ROUTES.ACCOUNT}
+      component={withAuth(Account)}
     />
     <Redirect to={ROUTES.LANDING_PAGE} />
   </AnimatePresence>

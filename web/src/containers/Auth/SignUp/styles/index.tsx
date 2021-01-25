@@ -110,7 +110,7 @@ export const AuthWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #2f3136;
+  background-color: ${({ theme }) => theme.colors.backgroundDarkerGray};
   width: 100%;
 
   #wave {

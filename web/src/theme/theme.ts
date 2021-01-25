@@ -5,6 +5,7 @@ const theme = {
     gray: "#757575",
     orange: "#fe5000",
     grayText: "#DCDDDE",
+    backgroundDarkerGray: "#212121",
   },
   mediaQueries: {
     phones: `only screen and (max-width: 920px)`,
