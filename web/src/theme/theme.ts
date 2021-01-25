@@ -6,7 +6,7 @@ const theme = {
     grayText: "#DCDDDE",
   },
   mediaQueries: {
-    phones: `only screen and (max-width: 764px)`,
+    phones: `only screen and (max-width: 920px)`,
   },
 };
 
