@@ -19,6 +19,7 @@ export const FixedWrapper = styled.div`
 `;
 
 export const LogoWrapper = styled.div`
+  z-index: 1000;
   padding-top: 1.125em;
   svg {
     height: 5em;

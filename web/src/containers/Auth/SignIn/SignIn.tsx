@@ -7,6 +7,7 @@ import { ReactComponent as FacebookIcon } from "../../../assets/svg/facebook.svg
 import { ReactComponent as GoogleIcon } from "../../../assets/svg/google-plus.svg";
 import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
 import { ReactComponent as Wave } from "../../../assets/svg/signInWave.svg";
+import Footer from "../../../components/Footer/Footer";
 import { Button, Heading } from "../../../components/UI";
 import { StyledForm } from "../../../components/UI/FormElements";
 import Input from "../../../components/UI/Input/Input";
@@ -129,6 +130,7 @@ const SignIn: React.FC<SignInProps> = ({}) => {
             </Formik>
           </LoginForm>
         </AuthContent>
+        <Footer />
       </AuthWrapper>
       <SignUpChangeWrapper>
         <SignUpChangeContent

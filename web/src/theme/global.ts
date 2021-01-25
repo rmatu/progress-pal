@@ -51,6 +51,7 @@ body {
   scroll-behavior: smooth;
   text-rendering: optimizeSpeed;
   line-height: 1.5;
+  background-color: #2F3136;
   color: #000;
   background-color: #fff;
 

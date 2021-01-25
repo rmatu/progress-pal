@@ -58,7 +58,12 @@ export const Ul = styled.ul<UlProps>`
     align-items: center;
     justify-content: center;
     flex-flow: column nowrap;
-    background-color: #21283e;
+    background: rgb(45, 52, 54);
+    background: linear-gradient(
+      180deg,
+      rgba(45, 52, 54, 1) 0%,
+      rgba(0, 0, 0, 1) 100%
+    );
     position: fixed;
     transform: ${({ open }) => (open ? "translateY(0%)" : "translateY(-100%)")};
     top: 0;
