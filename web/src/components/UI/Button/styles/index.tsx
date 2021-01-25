@@ -12,6 +12,7 @@ export const Wrapper = styled.div<WrapperProps>`
 
 interface ButtonProps {
   disabled?: boolean;
+  padding?: string;
 }
 
 export const StyledButton = styled.button<ButtonProps>`
@@ -19,7 +20,7 @@ export const StyledButton = styled.button<ButtonProps>`
   user-select: none;
   outline: none;
   border: none;
-  padding: 0.9em 4.6em;
+  padding: ${({ padding }) => (padding ? padding : "0.9em 4.6em")};
   border-radius: 2em;
   font-size: 1.2rem;
   font-weight: 500;

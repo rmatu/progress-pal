@@ -8,6 +8,7 @@ import { Ul, Li } from "./styles";
 import { CgLogOut } from "react-icons/cg";
 import { useLogoutMutation, useMeQuery } from "../../../generated/graphql";
 import { useApolloClient } from "@apollo/client";
+import { Button } from "../../UI";
 
 interface MenuProps {}
 
@@ -23,7 +24,7 @@ const Menu: React.FC<MenuProps> = () => {
     return (
       <Ul open={open}>
         <Li to={ROUTES.SIGN_IN} onClick={() => dispatch(toggleNavbar())}>
-          Start for free
+          <Button padding="0.3em 2em">Start for free</Button>
         </Li>
       </Ul>
     );
