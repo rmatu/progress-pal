@@ -112,8 +112,16 @@ export const AuthWrapper = styled.div`
   background-color: #2f3136;
   width: 100%;
 
+  #wave {
+    display: none;
+  }
+
   @media (max-width: 920px) {
     height: 100%;
+
+    #wave {
+      display: block;
+    }
   }
 `;
 

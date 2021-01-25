@@ -4,7 +4,8 @@ export const StyledInput = styled.input`
   background-color: transparent;
   border: none;
   width: 85%;
-  margin-left: 2rem;
+  margin-left: 2em;
+  padding-right: 1em;
   color: ${({ theme }) => theme.colors.gray};
   border: none;
   background-image: none;

@@ -11,10 +11,30 @@ import LandingPage from "./containers/LandingPage/LandingPage";
 
 const App: React.FC = () => (
   <AnimatePresence>
-    <Route exact path={ROUTES.LANDING_PAGE} component={LandingPage} />
-    <Route exact path={ROUTES.SIGN_IN} component={SignIn} />
-    <Route exact path={ROUTES.SIGN_UP} component={SignUp} />
-    <Route exact path={ROUTES.HOME} component={withAuth(Home)} />
+    <Route
+      key={ROUTES.LANDING_PAGE}
+      exact
+      path={ROUTES.LANDING_PAGE}
+      component={LandingPage}
+    />
+    <Route
+      key={ROUTES.SIGN_IN}
+      exact
+      path={ROUTES.SIGN_IN}
+      component={SignIn}
+    />
+    <Route
+      key={ROUTES.SIGN_UP}
+      exact
+      path={ROUTES.SIGN_UP}
+      component={SignUp}
+    />
+    <Route
+      key={ROUTES.HOME}
+      exact
+      path={ROUTES.HOME}
+      component={withAuth(Home)}
+    />
     <Redirect to={ROUTES.LANDING_PAGE} />
   </AnimatePresence>
 );

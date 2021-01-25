@@ -6,6 +6,7 @@ import { ReactComponent as EyeIcon } from "../../../assets/svg/eye.svg";
 import { ReactComponent as FacebookIcon } from "../../../assets/svg/facebook.svg";
 import { ReactComponent as GoogleIcon } from "../../../assets/svg/google-plus.svg";
 import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
+import { ReactComponent as Wave } from "../../../assets/svg/signInWave.svg";
 import { Button, Heading } from "../../../components/UI";
 import { StyledForm } from "../../../components/UI/FormElements";
 import Input from "../../../components/UI/Input/Input";
@@ -56,6 +57,7 @@ const SignIn: React.FC<SignInProps> = ({}) => {
         </GoBack>
       </NavLink>
       <AuthWrapper>
+        <Wave id="wave" />
         <AuthContent>
           <Heading size="h1" color="white" marginB="0.2em">
             Login to Your Account
