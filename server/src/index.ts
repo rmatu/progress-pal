@@ -1,3 +1,4 @@
+require("dotenv").config();
 import "reflect-metadata";
 import { UserResolver } from "./resolvers/user";
 import { createConnection } from "typeorm";
@@ -10,7 +11,6 @@ import connectRedis from "connect-redis";
 import Redis from "ioredis";
 import { buildSchema } from "type-graphql";
 import cors from "cors";
-import { origin } from "./env";
 import { COOKIE_NAME } from "./constants";
 
 //Entities
@@ -39,7 +39,7 @@ const main = async () => {
   app.set("trust poxy", 1);
   app.use(
     cors({
-      origin: "http://localhost:3000",
+      origin: process.env.CORS_ORIGIN,
       credentials: true,
     })
   );
@@ -57,7 +57,7 @@ const main = async () => {
         secure: __prod__, // cookie only works in https
       },
       saveUninitialized: false,
-      secret: "pfokasfadlveqttauytsdltksmv",
+      secret: process.env.SESSION_SECRET as string,
       resave: false,
     })
   );
@@ -77,10 +77,10 @@ const main = async () => {
   apolloServer.applyMiddleware({
     app,
     path: "/graphql",
-    cors: { credentials: true, origin },
+    cors: { credentials: true, origin: process.env.CORS_ORIGIN },
   });
 
-  app.listen(4000, () => {
+  app.listen(parseInt(process.env.PORT as string), () => {
     console.log("server started on localhost:4000");
   });
 };

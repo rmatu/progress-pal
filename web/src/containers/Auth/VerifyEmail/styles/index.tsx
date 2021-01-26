@@ -9,6 +9,20 @@ export const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
+  @media (max-width: 920px) {
+    h1 {
+      font-size: 2.5rem;
+    }
+
+    p {
+      font-size: 1.125rem;
+    }
+
+    button {
+      padding: 0.8em 3em;
+    }
+  }
 `;
 
 export const LogoContainer = styled.div`
@@ -39,6 +53,13 @@ export const EmailIconWrapper = styled.div`
   svg {
     height: 15em;
     width: 15em;
+  }
+
+  @media (max-width: 920px) {
+    svg {
+      height: 10em;
+      width: 10em;
+    }
   }
 `;
 

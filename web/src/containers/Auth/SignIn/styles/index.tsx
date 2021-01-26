@@ -17,12 +17,7 @@ export const Wrapper = styled(motion.div)`
 export const SignUpChangeWrapper = styled.div`
   min-width: 35em;
   height: 100vh;
-  background: rgb(45, 52, 54);
-  background: linear-gradient(
-    32deg,
-    rgba(45, 52, 54, 1) 0%,
-    rgba(0, 0, 0, 1) 100%
-  );
+  background-color: ${({ theme }) => theme.colors.background};
 
   display: flex;
   flex-direction: column;
@@ -121,6 +116,13 @@ export const AuthWrapper = styled.div`
 
     #wave {
       display: block;
+    }
+  }
+
+  @media (min-width: 920px) {
+    footer {
+      position: absolute;
+      bottom: 0;
     }
   }
 `;
