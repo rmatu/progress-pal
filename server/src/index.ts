@@ -8,13 +8,13 @@ import express from "express";
 import path from "path";
 import session from "express-session";
 import connectRedis from "connect-redis";
-import Redis from "ioredis";
 import { buildSchema } from "type-graphql";
 import cors from "cors";
 import { COOKIE_NAME } from "./constants";
 
 //Entities
 import { User } from "./entities/User";
+import { redis } from "./redis";
 
 const main = async () => {
   const conn = await createConnection({
@@ -34,7 +34,6 @@ const main = async () => {
   const app = express();
 
   const RedisStore = connectRedis(session);
-  const redis = new Redis();
 
   app.set("trust poxy", 1);
   app.use(

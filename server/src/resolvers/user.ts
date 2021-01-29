@@ -16,6 +16,9 @@ import { UsernamePasswordInput } from "./UsernamePasswordInput";
 import { validateRegister } from "../utils/validateRegister";
 import { getConnection } from "typeorm";
 import { COOKIE_NAME } from "../constants";
+import { sendEmail } from "../utils/sendEmail";
+import { createConfirmationUrl } from "../utils/createConfirmationUlr";
+import { redis } from "../redis";
 
 @ObjectType()
 class FieldError {
@@ -46,13 +49,51 @@ export class UserResolver {
     return "";
   }
 
-  @Query(() => User, { nullable: true })
-  me(@Ctx() { req }: MyContext) {
+  @Mutation(() => User)
+  async sendVerifyEmail(
+    @Arg("email") email: string,
+    @Ctx() { req }: MyContext
+  ) {
     // you are not logged in
     if (!req.session.userId) {
       return null;
     }
-    return User.findOne(req.session.userId);
+
+    const user = await User.findOne(req.session.userId);
+
+    if (!user) {
+      return null;
+    }
+
+    await sendEmail(email, await createConfirmationUrl(user?.id));
+
+    return user;
+  }
+
+  @Mutation(() => Boolean)
+  async confirmUser(
+    @Arg("token") token: string,
+    @Ctx() ctx: MyContext
+  ): Promise<boolean> {
+    const userId = await redis.get(token);
+
+    if (!userId) {
+      return false;
+    }
+
+    await User.update({ id: parseInt(userId, 10) }, { emailVerified: true });
+    await redis.del(token);
+
+    return true;
+  }
+
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() { req }: MyContext) {
+    // you are not logged in
+    if (!req.session.userId) {
+      return null;
+    }
+    return await User.findOne(req.session.userId);
   }
 
   @Mutation(() => UserResponse)
