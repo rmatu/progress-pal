@@ -6,19 +6,36 @@ import {
   StyledP,
   Content,
   GoBack,
+  Username,
 } from "./styles";
 import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
 import { ReactComponent as EmailIcon } from "../../../assets/svg/email.svg";
 import { ReactComponent as Cancel } from "../../../assets/svg/cancel.svg";
-import { useMeQuery } from "../../../generated/graphql";
+import {
+  useMeQuery,
+  useSendVerifyEmailMutation,
+} from "../../../generated/graphql";
 import { Button, Heading } from "../../../components/UI";
 import { NavLink } from "react-router-dom";
 import * as ROUTES from "../../../constants/routes";
 
 interface VerifyEmailProps {}
 
+//TODO: Do something when the email is send
+
 const VerifyEmail: React.FC<VerifyEmailProps> = ({}) => {
   const { data } = useMeQuery();
+  const [sendEmail] = useSendVerifyEmailMutation();
+
+  const handleOnClick = async () => {
+    const email = data?.me?.email;
+
+    if (!email) {
+      return;
+    }
+
+    await sendEmail({ variables: { email } });
+  };
 
   return (
     <>
@@ -32,9 +49,10 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({}) => {
       </NavLink>
       <Wrapper>
         <Content>
-          <Heading size="h1" marginB="0.5em" color="white">
-            Welcome {data?.me?.username}!
+          <Heading size="h1" marginB="0" color="white">
+            Welcome
           </Heading>
+          <Username> {data?.me?.username}!</Username>
           <EmailIconWrapper>
             <EmailIcon />
           </EmailIconWrapper>
@@ -42,7 +60,7 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({}) => {
             Your account has been successfully registered. To complete the
             process please check your email for a validation request
           </StyledP>
-          <Button>Resend email</Button>
+          <Button onClick={() => handleOnClick()}>Resend email</Button>
         </Content>
       </Wrapper>
     </>

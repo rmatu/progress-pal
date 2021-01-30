@@ -5,7 +5,7 @@ import { withAuth } from "./services/auth.service";
 import { AnimatePresence } from "framer-motion";
 
 //Components
-import { SignIn, SignUp, VerifyEmail } from "./containers/Auth";
+import { SignIn, SignUp, VerifyEmail, ConfirmEmail } from "./containers/Auth";
 import Home from "./containers/Home/Home";
 import LandingPage from "./containers/LandingPage/LandingPage";
 import Account from "./containers/Account/Account";
@@ -37,6 +37,12 @@ const App: React.FC = () => (
       component={VerifyEmail}
     />
     <Route
+      key={ROUTES.EMAIL_CONFIRM}
+      exact
+      path={`${ROUTES.EMAIL_CONFIRM}/:token`}
+      component={ConfirmEmail}
+    />
+    <Route
       key={ROUTES.HOME}
       exact
       path={ROUTES.HOME}
@@ -48,7 +54,6 @@ const App: React.FC = () => (
       path={ROUTES.ACCOUNT}
       component={withAuth(Account)}
     />
-    <Redirect to={ROUTES.LANDING_PAGE} />
   </AnimatePresence>
 );
 

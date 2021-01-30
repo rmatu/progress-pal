@@ -71,10 +71,7 @@ export class UserResolver {
   }
 
   @Mutation(() => Boolean)
-  async confirmUser(
-    @Arg("token") token: string,
-    @Ctx() ctx: MyContext
-  ): Promise<boolean> {
+  async confirmUser(@Arg("token") token: string): Promise<boolean> {
     const userId = await redis.get(token);
 
     if (!userId) {
@@ -108,6 +105,7 @@ export class UserResolver {
 
     const hashedPassword = await argon2.hash(options.password);
     let user;
+
     try {
       const result = await getConnection()
         .createQueryBuilder()
@@ -151,6 +149,9 @@ export class UserResolver {
     // this will set a cookie on the user
     // keep them logged in
     req.session.userId = user.id;
+
+    // sending the verification email
+    await sendEmail(options.email, await createConfirmationUrl(user?.id));
 
     return { user };
   }

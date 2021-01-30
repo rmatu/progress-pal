@@ -1,0 +1,5 @@
+mutation SendVerifyEmail($email: String!) {
+  sendVerifyEmail(email: $email) {
+    ...RegularUser
+  }
+}

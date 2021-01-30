@@ -28,9 +28,21 @@ export type User = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  sendVerifyEmail: User;
+  confirmUser: Scalars['Boolean'];
   signUp: UserResponse;
   signIn: UserResponse;
   logout: Scalars['Boolean'];
+};
+
+
+export type MutationSendVerifyEmailArgs = {
+  email: Scalars['String'];
+};
+
+
+export type MutationConfirmUserArgs = {
+  token: Scalars['String'];
 };
 
 
@@ -69,7 +81,7 @@ export type RegularErrorFragment = (
 
 export type RegularUserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'username'>
+  & Pick<User, 'id' | 'username' | 'email' | 'isPremium' | 'emailVerified'>
 );
 
 export type RegularUserResponseFragment = (
@@ -83,12 +95,35 @@ export type RegularUserResponseFragment = (
   )> }
 );
 
+export type ConfirmUserMutationVariables = Exact<{
+  token: Scalars['String'];
+}>;
+
+
+export type ConfirmUserMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'confirmUser'>
+);
+
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LogoutMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'logout'>
+);
+
+export type SendVerifyEmailMutationVariables = Exact<{
+  email: Scalars['String'];
+}>;
+
+
+export type SendVerifyEmailMutation = (
+  { __typename?: 'Mutation' }
+  & { sendVerifyEmail: (
+    { __typename?: 'User' }
+    & RegularUserFragment
+  ) }
 );
 
 export type SignInMutationVariables = Exact<{
@@ -125,7 +160,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me?: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'username' | 'isPremium' | 'emailVerified'>
+    & Pick<User, 'id' | 'username' | 'isPremium' | 'emailVerified' | 'email'>
   )> }
 );
 
@@ -139,6 +174,9 @@ export const RegularUserFragmentDoc = gql`
     fragment RegularUser on User {
   id
   username
+  email
+  isPremium
+  emailVerified
 }
     `;
 export const RegularUserResponseFragmentDoc = gql`
@@ -152,6 +190,36 @@ export const RegularUserResponseFragmentDoc = gql`
 }
     ${RegularErrorFragmentDoc}
 ${RegularUserFragmentDoc}`;
+export const ConfirmUserDocument = gql`
+    mutation ConfirmUser($token: String!) {
+  confirmUser(token: $token)
+}
+    `;
+export type ConfirmUserMutationFn = Apollo.MutationFunction<ConfirmUserMutation, ConfirmUserMutationVariables>;
+
+/**
+ * __useConfirmUserMutation__
+ *
+ * To run a mutation, you first call `useConfirmUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useConfirmUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [confirmUserMutation, { data, loading, error }] = useConfirmUserMutation({
+ *   variables: {
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useConfirmUserMutation(baseOptions?: Apollo.MutationHookOptions<ConfirmUserMutation, ConfirmUserMutationVariables>) {
+        return Apollo.useMutation<ConfirmUserMutation, ConfirmUserMutationVariables>(ConfirmUserDocument, baseOptions);
+      }
+export type ConfirmUserMutationHookResult = ReturnType<typeof useConfirmUserMutation>;
+export type ConfirmUserMutationResult = Apollo.MutationResult<ConfirmUserMutation>;
+export type ConfirmUserMutationOptions = Apollo.BaseMutationOptions<ConfirmUserMutation, ConfirmUserMutationVariables>;
 export const LogoutDocument = gql`
     mutation Logout {
   logout
@@ -181,6 +249,38 @@ export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<Logou
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const SendVerifyEmailDocument = gql`
+    mutation SendVerifyEmail($email: String!) {
+  sendVerifyEmail(email: $email) {
+    ...RegularUser
+  }
+}
+    ${RegularUserFragmentDoc}`;
+export type SendVerifyEmailMutationFn = Apollo.MutationFunction<SendVerifyEmailMutation, SendVerifyEmailMutationVariables>;
+
+/**
+ * __useSendVerifyEmailMutation__
+ *
+ * To run a mutation, you first call `useSendVerifyEmailMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendVerifyEmailMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendVerifyEmailMutation, { data, loading, error }] = useSendVerifyEmailMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useSendVerifyEmailMutation(baseOptions?: Apollo.MutationHookOptions<SendVerifyEmailMutation, SendVerifyEmailMutationVariables>) {
+        return Apollo.useMutation<SendVerifyEmailMutation, SendVerifyEmailMutationVariables>(SendVerifyEmailDocument, baseOptions);
+      }
+export type SendVerifyEmailMutationHookResult = ReturnType<typeof useSendVerifyEmailMutation>;
+export type SendVerifyEmailMutationResult = Apollo.MutationResult<SendVerifyEmailMutation>;
+export type SendVerifyEmailMutationOptions = Apollo.BaseMutationOptions<SendVerifyEmailMutation, SendVerifyEmailMutationVariables>;
 export const SignInDocument = gql`
     mutation SignIn($usernameOrEmail: String!, $password: String!) {
   signIn(usernameOrEmail: $usernameOrEmail, password: $password) {
@@ -253,6 +353,7 @@ export const MeDocument = gql`
     username
     isPremium
     emailVerified
+    email
   }
 }
     `;

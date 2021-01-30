@@ -1,5 +1,7 @@
 import styled from "styled-components/macro";
 
+export const Username = styled.p``;
+
 export const Wrapper = styled.div`
   height: 100vh;
   width: 100vw;
@@ -21,6 +23,12 @@ export const Wrapper = styled.div`
 
     button {
       padding: 0.8em 3em;
+    }
+
+    ${Username} {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 1em;
     }
   }
 `;
@@ -71,6 +79,7 @@ export const StyledP = styled.p`
 
 export const Content = styled.div`
   max-width: 40em;
+  padding: 0 1em;
 `;
 
 export const GoBack = styled.div`

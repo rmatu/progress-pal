@@ -3,7 +3,7 @@ import { redis } from "../redis";
 
 export const createConfirmationUrl = async (userId: number) => {
   const token = v4();
-  await redis.set(token, userId, "ex", 60 * 30); // 30min expiration
+  await redis.set(token, userId, "ex", 60 * 60); // 1h expiration
 
-  return `http://localhost:3000/confirm/${token}`;
+  return `http://localhost:3000/email-confirm/${token}`;
 };

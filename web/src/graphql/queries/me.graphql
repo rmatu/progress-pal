@@ -4,5 +4,6 @@ query Me {
     username
     isPremium
     emailVerified
+    email
   }
 }
