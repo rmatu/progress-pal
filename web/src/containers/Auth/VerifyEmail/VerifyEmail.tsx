@@ -7,10 +7,12 @@ import {
   Content,
   GoBack,
   Username,
+  ExpirationText,
 } from "./styles";
 import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
 import { ReactComponent as EmailIcon } from "../../../assets/svg/email.svg";
 import { ReactComponent as Cancel } from "../../../assets/svg/cancel.svg";
+import { ReactComponent as Circle } from "../../../assets/svg/kek.svg";
 import {
   useMeQuery,
   useSendVerifyEmailMutation,
@@ -18,10 +20,9 @@ import {
 import { Button, Heading } from "../../../components/UI";
 import { NavLink } from "react-router-dom";
 import * as ROUTES from "../../../constants/routes";
+import Footer from "../../../components/Footer/Footer";
 
 interface VerifyEmailProps {}
-
-//TODO: Do something when the email is send
 
 const VerifyEmail: React.FC<VerifyEmailProps> = ({}) => {
   const { data } = useMeQuery();
@@ -48,6 +49,7 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({}) => {
         </GoBack>
       </NavLink>
       <Wrapper>
+        <Circle id="circle" />
         <Content>
           <Heading size="h1" marginB="0" color="white">
             Welcome
@@ -58,10 +60,14 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({}) => {
           </EmailIconWrapper>
           <StyledP>
             Your account has been successfully registered. To complete the
-            process please check your email for a validation request
+            process please check your email for a validation request.
           </StyledP>
           <Button onClick={() => handleOnClick()}>Resend email</Button>
+          <ExpirationText>
+            Verification link will expire in <span>10 min</span>
+          </ExpirationText>
         </Content>
+        <Footer />
       </Wrapper>
     </>
   );

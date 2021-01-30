@@ -9,6 +9,7 @@ import { SignIn, SignUp, VerifyEmail, ConfirmEmail } from "./containers/Auth";
 import Home from "./containers/Home/Home";
 import LandingPage from "./containers/LandingPage/LandingPage";
 import Account from "./containers/Account/Account";
+import { withEmail } from "./services/email.service";
 
 const App: React.FC = () => (
   <AnimatePresence>
@@ -34,7 +35,7 @@ const App: React.FC = () => (
       key={ROUTES.VERIFY_EMAIL}
       exact
       path={ROUTES.VERIFY_EMAIL}
-      component={VerifyEmail}
+      component={withEmail(VerifyEmail)}
     />
     <Route
       key={ROUTES.EMAIL_CONFIRM}
