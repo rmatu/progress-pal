@@ -1,5 +1,4 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 import Header from "../../components/Navigation/Header/Header";
 import { Heading } from "../../components/UI";
 import { HeaderWrapper, RestContent } from "./styles";
@@ -15,9 +14,6 @@ const LandingPage: React.FC<LandingPageProps> = ({}) => {
         <Heading marginB="0" color="#FFF" size="h3">
           Here will be all the info about ProgressPal
         </Heading>
-        <NavLink to={"/email-confirm"}>
-          <button>Confirm Email</button>
-        </NavLink>
       </RestContent>
     </>
   );

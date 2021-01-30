@@ -2,8 +2,10 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useConfirmUserMutation } from "../../../generated/graphql";
 import { useRouter } from "../../../hooks/useRouter";
-import {} from "./styles";
+import { Wrapper, LogoContainer } from "./styles";
 import * as ROUTES from "../../../constants/routes";
+import Loader from "../../../components/UI/Loader/Loader";
+import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
 
 interface ConfirmEmailProps {}
 
@@ -14,18 +16,23 @@ const ConfirmEmail: React.FC<ConfirmEmailProps> = ({}) => {
 
   useEffect(() => {
     const asyncConfirmUser = async () => {
-      console.log(token);
-      const res = await confirmUser({
+      await confirmUser({
         variables: {
           token,
         },
       });
-      console.log(res, "here");
-      await router.push(ROUTES.HOME);
+      await router.push(ROUTES.LANDING_PAGE);
     };
     asyncConfirmUser();
   }, [confirmUser, router, token]);
 
-  return <p>hehe xD</p>;
+  return (
+    <Wrapper>
+      <LogoContainer>
+        <Logo />
+      </LogoContainer>
+      <Loader />
+    </Wrapper>
+  );
 };
 export default ConfirmEmail;
