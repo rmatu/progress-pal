@@ -6,7 +6,7 @@ export const Username = styled.p`
 `;
 
 export const ExpirationText = styled.p`
-  margin-top: 1.25em;
+  margin-top: 2em;
   text-align: center;
   color: #a09e9e;
 
@@ -60,6 +60,7 @@ export const Wrapper = styled.div`
   footer {
     position: absolute;
     bottom: 0;
+    padding-bottom: 0.5em;
   }
 
   #circle {
@@ -110,7 +111,7 @@ export const EmailIconWrapper = styled.div`
 export const StyledP = styled.p`
   text-align: center;
   font-size: 1.25rem;
-  padding: 1em 1em;
+  padding: 1em 2em;
 
   @media (min-width: 600px) {
     padding: 2em 4em;

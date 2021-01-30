@@ -27,11 +27,16 @@ export const StyledButton = styled.button<ButtonProps>`
   background-color: ${({ theme }) => theme.colors.orange};
   border: 3px solid ${({ theme }) => theme.colors.orange};
   cursor: pointer;
+  opacity: 90%;
 
   &:disabled {
     cursor: not-allowed;
     background-color: transparent;
     opacity: 80%;
+  }
+
+  &:hover {
+    opacity: 100%;
   }
 
   transition: all 0.2s;

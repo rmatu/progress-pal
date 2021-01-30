@@ -12,7 +12,7 @@ import {
 import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
 import { ReactComponent as EmailIcon } from "../../../assets/svg/email.svg";
 import { ReactComponent as Cancel } from "../../../assets/svg/cancel.svg";
-import { ReactComponent as Circle } from "../../../assets/svg/kek.svg";
+import { ReactComponent as Circle } from "../../../assets/svg/circle.svg";
 import {
   useMeQuery,
   useSendVerifyEmailMutation,

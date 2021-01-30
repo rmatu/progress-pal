@@ -11,12 +11,15 @@ import connectRedis from "connect-redis";
 import { buildSchema } from "type-graphql";
 import cors from "cors";
 import { COOKIE_NAME } from "./constants";
+import { oAuth2Client } from "./OAuth2Client";
 
 //Entities
 import { User } from "./entities/User";
 import { redis } from "./redis";
 
 const main = async () => {
+  oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
+
   const conn = await createConnection({
     type: "postgres",
     database: "progresspal",

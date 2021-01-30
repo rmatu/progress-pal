@@ -169,9 +169,13 @@ export const LoginForm = styled.div`
   }
 `;
 
-export const FieldWrapper = styled.div`
+export const FieldWrapper = styled.div<{ active?: boolean }>`
   width: 100%;
+  svg {
+    fill: ${({ active }) => (active ? "#FE5000" : "#75757E")};
 
+    transition: all 0.1s;
+  }
   @media (max-width: 1100px) {
     width: 100%;
   }
@@ -184,5 +188,16 @@ export const FieldRow = styled.div`
 
   @media (max-width: 1100px) {
     flex-direction: column;
+  }
+`;
+
+export const BottomText = styled.div`
+  margin-top: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  span {
+    margin: 0 0.5em;
+    color: ${({ theme }) => theme.colors.orange};
   }
 `;

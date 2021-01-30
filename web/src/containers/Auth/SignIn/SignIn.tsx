@@ -35,6 +35,7 @@ import {
   Wrapper,
   SignUpChangeContent,
   LogoContainer,
+  BottomText,
 } from "./styles";
 
 interface SignInProps {}
@@ -102,7 +103,7 @@ const SignIn: React.FC<SignInProps> = ({}) => {
                     </FieldWrapper>
                   </FieldRow>
                   <FieldRow>
-                    <FieldWrapper>
+                    <FieldWrapper active={passwordVisibility}>
                       <Field
                         type={passwordVisibility ? "text" : "password"}
                         name="password"
@@ -125,6 +126,12 @@ const SignIn: React.FC<SignInProps> = ({}) => {
                   >
                     Sign In
                   </Button>
+                  <BottomText>
+                    <p>Forgot your password?</p>
+                    <NavLink to="forgot-password">
+                      <span>Click here</span>
+                    </NavLink>
+                  </BottomText>
                 </StyledForm>
               )}
             </Formik>
