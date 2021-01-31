@@ -16,9 +16,10 @@ import { UsernamePasswordInput } from "./UsernamePasswordInput";
 import { validateRegister } from "../utils/validateRegister";
 import { getConnection } from "typeorm";
 import { COOKIE_NAME } from "../constants";
-import { sendEmail } from "../utils/sendEmail";
-import { createConfirmationUrl } from "../utils/createConfirmationUlr";
 import { redis } from "../redis";
+import { sendEmail } from "../utils/sendEmail";
+import { createResetPasswordEmail, createVerificationEmail } from "../emails";
+import { createUrl } from "../utils/createUrl";
 
 @ObjectType()
 class FieldError {
@@ -65,9 +66,32 @@ export class UserResolver {
       return null;
     }
 
-    await sendEmail(email, await createConfirmationUrl(user?.id));
+    const emailObject = createVerificationEmail(
+      email,
+      await createUrl(user?.id, "email-confirm")
+    );
+
+    await sendEmail(emailObject);
 
     return user;
+  }
+
+  @Mutation(() => Boolean)
+  async sendResetPasswordEmail(@Arg("email") email: string) {
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return false;
+    }
+
+    const emailObject = createResetPasswordEmail(
+      email,
+      await createUrl(user?.id, "reset-password")
+    );
+
+    await sendEmail(emailObject);
+
+    return true;
   }
 
   @Mutation(() => Boolean)
@@ -150,8 +174,13 @@ export class UserResolver {
     // keep them logged in
     req.session.userId = user.id;
 
+    const emailObject = createVerificationEmail(
+      options.email,
+      await createUrl(user?.id, "email-confirm")
+    );
+
     // sending the verification email
-    await sendEmail(options.email, await createConfirmationUrl(user?.id));
+    await sendEmail(emailObject);
 
     return { user };
   }
