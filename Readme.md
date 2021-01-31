@@ -5,7 +5,8 @@
 ## Frontend
 
 - React
-- React-Router-Dom
+- Typescript
+- React Router Dom
 - Apollo Client
 - Formik
 - Yup
@@ -16,9 +17,11 @@
 
 ## Backend
 
+- Typescript
 - Node
 - Express
 - PostgreSQL
 - TypeORM
 - Redis
 - Apollo Server
+- GraphQL

@@ -199,5 +199,9 @@ export const BottomText = styled.div`
   span {
     margin: 0 0.5em;
     color: ${({ theme }) => theme.colors.orange};
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 `;

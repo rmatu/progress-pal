@@ -21,6 +21,18 @@ export const SignInSchema = Yup.object().shape({
     .min(3, "The password is to short"),
 });
 
+export const ForgetEmailSchema = Yup.object().shape({
+  email: Yup.string().email("Invalid email.").required("The email is required"),
+});
+
+export interface ForgetEmailTypes {
+  email: string;
+}
+
+export const ForgetEmailInitialValues = {
+  email: "",
+};
+
 /**
  * * Sign Up
  */
