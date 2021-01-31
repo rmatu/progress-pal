@@ -39,7 +39,7 @@ const ForgotEmailModal: React.FC<ForgotEmailModalProps> = ({
           console.log("Kekw :D");
         }}
       >
-        {({ isValid }) => (
+        {({ isSubmitting, isValid }) => (
           <StyledForm>
             <Field
               type="email"
@@ -49,6 +49,7 @@ const ForgotEmailModal: React.FC<ForgotEmailModalProps> = ({
             />
 
             <Button
+              loading={isSubmitting ? "Sending..." : null}
               marginTop="3em"
               color="main"
               disabled={!isValid}

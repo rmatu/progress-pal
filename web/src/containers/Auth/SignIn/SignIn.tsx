@@ -128,6 +128,7 @@ const SignIn: React.FC<SignInProps> = ({}) => {
                     </FieldWrapper>
                   </FieldRow>
                   <Button
+                    loading={isSubmitting ? "Signing in..." : null}
                     marginTop="1em"
                     color="main"
                     disabled={!isValid}

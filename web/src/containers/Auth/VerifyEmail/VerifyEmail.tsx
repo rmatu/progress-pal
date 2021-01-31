@@ -26,7 +26,7 @@ interface VerifyEmailProps {}
 
 const VerifyEmail: React.FC<VerifyEmailProps> = ({}) => {
   const { data } = useMeQuery();
-  const [sendEmail] = useSendVerifyEmailMutation();
+  const [sendEmail, { loading }] = useSendVerifyEmailMutation();
 
   const handleOnClick = async () => {
     const email = data?.me?.email;
@@ -62,7 +62,12 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({}) => {
             Your account has been successfully registered. To complete the
             process please check your email for a validation request.
           </StyledP>
-          <Button onClick={() => handleOnClick()}>Resend email</Button>
+          <Button
+            loading={loading ? "Sending email... " : null}
+            onClick={() => handleOnClick()}
+          >
+            Resend email
+          </Button>
           <ExpirationText>
             Verification link will expire in <span>10 min</span>
           </ExpirationText>

@@ -110,8 +110,9 @@ export const EmailIconWrapper = styled.div`
 
 export const StyledP = styled.p`
   text-align: center;
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   padding: 1em 2em;
+  color: ${({ theme }) => theme.colors.grayText};
 
   @media (min-width: 600px) {
     padding: 2em 4em;

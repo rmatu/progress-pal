@@ -158,6 +158,7 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
                     </FieldWrapper>
                   </FieldRow>
                   <Button
+                    loading={isSubmitting ? "Signing up..." : null}
                     marginTop="1em"
                     color="main"
                     disabled={!isValid}
