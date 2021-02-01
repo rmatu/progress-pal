@@ -67,3 +67,26 @@ export const SignUpSchema = Yup.object().shape({
     .oneOf([Yup.ref("password"), null], `Password doesn't match`)
     .required("Confirm your password."),
 });
+
+/**
+ * * Reset Password
+ */
+
+export const ResetPasswordSchema = Yup.object().shape({
+  password: Yup.string()
+    .required("The password is required.")
+    .min(8, "The password is to short"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), null], `Password doesn't match`)
+    .required("Confirm your password."),
+});
+
+export interface ResetPasswordTypes {
+  password: string;
+  confirmPassword: string;
+}
+
+export const ResetPasswordValues = {
+  password: "",
+  confirmPassword: "",
+};

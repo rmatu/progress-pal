@@ -8,3 +8,4 @@ export const FORGOT_PASSWORD = "/forgot-password";
 export const LANDING_PAGE = "/";
 export const VERIFY_EMAIL = "/verify-email";
 export const EMAIL_CONFIRM = "/email-confirm";
+export const RESET_PASSWORD = "/reset-password";

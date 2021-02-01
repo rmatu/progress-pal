@@ -8,7 +8,7 @@ import { ReactComponent as GoogleIcon } from "../../../assets/svg/google-plus.sv
 import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
 import { ReactComponent as Wave } from "../../../assets/svg/signInWave.svg";
 import Footer from "../../../components/Footer/Footer";
-import { Button, Heading, Modal } from "../../../components/UI";
+import { Button, Heading } from "../../../components/UI";
 import { StyledForm } from "../../../components/UI/FormElements";
 import Input from "../../../components/UI/Input/Input";
 import Separator from "../../../components/UI/Separator/Separator";
@@ -16,9 +16,6 @@ import * as ROUTES from "../../../constants/routes";
 import { useMeQuery, useSignInMutation } from "../../../generated/graphql";
 import { useRouter } from "../../../hooks/useRouter";
 import {
-  ForgetEmailInitialValues,
-  ForgetEmailSchema,
-  ForgetEmailTypes,
   SignInFormTypes,
   SignInInitialValues,
   SignInSchema,

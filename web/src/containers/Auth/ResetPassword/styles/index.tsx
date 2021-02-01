@@ -1,22 +1,5 @@
 import styled from "styled-components/macro";
-
-export const Username = styled.p`
-  text-align: center;
-  font-size: 2rem;
-`;
-
-export const ExpirationText = styled.p`
-  margin-top: 2em;
-  text-align: center;
-  color: #a09e9e;
-
-  position: absolute;
-  bottom: 1em;
-
-  span {
-    color: ${({ theme }) => theme.colors.orange};
-  }
-`;
+import { Form } from "formik";
 
 export const Wrapper = styled.div`
   height: 100vh;
@@ -41,31 +24,12 @@ export const Wrapper = styled.div`
     button {
       padding: 0.8em 3em;
     }
-
-    ${Username} {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 1em;
-    }
-
-    ${ExpirationText} {
-      font-size: 0.9rem;
-    }
-    #circle {
-      display: none;
-    }
   }
 
   footer {
     position: absolute;
     bottom: 0;
     padding-bottom: 0.5em;
-  }
-
-  #circle {
-    max-width: 100%;
-    max-height: 100%;
-    position: absolute;
   }
 `;
 
@@ -90,20 +54,21 @@ export const LogoContainer = styled.div`
   }
 `;
 
-export const EmailIconWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  svg {
-    height: 12em;
-    width: 12em;
-  }
+export const GoBack = styled.div`
+  z-index: 10;
+  position: absolute;
+  height: 3em;
+  width: 3em;
+  top: 2em;
+  right: 2em;
 
   @media (max-width: 600px) {
-    svg {
-      height: 10em;
-      width: 10em;
-    }
+    height: 1.5em;
+    width: 1.5em;
+  }
+
+  svg {
+    fill: white;
   }
 `;
 
@@ -135,20 +100,31 @@ export const Content = styled.div`
   box-shadow: 0px 3px 19px 0px rgba(0, 0, 0, 0.5);
 `;
 
-export const GoBack = styled.div`
-  z-index: 10;
+export const ExpirationText = styled.p`
+  margin-top: 2em;
+  text-align: center;
+  color: #a09e9e;
+
   position: absolute;
-  height: 3em;
-  width: 3em;
-  top: 2em;
-  right: 2em;
+  bottom: 1em;
 
-  @media (max-width: 600px) {
-    height: 1.5em;
-    width: 1.5em;
+  span {
+    color: ${({ theme }) => theme.colors.orange};
   }
+`;
 
+export const StyledForm = styled(Form)`
+  width: 85%;
+`;
+
+export const FieldWrapper = styled.div<{ active?: boolean }>`
+  width: 100%;
   svg {
-    fill: white;
+    fill: ${({ active }) => (active ? "#FE5000" : "#75757E")};
+
+    transition: all 0.1s;
+  }
+  @media (max-width: 1100px) {
+    width: 100%;
   }
 `;

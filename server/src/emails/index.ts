@@ -626,17 +626,17 @@ export const createResetPasswordEmail = (email: string, url: string) => {
                             "
                           >
                             <br />
-                            <p
-                              style="
-                                font-family: sans-serif;
-                                font-size: 14px;
-                                font-weight: normal;
-                                margin: 0;
-                                margin-bottom: 15px;
-                              "
-                            >
-                              Greetings!
-                            </p>
+                            <h2
+                            style="
+                              font-family: sans-serif;
+                              font-size: 20px;
+                              font-weight: bolder;
+                              margin: 0;
+                              margin-bottom: 15px;
+                            "
+                          >
+                            Greetings!
+                          </h2>
                             <p
                               style="
                                 font-family: sans-serif;
@@ -698,7 +698,7 @@ export const createResetPasswordEmail = (email: string, url: string) => {
                                             "
                                           >
                                             <a
-                                              href="http://htmlemail.io"
+                                              href="${url}"
                                               target="_blank"
                                               style="
                                                 display: inline-block;
