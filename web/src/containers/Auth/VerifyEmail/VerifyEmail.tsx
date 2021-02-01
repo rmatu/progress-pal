@@ -27,7 +27,6 @@ interface VerifyEmailProps {}
 const VerifyEmail: React.FC<VerifyEmailProps> = ({}) => {
   const { data } = useMeQuery();
   const [sendEmail, { loading }] = useSendVerifyEmailMutation();
-
   const handleOnClick = async () => {
     const email = data?.me?.email;
 

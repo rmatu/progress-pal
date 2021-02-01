@@ -29,6 +29,7 @@ export type User = {
 export type Mutation = {
   __typename?: 'Mutation';
   sendVerifyEmail: User;
+  sendResetPasswordEmail: Scalars['Boolean'];
   confirmUser: Scalars['Boolean'];
   signUp: UserResponse;
   signIn: UserResponse;
@@ -37,6 +38,11 @@ export type Mutation = {
 
 
 export type MutationSendVerifyEmailArgs = {
+  email: Scalars['String'];
+};
+
+
+export type MutationSendResetPasswordEmailArgs = {
   email: Scalars['String'];
 };
 
@@ -111,6 +117,16 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 export type LogoutMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'logout'>
+);
+
+export type SendResetPasswordEmailMutationVariables = Exact<{
+  email: Scalars['String'];
+}>;
+
+
+export type SendResetPasswordEmailMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'sendResetPasswordEmail'>
 );
 
 export type SendVerifyEmailMutationVariables = Exact<{
@@ -249,6 +265,36 @@ export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<Logou
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const SendResetPasswordEmailDocument = gql`
+    mutation SendResetPasswordEmail($email: String!) {
+  sendResetPasswordEmail(email: $email)
+}
+    `;
+export type SendResetPasswordEmailMutationFn = Apollo.MutationFunction<SendResetPasswordEmailMutation, SendResetPasswordEmailMutationVariables>;
+
+/**
+ * __useSendResetPasswordEmailMutation__
+ *
+ * To run a mutation, you first call `useSendResetPasswordEmailMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendResetPasswordEmailMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendResetPasswordEmailMutation, { data, loading, error }] = useSendResetPasswordEmailMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useSendResetPasswordEmailMutation(baseOptions?: Apollo.MutationHookOptions<SendResetPasswordEmailMutation, SendResetPasswordEmailMutationVariables>) {
+        return Apollo.useMutation<SendResetPasswordEmailMutation, SendResetPasswordEmailMutationVariables>(SendResetPasswordEmailDocument, baseOptions);
+      }
+export type SendResetPasswordEmailMutationHookResult = ReturnType<typeof useSendResetPasswordEmailMutation>;
+export type SendResetPasswordEmailMutationResult = Apollo.MutationResult<SendResetPasswordEmailMutation>;
+export type SendResetPasswordEmailMutationOptions = Apollo.BaseMutationOptions<SendResetPasswordEmailMutation, SendResetPasswordEmailMutationVariables>;
 export const SendVerifyEmailDocument = gql`
     mutation SendVerifyEmail($email: String!) {
   sendVerifyEmail(email: $email) {

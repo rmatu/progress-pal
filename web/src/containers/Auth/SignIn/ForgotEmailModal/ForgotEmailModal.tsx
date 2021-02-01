@@ -8,7 +8,7 @@ import {
   ForgetEmailTypes,
 } from "../../../../utils/formSchemas";
 import { StyledP, StyledForm } from "./styles";
-
+import { useSendResetPasswordEmailMutation } from "../../../../generated/graphql";
 interface ForgotEmailModalProps {
   modalOpened: boolean;
   setModalOpened: () => void;
@@ -18,6 +18,8 @@ const ForgotEmailModal: React.FC<ForgotEmailModalProps> = ({
   modalOpened,
   setModalOpened,
 }) => {
+  const [sendEmail] = useSendResetPasswordEmailMutation();
+
   return (
     <Modal opened={modalOpened} close={setModalOpened}>
       <Heading size="h3" color="white" marginB="0.5em">
@@ -32,11 +34,16 @@ const ForgotEmailModal: React.FC<ForgotEmailModalProps> = ({
         initialValues={ForgetEmailInitialValues}
         validationSchema={ForgetEmailSchema}
         onSubmit={async (
-          values: ForgetEmailTypes,
-          { setSubmitting, resetForm, setErrors }
+          { email }: ForgetEmailTypes,
+          { setSubmitting, resetForm }
         ) => {
+          await sendEmail({
+            variables: {
+              email,
+            },
+          });
+          setSubmitting(false);
           resetForm();
-          console.log("Kekw :D");
         }}
       >
         {({ isSubmitting, isValid }) => (
