@@ -81,6 +81,10 @@ export const StyledP = styled.p`
   @media (min-width: 600px) {
     padding: 2em 4em;
   }
+
+  @media (max-width: 500px) {
+    margin-bottom: 2em;
+  }
 `;
 
 export const Content = styled.div`

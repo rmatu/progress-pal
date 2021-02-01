@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
 import { ReactComponent as Cancel } from "../../../assets/svg/cancel.svg";
 import { ReactComponent as EyeIcon } from "../../../assets/svg/eye.svg";
@@ -20,13 +20,19 @@ import { Field, Formik } from "formik";
 import Input from "../../../components/UI/Input/Input";
 import {
   ResetPasswordSchema,
+  ResetPasswordTypes,
   ResetPasswordValues,
 } from "../../../utils/formSchemas";
+import { useChangePasswordMutation } from "../../../generated/graphql";
+import { useRouter } from "../../../hooks/useRouter";
 
 interface ResetPasswordProps {}
 
 const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
+  const [changePassword] = useChangePasswordMutation();
+  const { token }: any = useParams();
+  const router = useRouter();
 
   return (
     <Wrapper>
@@ -51,7 +57,19 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
           isInitialValid={false}
           initialValues={ResetPasswordValues}
           validationSchema={ResetPasswordSchema}
-          onSubmit={() => console.log("kekw XD")}
+          onSubmit={async (
+            { password }: ResetPasswordTypes,
+            { setSubmitting }
+          ) => {
+            await changePassword({
+              variables: {
+                password,
+                token,
+              },
+            });
+            await setSubmitting(false);
+            await router.push("/sign-in");
+          }}
         >
           {({ isSubmitting, isValid }) => (
             <StyledForm>
