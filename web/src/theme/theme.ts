@@ -6,6 +6,8 @@ const theme = {
     orange: "#fe5000",
     grayText: "#DCDDDE",
     backgroundDarkerGray: "#212121",
+    errorTextColor: "#ff5757",
+    successTextColor: "#70a514",
   },
   mediaQueries: {
     phones: `only screen and (max-width: 920px)`,

@@ -1,5 +1,5 @@
-import { Field, Formik } from "formik";
 import React from "react";
+import { Field, Formik } from "formik";
 import { Modal, Heading, Button } from "../../../../components/UI";
 import Input from "../../../../components/UI/Input/Input";
 import {
@@ -9,15 +9,17 @@ import {
 } from "../../../../utils/formSchemas";
 import { StyledP, StyledForm, Wrapper } from "./styles";
 import { useSendResetPasswordEmailMutation } from "../../../../generated/graphql";
-import { ReactComponent as LockIcon } from "../../../../assets/svg/Lock.svg";
+import { ReactComponent as LockIcon } from "../../../../assets/svg/lock.svg";
 interface ForgotEmailModalProps {
   modalOpened: boolean;
   setModalOpened: () => void;
+  showPopup: () => void;
 }
 
 const ForgotEmailModal: React.FC<ForgotEmailModalProps> = ({
   modalOpened,
   setModalOpened,
+  showPopup,
 }) => {
   const [sendEmail] = useSendResetPasswordEmailMutation();
 
@@ -47,6 +49,8 @@ const ForgotEmailModal: React.FC<ForgotEmailModalProps> = ({
             });
             setSubmitting(false);
             resetForm();
+            setModalOpened();
+            showPopup();
           }}
         >
           {({ isSubmitting, isValid }) => (

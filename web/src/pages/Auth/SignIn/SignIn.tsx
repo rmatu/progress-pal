@@ -8,10 +8,8 @@ import { ReactComponent as GoogleIcon } from "../../../assets/svg/google-plus.sv
 import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
 import { ReactComponent as Wave } from "../../../assets/svg/signInWave.svg";
 import Footer from "../../../components/Footer/Footer";
-import { Button, Heading } from "../../../components/UI";
+import { Button, Heading, Input, Separator } from "../../../components/UI";
 import { StyledForm } from "../../../components/UI/FormElements";
-import Input from "../../../components/UI/Input/Input";
-import Separator from "../../../components/UI/Separator/Separator";
 import * as ROUTES from "../../../constants/routes";
 import { useMeQuery, useSignInMutation } from "../../../generated/graphql";
 import { useRouter } from "../../../hooks/useRouter";
@@ -23,26 +21,28 @@ import {
 import { toErrorMap } from "../../../utils/toErrorMap";
 import ForgotEmailModal from "./ForgotEmailModal/ForgotEmailModal";
 import {
+  AuthContent,
   AuthText,
   AuthWrapper,
-  AuthContent,
+  BottomText,
   FieldRow,
   FieldWrapper,
   GoBack,
   LoginForm,
+  LogoContainer,
+  SignUpChangeContent,
   SignUpChangeWrapper,
   SocialIcons,
   StyledP,
   Wrapper,
-  SignUpChangeContent,
-  LogoContainer,
-  BottomText,
+  Popup,
 } from "./styles";
 
 interface SignInProps {}
 
 const SignIn: React.FC<SignInProps> = ({}) => {
   const [modalOpened, setModalOpened] = useState<boolean>(false);
+  const [showPopup, setShowPopup] = useState<boolean>(false);
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(false);
   const { refetch } = useMeQuery();
   const [signIn] = useSignInMutation();
@@ -53,6 +53,12 @@ const SignIn: React.FC<SignInProps> = ({}) => {
       <ForgotEmailModal
         modalOpened={modalOpened}
         setModalOpened={() => setModalOpened(false)}
+        showPopup={() => {
+          setShowPopup(true);
+          setTimeout(() => {
+            setShowPopup(false);
+          }, 4000);
+        }}
       />
       <NavLink to={ROUTES.LANDING_PAGE}>
         <LogoContainer>
@@ -162,6 +168,8 @@ const SignIn: React.FC<SignInProps> = ({}) => {
           </NavLink>
         </SignUpChangeContent>
       </SignUpChangeWrapper>
+
+      <Popup showPopup={showPopup}>Email has been sent successfully!</Popup>
     </Wrapper>
   );
 };

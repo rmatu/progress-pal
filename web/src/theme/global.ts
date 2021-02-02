@@ -104,6 +104,8 @@ html{
   --grayText: ${(props) => props.theme.colors.grayText}
   --backgroundGray: ${(props) => props.theme.colors.backgroundGray}
   --backgroundDarkerGray: ${(props) => props.theme.colors.backgroundDarkerGray}
+  --errorTextColor: ${(props) => props.theme.colors.errorTextColor}
+  --successTextColor: ${(props) => props.theme.colors.successTextColor}
 
 input:focus,
 select:focus,
