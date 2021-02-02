@@ -1,6 +1,7 @@
 import { Field, Formik } from "formik";
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import GoogleLogin from "react-google-login";
 import { ReactComponent as Cancel } from "../../../assets/svg/cancel.svg";
 import { ReactComponent as EyeIcon } from "../../../assets/svg/eye.svg";
 import { ReactComponent as FacebookIcon } from "../../../assets/svg/facebook.svg";
@@ -8,12 +9,16 @@ import { ReactComponent as GoogleIcon } from "../../../assets/svg/google-plus.sv
 import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
 import { ReactComponent as Wave } from "../../../assets/svg/signUpWave.svg";
 import Footer from "../../../components/Footer/Footer";
-import { Button, Heading } from "../../../components/UI";
+import { Button, Heading, Popup } from "../../../components/UI";
 import { StyledForm } from "../../../components/UI/FormElements";
 import Input from "../../../components/UI/Input/Input";
 import Separator from "../../../components/UI/Separator/Separator";
 import * as ROUTES from "../../../constants/routes";
-import { useMeQuery, useSignUpMutation } from "../../../generated/graphql";
+import {
+  useMeQuery,
+  useSignUpMutation,
+  useSignUpWithGoogleMutation,
+} from "../../../generated/graphql";
 import { useRouter } from "../../../hooks/useRouter";
 import {
   SignUpFormTypes,
@@ -41,9 +46,33 @@ interface SignUpProps {}
 
 const SignUp: React.FC<SignUpProps> = ({}) => {
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(false);
+  const [errorPopup, setErrorPopup] = useState<boolean>(false);
+  const [signUpWithGoogle] = useSignUpWithGoogleMutation();
   const [signUp] = useSignUpMutation();
   const router = useRouter();
-  const { refetch } = useMeQuery();
+  const { data, refetch } = useMeQuery();
+
+  const responseGoogle = async (response: any) => {
+    const { email, googleId } = response.profileObj;
+    console.log("here");
+    try {
+      const res = await signUpWithGoogle({
+        variables: {
+          email,
+          googleId,
+        },
+      });
+      if (res.data?.signUpWithGoogle.user) {
+        await refetch();
+        router.push(ROUTES.HOME);
+      }
+    } catch (e) {
+      setErrorPopup(true);
+      setTimeout(() => {
+        setErrorPopup(false);
+      }, 5000);
+    }
+  };
 
   return (
     <Wrapper>
@@ -83,7 +112,16 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
           <AuthText>Sign up using social networks</AuthText>
           <SocialIcons>
             <FacebookIcon />
-            <GoogleIcon />
+            <GoogleLogin
+              clientId={process.env.REACT_APP_CLIENT_ID as string}
+              render={(renderProps) => (
+                <GoogleIcon onClick={renderProps.onClick} />
+              )}
+              buttonText="Login"
+              onSuccess={responseGoogle}
+              onFailure={responseGoogle}
+              cookiePolicy={"single_host_origin"}
+            />
           </SocialIcons>
           <RegistrationForm>
             <Separator />
@@ -102,7 +140,7 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
                   setErrors(toErrorMap(response.data.signUp.errors));
                 } else if (response.data?.signUp.user) {
                   await refetch();
-                  router.push("/verify-email");
+                  router.push(ROUTES.VERIFY_EMAIL);
                 }
                 setSubmitting(false);
               }}
@@ -167,6 +205,9 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
         </AuthContent>
         <Footer />
       </AuthWrapper>
+      <Popup showPopup={errorPopup} error={true}>
+        This email is already in use.
+      </Popup>
     </Wrapper>
   );
 };

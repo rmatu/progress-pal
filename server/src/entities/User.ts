@@ -29,6 +29,14 @@ export class User extends BaseEntity {
   @Column({ type: "boolean", default: false })
   emailVerified: boolean;
 
+  @Field(() => Boolean)
+  @Column({ type: "boolean", default: false })
+  googleRegisetered: boolean;
+
+  @Field(() => Boolean)
+  @Column({ type: "boolean", default: false })
+  facebookRegisetered: boolean;
+
   @Field(() => String)
   @Column({ nullable: true })
   subscriptionStart: Date;

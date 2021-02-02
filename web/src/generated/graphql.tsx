@@ -23,6 +23,8 @@ export type User = {
   email: Scalars['String'];
   isPremium: Scalars['Boolean'];
   emailVerified: Scalars['Boolean'];
+  googleRegisetered: Scalars['Boolean'];
+  facebookRegisetered: Scalars['Boolean'];
   subscriptionStart: Scalars['String'];
 };
 
@@ -32,6 +34,7 @@ export type Mutation = {
   sendResetPasswordEmail: Scalars['Boolean'];
   changePassword: UserResponse;
   confirmUser: Scalars['Boolean'];
+  signUpWithGoogle: UserResponse;
   signUp: UserResponse;
   signIn: UserResponse;
   logout: Scalars['Boolean'];
@@ -56,6 +59,12 @@ export type MutationChangePasswordArgs = {
 
 export type MutationConfirmUserArgs = {
   token: Scalars['String'];
+};
+
+
+export type MutationSignUpWithGoogleArgs = {
+  googleId: Scalars['String'];
+  email: Scalars['String'];
 };
 
 
@@ -185,6 +194,20 @@ export type SignUpMutationVariables = Exact<{
 export type SignUpMutation = (
   { __typename?: 'Mutation' }
   & { signUp: (
+    { __typename?: 'UserResponse' }
+    & RegularUserResponseFragment
+  ) }
+);
+
+export type SignUpWithGoogleMutationVariables = Exact<{
+  googleId: Scalars['String'];
+  email: Scalars['String'];
+}>;
+
+
+export type SignUpWithGoogleMutation = (
+  { __typename?: 'Mutation' }
+  & { signUpWithGoogle: (
     { __typename?: 'UserResponse' }
     & RegularUserResponseFragment
   ) }
@@ -446,6 +469,39 @@ export function useSignUpMutation(baseOptions?: Apollo.MutationHookOptions<SignU
 export type SignUpMutationHookResult = ReturnType<typeof useSignUpMutation>;
 export type SignUpMutationResult = Apollo.MutationResult<SignUpMutation>;
 export type SignUpMutationOptions = Apollo.BaseMutationOptions<SignUpMutation, SignUpMutationVariables>;
+export const SignUpWithGoogleDocument = gql`
+    mutation SignUpWithGoogle($googleId: String!, $email: String!) {
+  signUpWithGoogle(googleId: $googleId, email: $email) {
+    ...RegularUserResponse
+  }
+}
+    ${RegularUserResponseFragmentDoc}`;
+export type SignUpWithGoogleMutationFn = Apollo.MutationFunction<SignUpWithGoogleMutation, SignUpWithGoogleMutationVariables>;
+
+/**
+ * __useSignUpWithGoogleMutation__
+ *
+ * To run a mutation, you first call `useSignUpWithGoogleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignUpWithGoogleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signUpWithGoogleMutation, { data, loading, error }] = useSignUpWithGoogleMutation({
+ *   variables: {
+ *      googleId: // value for 'googleId'
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useSignUpWithGoogleMutation(baseOptions?: Apollo.MutationHookOptions<SignUpWithGoogleMutation, SignUpWithGoogleMutationVariables>) {
+        return Apollo.useMutation<SignUpWithGoogleMutation, SignUpWithGoogleMutationVariables>(SignUpWithGoogleDocument, baseOptions);
+      }
+export type SignUpWithGoogleMutationHookResult = ReturnType<typeof useSignUpWithGoogleMutation>;
+export type SignUpWithGoogleMutationResult = Apollo.MutationResult<SignUpWithGoogleMutation>;
+export type SignUpWithGoogleMutationOptions = Apollo.BaseMutationOptions<SignUpWithGoogleMutation, SignUpWithGoogleMutationVariables>;
 export const MeDocument = gql`
     query Me {
   me {

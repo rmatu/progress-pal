@@ -148,6 +148,55 @@ export class UserResolver {
   }
 
   @Mutation(() => UserResponse)
+  async signUpWithGoogle(
+    @Arg("email") email: string,
+    @Arg("googleId") googleId: string,
+    @Ctx() { req }: MyContext
+  ): Promise<UserResponse> {
+    // I don't know if this is worth doing, instead of making
+    // the password field nullable
+
+    const hashedPassword = await argon2.hash(googleId);
+    let user;
+
+    try {
+      const result = await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(User)
+        .values({
+          username: email,
+          email: email,
+          password: hashedPassword,
+          googleRegisetered: true,
+          emailVerified: true,
+        })
+        .returning("*")
+        .execute();
+      user = result.raw[0];
+    } catch (err) {
+      console.log(err.detail);
+      if (err.detail.includes("email")) {
+        return {
+          errors: [
+            {
+              field: "email",
+              message: "Email already taken",
+            },
+          ],
+        };
+      }
+    }
+
+    // store user id session
+    // this will set a cookie on the user
+    // keep them logged in
+    req.session.userId = user.id;
+
+    return { user };
+  }
+
+  @Mutation(() => UserResponse)
   async signUp(
     @Arg("options") options: UsernamePasswordInput,
     @Ctx() { req }: MyContext

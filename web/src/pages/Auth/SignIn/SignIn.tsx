@@ -42,6 +42,7 @@ import {
   StyledP,
   Wrapper,
 } from "./styles";
+import GoogleLogin from "react-google-login";
 
 interface SignInProps {}
 
@@ -52,6 +53,10 @@ const SignIn: React.FC<SignInProps> = ({}) => {
   const { refetch } = useMeQuery();
   const [signIn] = useSignInMutation();
   const router = useRouter();
+
+  const responseGoogle = (response: any) => {
+    console.log(response);
+  };
 
   return (
     <Wrapper>
@@ -84,7 +89,18 @@ const SignIn: React.FC<SignInProps> = ({}) => {
           <AuthText>Login using social networks</AuthText>
           <SocialIcons>
             <FacebookIcon />
-            <GoogleIcon />
+            <GoogleLogin
+              clientId={process.env.REACT_APP_CLIENT_ID as string}
+              render={(renderProps) => (
+                <GoogleIcon onClick={renderProps.onClick}>
+                  This is my custom Google button
+                </GoogleIcon>
+              )}
+              buttonText="Login"
+              onSuccess={responseGoogle}
+              onFailure={responseGoogle}
+              cookiePolicy={"single_host_origin"}
+            />
           </SocialIcons>
           <LoginForm>
             <Separator />

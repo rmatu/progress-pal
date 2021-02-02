@@ -1,13 +1,29 @@
 import styled from "styled-components/macro";
 
-export const Wrapper = styled.div<{ showPopup: boolean }>`
+interface WrapperProps {
+  showPopup: boolean;
+  success?: boolean | null;
+  error?: boolean | null;
+}
+
+export const Wrapper = styled.div<WrapperProps>`
   position: fixed;
   bottom: 0;
   right: 0;
   padding: 1em 2em;
   border-radius: 1em;
   margin: 0 1em 1em 0;
-  background-color: ${({ theme }) => theme.colors.orange};
+  background-color: ${({
+    error,
+    success,
+    theme: {
+      colors: { orange, errorTextColor },
+    },
+  }) => {
+    if (error) return errorTextColor;
+    if (success) return orange;
+    else return orange;
+  }};
   color: white;
   font-weight: 500;
   transform: ${({ showPopup }) =>
@@ -19,4 +35,5 @@ export const Wrapper = styled.div<{ showPopup: boolean }>`
   box-shadow: 0px 3px 19px 0px rgba(0, 0, 0, 0.75);
 
   transition: all 1s;
+  z-index: 1000;
 `;
