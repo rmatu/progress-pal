@@ -102,7 +102,7 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
                   setErrors(toErrorMap(response.data.signUp.errors));
                 } else if (response.data?.signUp.user) {
                   await refetch();
-                  await router.push("/verify-email");
+                  router.push("/verify-email");
                 }
                 setSubmitting(false);
               }}

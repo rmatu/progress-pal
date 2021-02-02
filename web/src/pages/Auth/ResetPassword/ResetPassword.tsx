@@ -16,7 +16,7 @@ import {
   FieldWrapper,
 } from "./styles";
 import * as ROUTES from "../../../constants/routes";
-import { Button, Heading } from "../../../components/UI";
+import { Button, Heading, Popup } from "../../../components/UI";
 import Footer from "../../../components/Footer/Footer";
 import { Field, Formik } from "formik";
 import Input from "../../../components/UI/Input/Input";
@@ -32,6 +32,7 @@ interface ResetPasswordProps {}
 
 const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
   const [changePassword] = useChangePasswordMutation();
   const { token }: any = useParams();
   const router = useRouter();
@@ -41,7 +42,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
       <LogoContainer>
         <Logo />
       </LogoContainer>
-      <NavLink to={ROUTES.LANDING_PAGE}>
+      <NavLink to={ROUTES.SIGN_IN}>
         <GoBack>
           <Cancel />
         </GoBack>
@@ -70,8 +71,11 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
                 token,
               },
             });
-            await setSubmitting(false);
-            await router.push("/sign-in");
+            setSubmitting(false);
+            setShowPopup(true);
+            setTimeout(() => {
+              router.push("/sign-in");
+            }, 4000);
           }}
         >
           {({ isSubmitting, isValid }) => (
@@ -112,6 +116,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
           The request is valid for <span>10 min</span>
         </ExpirationText>
       </Content>
+      <Popup showPopup={showPopup}>Email has been sent successfully!</Popup>
       <Footer />
     </Wrapper>
   );

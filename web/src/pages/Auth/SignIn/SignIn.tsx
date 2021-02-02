@@ -8,7 +8,13 @@ import { ReactComponent as GoogleIcon } from "../../../assets/svg/google-plus.sv
 import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
 import { ReactComponent as Wave } from "../../../assets/svg/signInWave.svg";
 import Footer from "../../../components/Footer/Footer";
-import { Button, Heading, Input, Separator } from "../../../components/UI";
+import {
+  Button,
+  Heading,
+  Input,
+  Separator,
+  Popup,
+} from "../../../components/UI";
 import { StyledForm } from "../../../components/UI/FormElements";
 import * as ROUTES from "../../../constants/routes";
 import { useMeQuery, useSignInMutation } from "../../../generated/graphql";
@@ -35,7 +41,6 @@ import {
   SocialIcons,
   StyledP,
   Wrapper,
-  Popup,
 } from "./styles";
 
 interface SignInProps {}
