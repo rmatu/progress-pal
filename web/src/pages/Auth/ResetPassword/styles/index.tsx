@@ -11,6 +11,7 @@ export const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  position: relative;
 
   @media (max-width: 600px) {
     h1 {
@@ -102,6 +103,18 @@ export const Content = styled.div`
   -webkit-box-shadow: 0px 3px 19px 0px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 0px 3px 19px 0px rgba(0, 0, 0, 0.5);
   box-shadow: 0px 3px 19px 0px rgba(0, 0, 0, 0.5);
+
+  .lockSvg {
+    width: 10em;
+    height: 10em;
+  }
+
+  @media (max-width: 600px) {
+    .lockSvg {
+      width: 7em;
+      height: 7em;
+    }
+  }
 `;
 
 export const ExpirationText = styled.p`

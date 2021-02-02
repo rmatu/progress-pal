@@ -128,7 +128,7 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
                     </FieldWrapper>
                   </FieldRow>
                   <FieldRow>
-                    <FieldWrapper>
+                    <FieldWrapper active={passwordVisibility}>
                       <Field
                         type={passwordVisibility ? "text" : "password"}
                         name="password"
@@ -148,13 +148,7 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
                         name="confirmPassword"
                         placeholder="Confirm password"
                         component={Input}
-                      >
-                        <EyeIcon
-                          onClick={() =>
-                            setPasswordVisibility(!passwordVisibility)
-                          }
-                        />
-                      </Field>
+                      ></Field>
                     </FieldWrapper>
                   </FieldRow>
                   <Button

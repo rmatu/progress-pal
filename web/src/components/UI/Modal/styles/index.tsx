@@ -12,7 +12,7 @@ export const WrappedModal = styled.div<WrappedModalProps>`
     opened ? "translate(-50%, -50%)" : "translate(-50%, -150%)"};
   z-index: 1500;
   width: 90%;
-  max-width: 40em;
+  max-width: 36em;
   display: flex;
   opacity: ${({ opened }) => (opened ? "1" : "0")};
   visibility: ${({ opened }) => (opened ? "visible" : "hidden")};
@@ -26,14 +26,15 @@ export const WrappedModal = styled.div<WrappedModalProps>`
   transition: all 0.1s;
   color: white;
 
-  svg {
+  .cancel {
     position: absolute;
     height: 1em;
     width: 1em;
     top: 1em;
     right: 1em;
     fill: #fff;
-    &:hover {
+
+    :hover {
       cursor: pointer;
     }
   }

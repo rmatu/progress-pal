@@ -18,7 +18,7 @@ const Modal = React.memo<ModalProps>(
       <>
         <Backdrop opened={opened} close={close} />
         <WrappedModal opened={opened}>
-          <CancelIcon onClick={close} />
+          <CancelIcon className="cancel" onClick={close} />
           {children}
         </WrappedModal>
       </>,

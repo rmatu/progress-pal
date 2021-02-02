@@ -11,10 +11,10 @@ import {
   VerifyEmail,
   ConfirmEmail,
   ResetPassword,
-} from "./containers/Auth";
-import Home from "./containers/Home/Home";
-import LandingPage from "./containers/LandingPage/LandingPage";
-import Account from "./containers/Account/Account";
+} from "./pages/Auth";
+import Home from "./pages/Home/Home";
+import LandingPage from "./pages/LandingPage/LandingPage";
+import Account from "./pages/Account/Account";
 import { withEmail } from "./services/email.service";
 
 const App: React.FC = () => (

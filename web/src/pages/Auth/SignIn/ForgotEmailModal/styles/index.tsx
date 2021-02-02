@@ -16,3 +16,16 @@ export const StyledP = styled.p`
 export const StyledForm = styled(Form)`
   width: 85%;
 `;
+
+export const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  .lockSvg {
+    width: 5em;
+    height: 5em;
+    margin-bottom: 1em;
+  }
+`;

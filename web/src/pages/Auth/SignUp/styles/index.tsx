@@ -170,8 +170,14 @@ export const RegistrationForm = styled.div`
   }
 `;
 
-export const FieldWrapper = styled.div`
+export const FieldWrapper = styled.div<{ active?: boolean }>`
   width: 24em;
+
+  svg {
+    fill: ${({ active }) => (active ? "#FE5000" : "#75757E")};
+
+    transition: all 0.1s;
+  }
 
   @media (max-width: 1100px) {
     width: 100%;

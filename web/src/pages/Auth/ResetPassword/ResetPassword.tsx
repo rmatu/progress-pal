@@ -3,6 +3,8 @@ import { NavLink, useParams } from "react-router-dom";
 import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
 import { ReactComponent as Cancel } from "../../../assets/svg/cancel.svg";
 import { ReactComponent as EyeIcon } from "../../../assets/svg/eye.svg";
+import { ReactComponent as LockIcon } from "../../../assets/svg/lock.svg";
+
 import {
   LogoContainer,
   Wrapper,
@@ -48,6 +50,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
         <Heading size="h1" marginB="0" color="white">
           Password Reset
         </Heading>
+        <LockIcon className="lockSvg"></LockIcon>
 
         <StyledP>
           Please note that when changing your password, we ask you to set

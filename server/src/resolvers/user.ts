@@ -94,6 +94,36 @@ export class UserResolver {
     return true;
   }
 
+  @Mutation(() => UserResponse)
+  async changePassword(
+    @Arg("password") password: string,
+    @Arg("token") token: string
+  ): Promise<UserResponse> {
+    const userId = await redis.get(token);
+
+    if (!userId) {
+      return {
+        errors: [
+          {
+            field: "",
+            message: "Request expired",
+          },
+        ],
+      };
+    }
+
+    const hashedPassword = await argon2.hash(password);
+
+    await User.update(
+      { id: parseInt(userId, 10) },
+      { password: hashedPassword }
+    );
+
+    const user = await User.findOne(userId);
+
+    return { user };
+  }
+
   @Mutation(() => Boolean)
   async confirmUser(@Arg("token") token: string): Promise<boolean> {
     const userId = await redis.get(token);
