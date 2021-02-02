@@ -319,6 +319,47 @@ export class UserResolver {
     };
   }
 
+  @Mutation(() => UserResponse)
+  async signInWithGoogle(
+    @Arg("email") email: string,
+    @Arg("googleId") googleId: string,
+    @Ctx() { req }: MyContext
+  ): Promise<UserResponse> {
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return {
+        errors: [
+          {
+            field: "",
+            message: "You have to register this account first",
+          },
+        ],
+      };
+    }
+
+    const valid = await argon2.verify(user.password, googleId);
+
+    console.log(valid);
+    if (!valid) {
+      return {
+        errors: [
+          {
+            field: "",
+            message: "Incorrect password",
+          },
+        ],
+      };
+    }
+
+    // Setting the cookie
+    req.session.userId = user.id;
+
+    return {
+      user,
+    };
+  }
+
   @Mutation(() => Boolean)
   logout(@Ctx() { req, res }: MyContext) {
     return new Promise((resolve) =>

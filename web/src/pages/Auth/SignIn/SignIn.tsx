@@ -17,7 +17,12 @@ import {
 } from "../../../components/UI";
 import { StyledForm } from "../../../components/UI/FormElements";
 import * as ROUTES from "../../../constants/routes";
-import { useMeQuery, useSignInMutation } from "../../../generated/graphql";
+import {
+  useMeQuery,
+  useSignInMutation,
+  useSignInWithGoogleMutation,
+  useSignUpWithGoogleMutation,
+} from "../../../generated/graphql";
 import { useRouter } from "../../../hooks/useRouter";
 import {
   SignInFormTypes,
@@ -49,17 +54,47 @@ interface SignInProps {}
 const SignIn: React.FC<SignInProps> = ({}) => {
   const [modalOpened, setModalOpened] = useState<boolean>(false);
   const [showPopup, setShowPopup] = useState<boolean>(false);
+  const [errorText, setErrorText] = useState<string>("");
+  const [showErrorPopup, setShowErrorPopup] = useState<boolean>(false);
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(false);
   const { refetch } = useMeQuery();
   const [signIn] = useSignInMutation();
+  const [signInWithGoogle] = useSignInWithGoogleMutation();
   const router = useRouter();
 
-  const responseGoogle = (response: any) => {
-    console.log(response);
+  const responseGoogle = async (response: any) => {
+    const { email, googleId } = response.profileObj;
+    try {
+      const res = await signInWithGoogle({
+        variables: {
+          email,
+          googleId,
+        },
+      });
+      if (res.data?.signInWithGoogle.user) {
+        await refetch();
+        router.push(ROUTES.HOME);
+      }
+      if (res.data?.signInWithGoogle.errors) {
+        setErrorText(res.data?.signInWithGoogle.errors[0].message);
+        setShowErrorPopup(true);
+        setTimeout(() => {
+          setShowErrorPopup(false);
+        }, 5000);
+      }
+    } catch (e) {
+      setShowErrorPopup(true);
+      setTimeout(() => {
+        setShowErrorPopup(false);
+      }, 5000);
+    }
   };
 
   return (
     <Wrapper>
+      <Popup showPopup={showErrorPopup} error={true}>
+        {errorText}
+      </Popup>
       <ForgotEmailModal
         modalOpened={modalOpened}
         setModalOpened={() => setModalOpened(false)}

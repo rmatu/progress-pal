@@ -50,7 +50,7 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
   const [signUpWithGoogle] = useSignUpWithGoogleMutation();
   const [signUp] = useSignUpMutation();
   const router = useRouter();
-  const { data, refetch } = useMeQuery();
+  const { refetch } = useMeQuery();
 
   const responseGoogle = async (response: any) => {
     const { email, googleId } = response.profileObj;
