@@ -62,28 +62,30 @@ const SignIn: React.FC<SignInProps> = ({}) => {
   const router = useRouter();
 
   const responseGoogle = async (response: any) => {
-    const { email } = response.profileObj;
-    try {
-      const res = await signInWithGoogle({
-        variables: {
-          email,
-        },
-      });
-      if (res.data?.signInWithGoogle.user) {
-        await refetch();
-        router.push(ROUTES.HOME);
-      } else if (res.data?.signInWithGoogle.errors) {
-        setErrorText(res.data?.signInWithGoogle.errors[0].message);
+    if (response.profileObj) {
+      const { email } = response.profileObj;
+      try {
+        const res = await signInWithGoogle({
+          variables: {
+            email,
+          },
+        });
+        if (res.data?.signInWithGoogle.user) {
+          await refetch();
+          router.push(ROUTES.HOME);
+        } else if (res.data?.signInWithGoogle.errors) {
+          setErrorText(res.data?.signInWithGoogle.errors[0].message);
+          setShowErrorPopup(true);
+          setTimeout(() => {
+            setShowErrorPopup(false);
+          });
+        }
+      } catch (e) {
         setShowErrorPopup(true);
         setTimeout(() => {
           setShowErrorPopup(false);
-        });
+        }, 5000);
       }
-    } catch (e) {
-      setShowErrorPopup(true);
-      setTimeout(() => {
-        setShowErrorPopup(false);
-      }, 5000);
     }
   };
 
