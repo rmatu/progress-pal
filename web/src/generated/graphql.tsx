@@ -35,9 +35,11 @@ export type Mutation = {
   changePassword: UserResponse;
   confirmUser: Scalars['Boolean'];
   signUpWithGoogle: UserResponse;
+  signUpWithFacebook: UserResponse;
   signUp: UserResponse;
   signIn: UserResponse;
   signInWithGoogle: UserResponse;
+  signInWithFacebook: UserResponse;
   logout: Scalars['Boolean'];
 };
 
@@ -68,6 +70,11 @@ export type MutationSignUpWithGoogleArgs = {
 };
 
 
+export type MutationSignUpWithFacebookArgs = {
+  email: Scalars['String'];
+};
+
+
 export type MutationSignUpArgs = {
   options: UsernamePasswordInput;
 };
@@ -80,6 +87,11 @@ export type MutationSignInArgs = {
 
 
 export type MutationSignInWithGoogleArgs = {
+  email: Scalars['String'];
+};
+
+
+export type MutationSignInWithFacebookArgs = {
   email: Scalars['String'];
 };
 
@@ -191,6 +203,19 @@ export type SignInMutation = (
   ) }
 );
 
+export type SignInWithFacebookMutationVariables = Exact<{
+  email: Scalars['String'];
+}>;
+
+
+export type SignInWithFacebookMutation = (
+  { __typename?: 'Mutation' }
+  & { signInWithFacebook: (
+    { __typename?: 'UserResponse' }
+    & RegularUserResponseFragment
+  ) }
+);
+
 export type SignInWithGoogleMutationVariables = Exact<{
   email: Scalars['String'];
 }>;
@@ -212,6 +237,19 @@ export type SignUpMutationVariables = Exact<{
 export type SignUpMutation = (
   { __typename?: 'Mutation' }
   & { signUp: (
+    { __typename?: 'UserResponse' }
+    & RegularUserResponseFragment
+  ) }
+);
+
+export type SignUpWithFacebookMutationVariables = Exact<{
+  email: Scalars['String'];
+}>;
+
+
+export type SignUpWithFacebookMutation = (
+  { __typename?: 'Mutation' }
+  & { signUpWithFacebook: (
     { __typename?: 'UserResponse' }
     & RegularUserResponseFragment
   ) }
@@ -454,6 +492,38 @@ export function useSignInMutation(baseOptions?: Apollo.MutationHookOptions<SignI
 export type SignInMutationHookResult = ReturnType<typeof useSignInMutation>;
 export type SignInMutationResult = Apollo.MutationResult<SignInMutation>;
 export type SignInMutationOptions = Apollo.BaseMutationOptions<SignInMutation, SignInMutationVariables>;
+export const SignInWithFacebookDocument = gql`
+    mutation SignInWithFacebook($email: String!) {
+  signInWithFacebook(email: $email) {
+    ...RegularUserResponse
+  }
+}
+    ${RegularUserResponseFragmentDoc}`;
+export type SignInWithFacebookMutationFn = Apollo.MutationFunction<SignInWithFacebookMutation, SignInWithFacebookMutationVariables>;
+
+/**
+ * __useSignInWithFacebookMutation__
+ *
+ * To run a mutation, you first call `useSignInWithFacebookMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignInWithFacebookMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signInWithFacebookMutation, { data, loading, error }] = useSignInWithFacebookMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useSignInWithFacebookMutation(baseOptions?: Apollo.MutationHookOptions<SignInWithFacebookMutation, SignInWithFacebookMutationVariables>) {
+        return Apollo.useMutation<SignInWithFacebookMutation, SignInWithFacebookMutationVariables>(SignInWithFacebookDocument, baseOptions);
+      }
+export type SignInWithFacebookMutationHookResult = ReturnType<typeof useSignInWithFacebookMutation>;
+export type SignInWithFacebookMutationResult = Apollo.MutationResult<SignInWithFacebookMutation>;
+export type SignInWithFacebookMutationOptions = Apollo.BaseMutationOptions<SignInWithFacebookMutation, SignInWithFacebookMutationVariables>;
 export const SignInWithGoogleDocument = gql`
     mutation SignInWithGoogle($email: String!) {
   signInWithGoogle(email: $email) {
@@ -518,6 +588,38 @@ export function useSignUpMutation(baseOptions?: Apollo.MutationHookOptions<SignU
 export type SignUpMutationHookResult = ReturnType<typeof useSignUpMutation>;
 export type SignUpMutationResult = Apollo.MutationResult<SignUpMutation>;
 export type SignUpMutationOptions = Apollo.BaseMutationOptions<SignUpMutation, SignUpMutationVariables>;
+export const SignUpWithFacebookDocument = gql`
+    mutation SignUpWithFacebook($email: String!) {
+  signUpWithFacebook(email: $email) {
+    ...RegularUserResponse
+  }
+}
+    ${RegularUserResponseFragmentDoc}`;
+export type SignUpWithFacebookMutationFn = Apollo.MutationFunction<SignUpWithFacebookMutation, SignUpWithFacebookMutationVariables>;
+
+/**
+ * __useSignUpWithFacebookMutation__
+ *
+ * To run a mutation, you first call `useSignUpWithFacebookMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignUpWithFacebookMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signUpWithFacebookMutation, { data, loading, error }] = useSignUpWithFacebookMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useSignUpWithFacebookMutation(baseOptions?: Apollo.MutationHookOptions<SignUpWithFacebookMutation, SignUpWithFacebookMutationVariables>) {
+        return Apollo.useMutation<SignUpWithFacebookMutation, SignUpWithFacebookMutationVariables>(SignUpWithFacebookDocument, baseOptions);
+      }
+export type SignUpWithFacebookMutationHookResult = ReturnType<typeof useSignUpWithFacebookMutation>;
+export type SignUpWithFacebookMutationResult = Apollo.MutationResult<SignUpWithFacebookMutation>;
+export type SignUpWithFacebookMutationOptions = Apollo.BaseMutationOptions<SignUpWithFacebookMutation, SignUpWithFacebookMutationVariables>;
 export const SignUpWithGoogleDocument = gql`
     mutation SignUpWithGoogle($email: String!) {
   signUpWithGoogle(email: $email) {

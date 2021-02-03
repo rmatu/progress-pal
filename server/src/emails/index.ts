@@ -404,7 +404,7 @@ export const createVerificationEmail = (email: string, url: string) => {
   };
 };
 
-export const createGoogleSignUpEmail = (email: string) => {
+export const createThirdPartySignUpEmail = (email: string) => {
   return {
     from: "ProgressPal <progresspal.app@gmail.com>", // sender address
     to: email, // list of receivers

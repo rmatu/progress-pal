@@ -17,6 +17,7 @@ import * as ROUTES from "../../../constants/routes";
 import {
   useMeQuery,
   useSignUpMutation,
+  useSignUpWithFacebookMutation,
   useSignUpWithGoogleMutation,
 } from "../../../generated/graphql";
 import { useRouter } from "../../../hooks/useRouter";
@@ -26,6 +27,8 @@ import {
   SignUpSchema,
 } from "../../../utils/formSchemas";
 import { toErrorMap } from "../../../utils/toErrorMap";
+// @ts-ignore
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import {
   AuthText,
   AuthWrapper,
@@ -44,10 +47,16 @@ import {
 
 interface SignUpProps {}
 
+/**
+ * TODO: Facebook login has to be called from https page. Http is not secured right now.
+ * TODO: Login with Facebook and Google could be extracted from here and be more generic
+ */
+
 const SignUp: React.FC<SignUpProps> = ({}) => {
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(false);
   const [errorPopup, setErrorPopup] = useState<boolean>(false);
   const [signUpWithGoogle] = useSignUpWithGoogleMutation();
+  const [signUpWithFacebook] = useSignUpWithFacebookMutation();
   const [signUp] = useSignUpMutation();
   const router = useRouter();
   const { refetch } = useMeQuery();
@@ -63,6 +72,33 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
       if (res.data?.signUpWithGoogle.user) {
         await refetch();
         router.push(ROUTES.HOME);
+      }
+    } catch (e) {
+      setErrorPopup(true);
+      setTimeout(() => {
+        setErrorPopup(false);
+      }, 5000);
+    }
+  };
+
+  const responseFacebook = async (response: any) => {
+    console.log(response);
+
+    const { email } = response;
+    try {
+      const res = await signUpWithFacebook({
+        variables: {
+          email,
+        },
+      });
+      if (res.data?.signUpWithFacebook.user) {
+        await refetch();
+        router.push(ROUTES.HOME);
+      } else if (res.data?.signUpWithFacebook.errors) {
+        setErrorPopup(true);
+        setTimeout(() => {
+          setErrorPopup(false);
+        });
       }
     } catch (e) {
       setErrorPopup(true);
@@ -109,7 +145,15 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
           </Heading>
           <AuthText>Sign up using social networks</AuthText>
           <SocialIcons>
-            <FacebookIcon />
+            <FacebookLogin
+              appId={process.env.REACT_APP_FACEBOOK_APP_ID}
+              callback={responseFacebook}
+              fields="email"
+              // @ts-ignore
+              render={(renderProps) => (
+                <FacebookIcon onClick={renderProps.onClick} />
+              )}
+            />
             <GoogleLogin
               clientId={process.env.REACT_APP_CLIENT_ID as string}
               render={(renderProps) => (

@@ -19,7 +19,7 @@ import { COOKIE_NAME } from "../constants";
 import { redis } from "../redis";
 import { sendEmail } from "../utils/sendEmail";
 import {
-  createGoogleSignUpEmail,
+  createThirdPartySignUpEmail,
   createResetPasswordEmail,
   createVerificationEmail,
 } from "../emails";
@@ -181,7 +181,44 @@ export class UserResolver {
     // keep them logged in
     req.session.userId = user.id;
 
-    const emailObject = createGoogleSignUpEmail(email);
+    const emailObject = createThirdPartySignUpEmail(email);
+
+    await sendEmail(emailObject);
+
+    return { user };
+  }
+
+  @Mutation(() => UserResponse)
+  async signUpWithFacebook(
+    @Arg("email") email: string,
+    @Ctx() { req }: MyContext
+  ): Promise<UserResponse> {
+    let user;
+
+    try {
+      const result = await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(User)
+        .values({
+          username: email,
+          email: email,
+          facebookRegisetered: true,
+          emailVerified: true,
+        })
+        .returning("*")
+        .execute();
+      user = result.raw[0];
+    } catch (err) {
+      console.log(err.detail);
+    }
+
+    // store user id session
+    // this will set a cookie on the user
+    // keep them logged in
+    req.session.userId = user.id;
+
+    const emailObject = createThirdPartySignUpEmail(email);
 
     await sendEmail(emailObject);
 
@@ -365,7 +402,61 @@ export class UserResolver {
       // keep them logged in
       req.session.userId = newUser.id;
 
-      const emailObject = createGoogleSignUpEmail(email);
+      const emailObject = createThirdPartySignUpEmail(email);
+
+      await sendEmail(emailObject);
+
+      return { user: newUser };
+    }
+
+    req.session.userId = user.id;
+
+    return { user };
+  }
+
+  @Mutation(() => UserResponse)
+  async signInWithFacebook(
+    @Arg("email") email: string,
+    @Ctx() { req }: MyContext
+  ): Promise<UserResponse> {
+    const user = await User.findOne({ where: { email } });
+
+    // If there is no user register at this email, create a new one
+    if (!user) {
+      let newUser;
+
+      try {
+        const result = await getConnection()
+          .createQueryBuilder()
+          .insert()
+          .into(User)
+          .values({
+            username: email,
+            email: email,
+            facebookRegisetered: true,
+            emailVerified: true,
+          })
+          .returning("*")
+          .execute();
+        newUser = result.raw[0];
+      } catch (err) {
+        console.log(err.detail);
+        return {
+          errors: [
+            {
+              field: "Popup",
+              message: "There was some error when logging to this account.",
+            },
+          ],
+        };
+      }
+
+      // store user id session
+      // this will set a cookie on the user
+      // keep them logged in
+      req.session.userId = newUser.id;
+
+      const emailObject = createThirdPartySignUpEmail(email);
 
       await sendEmail(emailObject);
 

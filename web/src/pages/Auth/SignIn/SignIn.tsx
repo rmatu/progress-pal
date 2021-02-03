@@ -20,6 +20,7 @@ import * as ROUTES from "../../../constants/routes";
 import {
   useMeQuery,
   useSignInMutation,
+  useSignInWithFacebookMutation,
   useSignInWithGoogleMutation,
 } from "../../../generated/graphql";
 import { useRouter } from "../../../hooks/useRouter";
@@ -47,8 +48,15 @@ import {
   Wrapper,
 } from "./styles";
 import GoogleLogin from "react-google-login";
+//@ts-ignore
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 
 interface SignInProps {}
+
+/**
+ * TODO: Facebook login has to be called from https page. Http is not secured right now.
+ * TODO: Login with Facebook and Google could be extracted from here and be more generic
+ */
 
 const SignIn: React.FC<SignInProps> = ({}) => {
   const [modalOpened, setModalOpened] = useState<boolean>(false);
@@ -59,6 +67,7 @@ const SignIn: React.FC<SignInProps> = ({}) => {
   const { refetch } = useMeQuery();
   const [signIn] = useSignInMutation();
   const [signInWithGoogle] = useSignInWithGoogleMutation();
+  const [signInWithFacebook] = useSignInWithFacebookMutation();
   const router = useRouter();
 
   const responseGoogle = async (response: any) => {
@@ -86,6 +95,34 @@ const SignIn: React.FC<SignInProps> = ({}) => {
           setShowErrorPopup(false);
         }, 5000);
       }
+    }
+  };
+
+  const responseFacebook = async (response: any) => {
+    console.log(response);
+
+    const { email } = response;
+    try {
+      const res = await signInWithFacebook({
+        variables: {
+          email,
+        },
+      });
+      if (res.data?.signInWithFacebook.user) {
+        await refetch();
+        router.push(ROUTES.HOME);
+      } else if (res.data?.signInWithFacebook.errors) {
+        setErrorText(res.data?.signInWithFacebook.errors[0].message);
+        setShowErrorPopup(true);
+        setTimeout(() => {
+          setShowErrorPopup(false);
+        });
+      }
+    } catch (e) {
+      setShowErrorPopup(true);
+      setTimeout(() => {
+        setShowErrorPopup(false);
+      }, 5000);
     }
   };
 
@@ -119,13 +156,19 @@ const SignIn: React.FC<SignInProps> = ({}) => {
           </Heading>
           <AuthText>Login using social networks</AuthText>
           <SocialIcons>
-            <FacebookIcon />
+            <FacebookLogin
+              appId={process.env.REACT_APP_FACEBOOK_APP_ID}
+              callback={responseFacebook}
+              fields="email"
+              // @ts-ignore
+              render={(renderProps) => (
+                <FacebookIcon onClick={renderProps.onClick} />
+              )}
+            />
             <GoogleLogin
               clientId={process.env.REACT_APP_CLIENT_ID as string}
               render={(renderProps) => (
-                <GoogleIcon onClick={renderProps.onClick}>
-                  This is my custom Google button
-                </GoogleIcon>
+                <GoogleIcon onClick={renderProps.onClick} />
               )}
               buttonText="Login"
               onSuccess={responseGoogle}

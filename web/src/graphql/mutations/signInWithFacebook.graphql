@@ -1,0 +1,5 @@
+mutation SignInWithFacebook($email: String!) {
+  signInWithFacebook(email: $email) {
+    ...RegularUserResponse
+  }
+}
