@@ -53,13 +53,11 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
   const { refetch } = useMeQuery();
 
   const responseGoogle = async (response: any) => {
-    const { email, googleId } = response.profileObj;
-    console.log("here");
+    const { email } = response.profileObj;
     try {
       const res = await signUpWithGoogle({
         variables: {
           email,
-          googleId,
         },
       });
       if (res.data?.signUpWithGoogle.user) {

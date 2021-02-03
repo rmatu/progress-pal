@@ -18,8 +18,8 @@ export class User extends BaseEntity {
   email!: string;
 
   // This could not be selected from GraphQL
-  @Column()
-  password!: string;
+  @Column({ nullable: true })
+  password: string;
 
   @Field(() => Boolean)
   @Column({ type: "boolean", default: false })

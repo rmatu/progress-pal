@@ -150,13 +150,8 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async signUpWithGoogle(
     @Arg("email") email: string,
-    @Arg("googleId") googleId: string,
     @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
-    // I don't know if this is worth doing, instead of making
-    // the password field nullable
-
-    const hashedPassword = await argon2.hash(googleId);
     let user;
 
     try {
@@ -167,7 +162,6 @@ export class UserResolver {
         .values({
           username: email,
           email: email,
-          password: hashedPassword,
           googleRegisetered: true,
           emailVerified: true,
         })
@@ -176,16 +170,6 @@ export class UserResolver {
       user = result.raw[0];
     } catch (err) {
       console.log(err.detail);
-      if (err.detail.includes("email")) {
-        return {
-          errors: [
-            {
-              field: "email",
-              message: "Email already taken",
-            },
-          ],
-        };
-      }
     }
 
     // store user id session
@@ -276,6 +260,18 @@ export class UserResolver {
         : { where: { username: usernameOrEmail } }
     );
 
+    // This email is associated with registered with Google button
+    if (user?.googleRegisetered) {
+      return {
+        errors: [
+          {
+            field: "Popup",
+            message: "Use the Google Button to sign in",
+          },
+        ],
+      };
+    }
+
     if (!user && usernameOrEmail.includes("@")) {
       return {
         errors: [
@@ -322,42 +318,51 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async signInWithGoogle(
     @Arg("email") email: string,
-    @Arg("googleId") googleId: string,
     @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
     const user = await User.findOne({ where: { email } });
 
+    // If there is no user register at this email, create a new one
     if (!user) {
-      return {
-        errors: [
-          {
-            field: "",
-            message: "You have to register this account first",
-          },
-        ],
-      };
+      let newUser;
+
+      try {
+        const result = await getConnection()
+          .createQueryBuilder()
+          .insert()
+          .into(User)
+          .values({
+            username: email,
+            email: email,
+            googleRegisetered: true,
+            emailVerified: true,
+          })
+          .returning("*")
+          .execute();
+        newUser = result.raw[0];
+      } catch (err) {
+        console.log(err.detail);
+        return {
+          errors: [
+            {
+              field: "Popup",
+              message: "There was some error when logging to this account.",
+            },
+          ],
+        };
+      }
+
+      // store user id session
+      // this will set a cookie on the user
+      // keep them logged in
+      req.session.userId = newUser.id;
+
+      return { user: newUser };
     }
 
-    const valid = await argon2.verify(user.password, googleId);
-
-    console.log(valid);
-    if (!valid) {
-      return {
-        errors: [
-          {
-            field: "",
-            message: "Incorrect password",
-          },
-        ],
-      };
-    }
-
-    // Setting the cookie
     req.session.userId = user.id;
 
-    return {
-      user,
-    };
+    return { user };
   }
 
   @Mutation(() => Boolean)

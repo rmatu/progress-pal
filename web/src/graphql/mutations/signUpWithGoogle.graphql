@@ -1,5 +1,5 @@
-mutation SignUpWithGoogle($googleId: String!, $email: String!) {
-  signUpWithGoogle(googleId: $googleId, email: $email) {
+mutation SignUpWithGoogle($email: String!) {
+  signUpWithGoogle(email: $email) {
     ...RegularUserResponse
   }
 }

@@ -21,7 +21,6 @@ import {
   useMeQuery,
   useSignInMutation,
   useSignInWithGoogleMutation,
-  useSignUpWithGoogleMutation,
 } from "../../../generated/graphql";
 import { useRouter } from "../../../hooks/useRouter";
 import {
@@ -63,24 +62,23 @@ const SignIn: React.FC<SignInProps> = ({}) => {
   const router = useRouter();
 
   const responseGoogle = async (response: any) => {
-    const { email, googleId } = response.profileObj;
+    const { email } = response.profileObj;
     try {
       const res = await signInWithGoogle({
         variables: {
           email,
-          googleId,
         },
       });
+      console.log(res);
       if (res.data?.signInWithGoogle.user) {
         await refetch();
         router.push(ROUTES.HOME);
-      }
-      if (res.data?.signInWithGoogle.errors) {
+      } else if (res.data?.signInWithGoogle.errors) {
         setErrorText(res.data?.signInWithGoogle.errors[0].message);
         setShowErrorPopup(true);
         setTimeout(() => {
           setShowErrorPopup(false);
-        }, 5000);
+        });
       }
     } catch (e) {
       setShowErrorPopup(true);
@@ -92,9 +90,6 @@ const SignIn: React.FC<SignInProps> = ({}) => {
 
   return (
     <Wrapper>
-      <Popup showPopup={showErrorPopup} error={true}>
-        {errorText}
-      </Popup>
       <ForgotEmailModal
         modalOpened={modalOpened}
         setModalOpened={() => setModalOpened(false)}
@@ -151,11 +146,18 @@ const SignIn: React.FC<SignInProps> = ({}) => {
                 const response = await signIn({ variables: values });
                 if (response.data?.signIn.errors) {
                   setErrors(toErrorMap(response.data?.signIn.errors));
+                  if (response.data?.signIn.errors[0].field === "Popup") {
+                    setErrorText(response.data?.signIn.errors[0].message);
+                    setShowErrorPopup(true);
+                    setTimeout(() => {
+                      setShowErrorPopup(false);
+                    }, 5000);
+                  }
                 } else if (response.data?.signIn.user) {
                   await refetch();
-                  await router.push("/home");
+                  router.push("/home");
                 }
-                await setSubmitting(false);
+                setSubmitting(false);
               }}
             >
               {({ isSubmitting, isValid }) => (
@@ -224,6 +226,9 @@ const SignIn: React.FC<SignInProps> = ({}) => {
           </NavLink>
         </SignUpChangeContent>
       </SignUpChangeWrapper>
+      <Popup showPopup={showErrorPopup} error={true}>
+        {errorText}
+      </Popup>
 
       <Popup showPopup={showPopup}>Email has been sent successfully!</Popup>
     </Wrapper>

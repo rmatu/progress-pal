@@ -64,7 +64,6 @@ export type MutationConfirmUserArgs = {
 
 
 export type MutationSignUpWithGoogleArgs = {
-  googleId: Scalars['String'];
   email: Scalars['String'];
 };
 
@@ -81,7 +80,6 @@ export type MutationSignInArgs = {
 
 
 export type MutationSignInWithGoogleArgs = {
-  googleId: Scalars['String'];
   email: Scalars['String'];
 };
 
@@ -195,7 +193,6 @@ export type SignInMutation = (
 
 export type SignInWithGoogleMutationVariables = Exact<{
   email: Scalars['String'];
-  googleId: Scalars['String'];
 }>;
 
 
@@ -221,7 +218,6 @@ export type SignUpMutation = (
 );
 
 export type SignUpWithGoogleMutationVariables = Exact<{
-  googleId: Scalars['String'];
   email: Scalars['String'];
 }>;
 
@@ -459,8 +455,8 @@ export type SignInMutationHookResult = ReturnType<typeof useSignInMutation>;
 export type SignInMutationResult = Apollo.MutationResult<SignInMutation>;
 export type SignInMutationOptions = Apollo.BaseMutationOptions<SignInMutation, SignInMutationVariables>;
 export const SignInWithGoogleDocument = gql`
-    mutation SignInWithGoogle($email: String!, $googleId: String!) {
-  signInWithGoogle(email: $email, googleId: $googleId) {
+    mutation SignInWithGoogle($email: String!) {
+  signInWithGoogle(email: $email) {
     ...RegularUserResponse
   }
 }
@@ -481,7 +477,6 @@ export type SignInWithGoogleMutationFn = Apollo.MutationFunction<SignInWithGoogl
  * const [signInWithGoogleMutation, { data, loading, error }] = useSignInWithGoogleMutation({
  *   variables: {
  *      email: // value for 'email'
- *      googleId: // value for 'googleId'
  *   },
  * });
  */
@@ -524,8 +519,8 @@ export type SignUpMutationHookResult = ReturnType<typeof useSignUpMutation>;
 export type SignUpMutationResult = Apollo.MutationResult<SignUpMutation>;
 export type SignUpMutationOptions = Apollo.BaseMutationOptions<SignUpMutation, SignUpMutationVariables>;
 export const SignUpWithGoogleDocument = gql`
-    mutation SignUpWithGoogle($googleId: String!, $email: String!) {
-  signUpWithGoogle(googleId: $googleId, email: $email) {
+    mutation SignUpWithGoogle($email: String!) {
+  signUpWithGoogle(email: $email) {
     ...RegularUserResponse
   }
 }
@@ -545,7 +540,6 @@ export type SignUpWithGoogleMutationFn = Apollo.MutationFunction<SignUpWithGoogl
  * @example
  * const [signUpWithGoogleMutation, { data, loading, error }] = useSignUpWithGoogleMutation({
  *   variables: {
- *      googleId: // value for 'googleId'
  *      email: // value for 'email'
  *   },
  * });
