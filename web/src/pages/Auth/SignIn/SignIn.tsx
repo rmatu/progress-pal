@@ -69,7 +69,6 @@ const SignIn: React.FC<SignInProps> = ({}) => {
           email,
         },
       });
-      console.log(res);
       if (res.data?.signInWithGoogle.user) {
         await refetch();
         router.push(ROUTES.HOME);
@@ -155,7 +154,7 @@ const SignIn: React.FC<SignInProps> = ({}) => {
                   }
                 } else if (response.data?.signIn.user) {
                   await refetch();
-                  router.push("/home");
+                  router.push(ROUTES.HOME);
                 }
                 setSubmitting(false);
               }}

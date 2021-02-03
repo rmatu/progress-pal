@@ -18,7 +18,11 @@ import { getConnection } from "typeorm";
 import { COOKIE_NAME } from "../constants";
 import { redis } from "../redis";
 import { sendEmail } from "../utils/sendEmail";
-import { createResetPasswordEmail, createVerificationEmail } from "../emails";
+import {
+  createGoogleSignUpEmail,
+  createResetPasswordEmail,
+  createVerificationEmail,
+} from "../emails";
 import { createUrl } from "../utils/createUrl";
 
 @ObjectType()
@@ -177,6 +181,10 @@ export class UserResolver {
     // keep them logged in
     req.session.userId = user.id;
 
+    const emailObject = createGoogleSignUpEmail(email);
+
+    await sendEmail(emailObject);
+
     return { user };
   }
 
@@ -266,7 +274,7 @@ export class UserResolver {
         errors: [
           {
             field: "Popup",
-            message: "Use the Google Button to sign in",
+            message: "Use the Google Button to sign in with this email",
           },
         ],
       };
@@ -356,6 +364,10 @@ export class UserResolver {
       // this will set a cookie on the user
       // keep them logged in
       req.session.userId = newUser.id;
+
+      const emailObject = createGoogleSignUpEmail(email);
+
+      await sendEmail(emailObject);
 
       return { user: newUser };
     }
