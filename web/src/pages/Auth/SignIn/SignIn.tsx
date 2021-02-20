@@ -7,6 +7,7 @@ import { ReactComponent as FacebookIcon } from "../../../assets/svg/facebook.svg
 import { ReactComponent as GoogleIcon } from "../../../assets/svg/google-plus.svg";
 import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
 import { ReactComponent as Wave } from "../../../assets/svg/signInWave.svg";
+import { ReactComponent as SideWave } from "../../../assets/svg/sideWave.svg";
 import Footer from "../../../components/Footer/Footer";
 import {
   Button,
@@ -43,6 +44,7 @@ import {
   LogoContainer,
   SignUpChangeContent,
   SignUpChangeWrapper,
+  SideWaveWrapper,
   SocialIcons,
   StyledP,
   Wrapper,
@@ -253,6 +255,9 @@ const SignIn: React.FC<SignInProps> = ({}) => {
         </AuthContent>
         <Footer />
       </AuthWrapper>
+      <SideWaveWrapper>
+        <SideWave id="sideWave" />
+      </SideWaveWrapper>
       <SignUpChangeWrapper>
         <SignUpChangeContent
           initial={{ y: 50, opacity: 0 }}

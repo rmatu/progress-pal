@@ -37,6 +37,20 @@ export const SignInChangeWrapper = styled.div`
   }
 `;
 
+export const SideWaveWrapper = styled.div`
+  height: 100vh;
+  background-color: #212121;
+
+  #sideWave {
+    transform: translateX(-2px) rotate(180deg);
+    height: 100%;
+  }
+
+  @media (max-width: 920px) {
+    display: none;
+  }
+`;
+
 export const SignInChangeContent = styled(motion.div)`
   display: flex;
   flex-direction: column;

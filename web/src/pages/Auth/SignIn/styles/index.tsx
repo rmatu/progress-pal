@@ -14,6 +14,19 @@ export const Wrapper = styled(motion.div)`
   }
 `;
 
+export const SideWaveWrapper = styled.div`
+  height: 100vh;
+  background-color: #212121;
+  #sideWave {
+    transform: translateX(2px);
+    height: 100%;
+  }
+
+  @media (max-width: 920px) {
+    display: none;
+  }
+`;
+
 export const SignUpChangeWrapper = styled.div`
   min-width: 35em;
   height: 100vh;

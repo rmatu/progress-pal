@@ -8,6 +8,7 @@ import { ReactComponent as FacebookIcon } from "../../../assets/svg/facebook.svg
 import { ReactComponent as GoogleIcon } from "../../../assets/svg/google-plus.svg";
 import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
 import { ReactComponent as Wave } from "../../../assets/svg/signUpWave.svg";
+import { ReactComponent as SideWave } from "../../../assets/svg/sideWave.svg";
 import Footer from "../../../components/Footer/Footer";
 import { Button, Heading, Popup } from "../../../components/UI";
 import { StyledForm } from "../../../components/UI/FormElements";
@@ -43,6 +44,7 @@ import {
   StyledP,
   LogoContainer,
   Wrapper,
+  SideWaveWrapper,
 } from "./styles";
 
 interface SignUpProps {}
@@ -137,6 +139,9 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
           </NavLink>
         </SignInChangeContent>
       </SignInChangeWrapper>
+      <SideWaveWrapper>
+        <SideWave id="sideWave" />
+      </SideWaveWrapper>
       <AuthWrapper>
         <Wave id="wave" />
         <AuthContent>
