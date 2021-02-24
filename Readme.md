@@ -27,7 +27,7 @@
 - Apollo Server
 - GraphQL
 
-## Screenschots
+## Screenshots
 
 ### Sign in:
 
