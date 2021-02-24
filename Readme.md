@@ -1,6 +1,7 @@
 # ProgressPal
 
-- [Technology Stack](#Front-end)
+- [Technology Stack](#Frontend)
+- [Screenschots](#Screenschots)
 
 ## Frontend
 
@@ -25,3 +26,7 @@
 - Redis
 - Apollo Server
 - GraphQL
+
+## Screenschots
+
+![Screenshot](media/desktop/Screenshot_2.png)
