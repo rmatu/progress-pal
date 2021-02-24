@@ -27,6 +27,8 @@
 - Apollo Server
 - GraphQL
 
+# Every Page is Fully Responsive
+
 ## Screenshots
 
 ### Sign in:
