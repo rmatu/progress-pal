@@ -1,7 +1,14 @@
 # ProgressPal
 
+# Disclaimer
+
+App is not ready yet
+
+## Description
+
 - [Technology Stack](#Frontend)
 - [Screenshots](#Screenshots)
+- [Features](#Features)
 
 ## Frontend
 
@@ -26,6 +33,17 @@
 - Redis
 - Apollo Server
 - GraphQL
+- Nodemailer
+
+## Features
+
+- Sign in/Sign up
+- Sign in/Sign up in with Google
+- Sign in/Sign up in with Facebook
+- Account Validation if user was registered without Google Button or Facebook Button
+- Sending email after successful sign up
+- Sending email inorder to recover the password
+- Password recovery
 
 # Every Page is Fully Responsive
 
