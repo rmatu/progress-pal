@@ -1,7 +1,7 @@
 # ProgressPal
 
 - [Technology Stack](#Frontend)
-- [Screenschots](#Screenschots)
+- [Screenschots](#Screenshots)
 
 ## Frontend
 
