@@ -1,21 +1,23 @@
 require("dotenv").config();
-import "reflect-metadata";
-import { UserResolver } from "./resolvers/user";
-import { createConnection } from "typeorm";
 import { ApolloServer } from "apollo-server-express";
-import { __prod__ } from "./constants";
-import express from "express";
-import path from "path";
-import session from "express-session";
 import connectRedis from "connect-redis";
-import { buildSchema } from "type-graphql";
 import cors from "cors";
-import { COOKIE_NAME } from "./constants";
-import { oAuth2Client } from "./OAuth2Client";
+import express from "express";
+import session from "express-session";
+import path from "path";
+import https from "https";
+import fs from "fs";
+
+import "reflect-metadata";
+import { buildSchema } from "type-graphql";
+import { createConnection } from "typeorm";
+import { COOKIE_NAME, __prod__ } from "./constants";
 
 //Entities
 import { User } from "./entities/User";
+import { oAuth2Client } from "./OAuth2Client";
 import { redis } from "./redis";
+import { UserResolver } from "./resolvers/user";
 
 const main = async () => {
   oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
@@ -35,6 +37,14 @@ const main = async () => {
   // await conn.runMigrations();
 
   const app = express();
+
+  const sslServer = https.createServer(
+    {
+      key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
+      cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
+    },
+    app
+  );
 
   const RedisStore = connectRedis(session);
 
@@ -83,7 +93,7 @@ const main = async () => {
   });
 
   app.listen(parseInt(process.env.PORT as string), () => {
-    console.log("server started on localhost:4000");
+    console.log("server started on http://localhost:4000/graphql");
   });
 };
 

@@ -55,10 +55,7 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  async sendVerifyEmail(
-    @Arg("email") email: string,
-    @Ctx() { req }: MyContext
-  ) {
+  async sendVerifyEmail(@Arg("email") email: string, @Ctx() { req }: MyContext) {
     // you are not logged in
     if (!req.session.userId) {
       return null;
@@ -70,10 +67,7 @@ export class UserResolver {
       return null;
     }
 
-    const emailObject = createVerificationEmail(
-      email,
-      await createUrl(user?.id, "email-confirm")
-    );
+    const emailObject = createVerificationEmail(email, await createUrl(user?.id, "email-confirm"));
 
     await sendEmail(emailObject);
 
@@ -118,10 +112,7 @@ export class UserResolver {
 
     const hashedPassword = await argon2.hash(password);
 
-    await User.update(
-      { id: parseInt(userId, 10) },
-      { password: hashedPassword }
-    );
+    await User.update({ id: parseInt(userId, 10) }, { password: hashedPassword });
 
     const user = await User.findOne(userId);
 

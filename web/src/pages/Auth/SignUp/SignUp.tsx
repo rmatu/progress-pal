@@ -22,11 +22,7 @@ import {
   useSignUpWithGoogleMutation,
 } from "../../../generated/graphql";
 import { useRouter } from "../../../hooks/useRouter";
-import {
-  SignUpFormTypes,
-  SignUpInitialValues,
-  SignUpSchema,
-} from "../../../utils/formSchemas";
+import { SignUpFormTypes, SignUpInitialValues, SignUpSchema } from "../../../utils/formSchemas";
 import { toErrorMap } from "../../../utils/toErrorMap";
 // @ts-ignore
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
@@ -83,6 +79,10 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
     }
   };
 
+  const fail = async (res: any) => {
+    console.log({ res });
+  };
+
   const responseFacebook = async (response: any) => {
     console.log(response);
 
@@ -131,9 +131,7 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
           <Heading size="h1" color="white" marginB="0.5em">
             One Of Us?
           </Heading>
-          <StyledP>
-            If you already have an account, just sign in. We've missed you!
-          </StyledP>
+          <StyledP>If you already have an account, just sign in. We've missed you!</StyledP>
           <NavLink to={ROUTES.SIGN_IN}>
             <Button>Sign In</Button>
           </NavLink>
@@ -155,18 +153,14 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
               callback={responseFacebook}
               fields="email"
               // @ts-ignore
-              render={(renderProps) => (
-                <FacebookIcon onClick={renderProps.onClick} />
-              )}
+              render={(renderProps) => <FacebookIcon onClick={renderProps.onClick} />}
             />
             <GoogleLogin
               clientId={process.env.REACT_APP_CLIENT_ID as string}
-              render={(renderProps) => (
-                <GoogleIcon onClick={renderProps.onClick} />
-              )}
+              render={(renderProps) => <GoogleIcon onClick={renderProps.onClick} />}
               buttonText="Login"
               onSuccess={responseGoogle}
-              onFailure={responseGoogle}
+              onFailure={fail}
               cookiePolicy={"single_host_origin"}
             />
           </SocialIcons>
@@ -220,11 +214,7 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
                         placeholder="Password"
                         component={Input}
                       >
-                        <EyeIcon
-                          onClick={() =>
-                            setPasswordVisibility(!passwordVisibility)
-                          }
-                        />
+                        <EyeIcon onClick={() => setPasswordVisibility(!passwordVisibility)} />
                       </Field>
                     </FieldWrapper>
                     <FieldWrapper>
