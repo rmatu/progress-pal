@@ -229,7 +229,7 @@ export const createVerificationEmail = (email: string, url: string) => {
                                 margin-bottom: 15px;
                               "
                             >
-                              Welcome to <b style="color: #fe5000">ProgressPal</b>
+                              Welcome to <b style="color: #fe5000">ProgressPal!</b>
                             </p>
                             <p
                               style="
@@ -408,7 +408,7 @@ export const createThirdPartySignUpEmail = (email: string) => {
   return {
     from: "ProgressPal <progresspal.app@gmail.com>", // sender address
     to: email, // list of receivers
-    subject: "Welcome to ProgressPal", // Subject line
+    subject: "Welcome to ProgressPal!", // Subject line
     text: `We are happy You are with us.`, // plain text body
     html: `<!DOCTYPE html>
     <html>
