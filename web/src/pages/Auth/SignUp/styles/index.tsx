@@ -1,5 +1,6 @@
 import styled from "styled-components/macro";
 import { motion } from "framer-motion";
+import { NavLink } from "react-router-dom";
 
 export const Wrapper = styled.div`
   max-width: 100vw;
@@ -206,4 +207,16 @@ export const FieldRow = styled.div`
   @media (max-width: 1100px) {
     flex-direction: column;
   }
+`;
+
+export const TermsOfUse = styled.p`
+  text-align: center;
+  font-size: 0.8rem;
+  margin: 2em auto 0 auto;
+  max-width: 35em;
+`;
+
+export const StyledLink = styled(NavLink)`
+  color: ${({ theme }) => theme.colors.orange};
+  text-decoration: underline;
 `;

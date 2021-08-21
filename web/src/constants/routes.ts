@@ -10,3 +10,5 @@ export const VERIFY_EMAIL = "/verify-email";
 export const EMAIL_CONFIRM = "/email-confirm";
 export const RESET_PASSWORD = "/reset-password";
 export const RESET_PASSWORD_WITH_TOKEN = "/reset-password/:token";
+export const TERMS_OF_SERVICE = "/terms-of-service";
+export const PRIVACY_POLICY = "/privacy-policy";
