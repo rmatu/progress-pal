@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components';
 
 export default createGlobalStyle`
  /* Box sizing rules */
@@ -61,11 +61,11 @@ body {
   ::-webkit-scrollbar {
     width: 8px;
     background: #0d141f;
-    border-radius: 0 0 0 8px;
+    background-color: #0d141f;
   }
   ::-webkit-scrollbar-thumb {
     background: #525861;
-    border-radius: 0 0 0 8px;
+    border-radius: 0 0 8px 8px;
   }
 }
 /* Remove list styles on ul, ol elements with a class attribute */
@@ -98,14 +98,14 @@ html{
   font-size: 80%;
   box-sizing: border-box;
 
-  --background: ${(props) => props.theme.colors.background}
-  --gray: ${(props) => props.theme.colors.gray}
-  --orange: ${(props) => props.theme.colors.orange}
-  --grayText: ${(props) => props.theme.colors.grayText}
-  --backgroundGray: ${(props) => props.theme.colors.backgroundGray}
-  --backgroundDarkerGray: ${(props) => props.theme.colors.backgroundDarkerGray}
-  --errorTextColor: ${(props) => props.theme.colors.errorTextColor}
-  --successTextColor: ${(props) => props.theme.colors.successTextColor}
+  --background: ${props => props.theme.colors.background}
+  --gray: ${props => props.theme.colors.gray}
+  --orange: ${props => props.theme.colors.orange}
+  --grayText: ${props => props.theme.colors.grayText}
+  --backgroundGray: ${props => props.theme.colors.backgroundGray}
+  --backgroundDarkerGray: ${props => props.theme.colors.backgroundDarkerGray}
+  --errorTextColor: ${props => props.theme.colors.errorTextColor}
+  --successTextColor: ${props => props.theme.colors.successTextColor}
 
 input:focus,
 select:focus,

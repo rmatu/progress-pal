@@ -163,13 +163,13 @@ const SignIn: React.FC<SignInProps> = ({}) => {
               callback={responseFacebook}
               fields="email"
               // @ts-ignore
-              render={(renderProps) => (
+              render={renderProps => (
                 <FacebookIcon onClick={renderProps.onClick} />
               )}
             />
             <GoogleLogin
               clientId={process.env.REACT_APP_CLIENT_ID as string}
-              render={(renderProps) => (
+              render={renderProps => (
                 <GoogleIcon onClick={renderProps.onClick} />
               )}
               buttonText="Login"
@@ -186,7 +186,7 @@ const SignIn: React.FC<SignInProps> = ({}) => {
               validationSchema={SignInSchema}
               onSubmit={async (
                 values: SignInFormTypes,
-                { setSubmitting, setErrors }
+                { setSubmitting, setErrors },
               ) => {
                 // TODO: Update properly the meQuery
                 const response = await signIn({ variables: values });

@@ -42,18 +42,18 @@ const App: React.FC = () => (
         key={ROUTES.VERIFY_EMAIL}
         exact
         path={ROUTES.VERIFY_EMAIL}
-        component={withEmail(VerifyEmail)}
+        component={VerifyEmail}
       />
       <Route
         key={ROUTES.RESET_PASSWORD}
         exact
-        path={`${ROUTES.RESET_PASSWORD}/:token`}
+        path={ROUTES.RESET_PASSWORD}
         component={ResetPassword}
       />
       <Route
         key={ROUTES.EMAIL_CONFIRM}
         exact
-        path={`${ROUTES.EMAIL_CONFIRM}/:token`}
+        path={ROUTES.EMAIL_CONFIRM}
         component={ConfirmEmail}
       />
       <Route
