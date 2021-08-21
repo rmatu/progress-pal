@@ -3,6 +3,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import * as ROUTES from "./constants/routes";
 import { withAuth } from "./services/auth.service";
 import { AnimatePresence } from "framer-motion";
+import { withEmail } from "./services/email.service";
 
 //Components
 import {
@@ -15,7 +16,7 @@ import {
 import Home from "./pages/Home/Home";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import Account from "./pages/Account/Account";
-import { withEmail } from "./services/email.service";
+import TermsOfService from "./pages/TermsOfService/TermsOfService";
 
 const App: React.FC = () => (
   <AnimatePresence>
@@ -51,10 +52,16 @@ const App: React.FC = () => (
         component={ResetPassword}
       />
       <Route
+        key={ROUTES.TERMS_OF_SERVICE}
+        exact
+        path={ROUTES.TERMS_OF_SERVICE}
+        component={TermsOfService}
+      />
+      <Route
         key={ROUTES.EMAIL_CONFIRM}
         exact
         path={ROUTES.EMAIL_CONFIRM}
-        component={ConfirmEmail}
+        component={withEmail(ConfirmEmail)}
       />
       <Route
         key={ROUTES.HOME}

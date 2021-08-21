@@ -40,4 +40,8 @@ export class User extends BaseEntity {
   @Field(() => String)
   @Column({ nullable: true })
   subscriptionStart: Date;
+
+  @Field(() => Int)
+  @Column({ type: "int", default: 0 })
+  onboardingStep: number;
 }

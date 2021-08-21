@@ -1,14 +1,16 @@
 import { Field, Formik } from "formik";
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+// @ts-ignore
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import GoogleLogin from "react-google-login";
+import { NavLink } from "react-router-dom";
 import { ReactComponent as Cancel } from "../../../assets/svg/cancel.svg";
 import { ReactComponent as EyeIcon } from "../../../assets/svg/eye.svg";
 import { ReactComponent as FacebookIcon } from "../../../assets/svg/facebook.svg";
 import { ReactComponent as GoogleIcon } from "../../../assets/svg/google-plus.svg";
 import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
-import { ReactComponent as Wave } from "../../../assets/svg/signUpWave.svg";
 import { ReactComponent as SideWave } from "../../../assets/svg/sideWave.svg";
+import { ReactComponent as Wave } from "../../../assets/svg/signUpWave.svg";
 import Footer from "../../../components/Footer/Footer";
 import { Button, Heading, Popup } from "../../../components/UI";
 import { StyledForm } from "../../../components/UI/FormElements";
@@ -22,25 +24,29 @@ import {
   useSignUpWithGoogleMutation,
 } from "../../../generated/graphql";
 import { useRouter } from "../../../hooks/useRouter";
-import { SignUpFormTypes, SignUpInitialValues, SignUpSchema } from "../../../utils/formSchemas";
-import { toErrorMap } from "../../../utils/toErrorMap";
-// @ts-ignore
-import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import {
+  SignUpFormTypes,
+  SignUpInitialValues,
+  SignUpSchema,
+} from "../../../utils/formSchemas";
+import { toErrorMap } from "../../../utils/toErrorMap";
+import {
+  AuthContent,
   AuthText,
   AuthWrapper,
-  AuthContent,
   FieldRow,
   FieldWrapper,
   GoBack,
+  LogoContainer,
   RegistrationForm,
-  SignInChangeWrapper,
+  StyledLink,
+  SideWaveWrapper,
   SignInChangeContent,
+  SignInChangeWrapper,
   SocialIcons,
   StyledP,
-  LogoContainer,
+  TermsOfUse,
   Wrapper,
-  SideWaveWrapper,
 } from "./styles";
 
 interface SignUpProps {}
@@ -131,7 +137,9 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
           <Heading size="h1" color="white" marginB="0.5em">
             One Of Us?
           </Heading>
-          <StyledP>If you already have an account, just sign in. We've missed you!</StyledP>
+          <StyledP>
+            If you already have an account, just sign in. We've missed you!
+          </StyledP>
           <NavLink to={ROUTES.SIGN_IN}>
             <Button>Sign In</Button>
           </NavLink>
@@ -153,11 +161,15 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
               callback={responseFacebook}
               fields="email"
               // @ts-ignore
-              render={(renderProps) => <FacebookIcon onClick={renderProps.onClick} />}
+              render={renderProps => (
+                <FacebookIcon onClick={renderProps.onClick} />
+              )}
             />
             <GoogleLogin
               clientId={process.env.REACT_APP_CLIENT_ID as string}
-              render={(renderProps) => <GoogleIcon onClick={renderProps.onClick} />}
+              render={renderProps => (
+                <GoogleIcon onClick={renderProps.onClick} />
+              )}
               buttonText="Login"
               onSuccess={responseGoogle}
               onFailure={fail}
@@ -172,7 +184,7 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
               validationSchema={SignUpSchema}
               onSubmit={async (
                 { email, username, password }: SignUpFormTypes,
-                { setSubmitting, setErrors }
+                { setSubmitting, setErrors },
               ) => {
                 const response = await signUp({
                   variables: { options: { email, username, password } },
@@ -187,55 +199,72 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
               }}
             >
               {({ isSubmitting, isValid }) => (
-                <StyledForm>
-                  <FieldRow>
-                    <FieldWrapper>
-                      <Field
-                        type="text"
-                        name="username"
-                        placeholder="Username"
-                        component={Input}
-                      ></Field>
-                    </FieldWrapper>
-                    <FieldWrapper>
-                      <Field
-                        type="email"
-                        name="email"
-                        placeholder="Email"
-                        component={Input}
-                      ></Field>
-                    </FieldWrapper>
-                  </FieldRow>
-                  <FieldRow>
-                    <FieldWrapper active={passwordVisibility}>
-                      <Field
-                        type={passwordVisibility ? "text" : "password"}
-                        name="password"
-                        placeholder="Password"
-                        component={Input}
-                      >
-                        <EyeIcon onClick={() => setPasswordVisibility(!passwordVisibility)} />
-                      </Field>
-                    </FieldWrapper>
-                    <FieldWrapper>
-                      <Field
-                        type={passwordVisibility ? "text" : "password"}
-                        name="confirmPassword"
-                        placeholder="Confirm password"
-                        component={Input}
-                      ></Field>
-                    </FieldWrapper>
-                  </FieldRow>
-                  <Button
-                    loading={isSubmitting ? "Signing up..." : null}
-                    marginTop="1em"
-                    color="main"
-                    disabled={!isValid}
-                    type="submit"
-                  >
-                    Sign Up
-                  </Button>
-                </StyledForm>
+                <>
+                  <StyledForm>
+                    <FieldRow>
+                      <FieldWrapper>
+                        <Field
+                          type="text"
+                          name="username"
+                          placeholder="Username"
+                          component={Input}
+                        ></Field>
+                      </FieldWrapper>
+                      <FieldWrapper>
+                        <Field
+                          type="email"
+                          name="email"
+                          placeholder="Email"
+                          component={Input}
+                        ></Field>
+                      </FieldWrapper>
+                    </FieldRow>
+                    <FieldRow>
+                      <FieldWrapper active={passwordVisibility}>
+                        <Field
+                          type={passwordVisibility ? "text" : "password"}
+                          name="password"
+                          placeholder="Password"
+                          component={Input}
+                        >
+                          <EyeIcon
+                            onClick={() =>
+                              setPasswordVisibility(!passwordVisibility)
+                            }
+                          />
+                        </Field>
+                      </FieldWrapper>
+                      <FieldWrapper>
+                        <Field
+                          type={passwordVisibility ? "text" : "password"}
+                          name="confirmPassword"
+                          placeholder="Confirm password"
+                          component={Input}
+                        ></Field>
+                      </FieldWrapper>
+                    </FieldRow>
+                    <Button
+                      loading={isSubmitting ? "Signing up..." : null}
+                      marginTop="1em"
+                      color="main"
+                      disabled={!isValid}
+                      type="submit"
+                    >
+                      Sign Up
+                    </Button>
+                  </StyledForm>
+                  <TermsOfUse>
+                    By clicking Sign Up, you are creating an ProgressPal account
+                    and agreeing to our{" "}
+                    <StyledLink to={ROUTES.TERMS_OF_SERVICE}>
+                      Terms of Service
+                    </StyledLink>{" "}
+                    and{" "}
+                    <StyledLink to={ROUTES.PRIVACY_POLICY}>
+                      Privacy Policy.
+                    </StyledLink>
+                  </TermsOfUse>
+                </>
               )}
             </Formik>
           </RegistrationForm>

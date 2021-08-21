@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from "styled-components";
 
 export default createGlobalStyle`
  /* Box sizing rules */
@@ -52,8 +52,8 @@ body {
   text-rendering: optimizeSpeed;
   line-height: 1.5;
   background-color: #2F3136;
-  color: #000;
-  background-color: #fff;
+  color: #fff;
+  background-color: #212121;
 
   font-family: 'Raleway', sans-serif;
   font-weight: 400;
