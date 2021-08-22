@@ -1,20 +1,23 @@
 import { Field, Formik } from "formik";
 import React, { useState } from "react";
+//@ts-ignore
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+import GoogleLogin from "react-google-login";
 import { NavLink } from "react-router-dom";
 import { ReactComponent as Cancel } from "../../../assets/svg/cancel.svg";
 import { ReactComponent as EyeIcon } from "../../../assets/svg/eye.svg";
 import { ReactComponent as FacebookIcon } from "../../../assets/svg/facebook.svg";
 import { ReactComponent as GoogleIcon } from "../../../assets/svg/google-plus.svg";
 import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
-import { ReactComponent as Wave } from "../../../assets/svg/signInWave.svg";
 import { ReactComponent as SideWave } from "../../../assets/svg/sideWave.svg";
+import { ReactComponent as Wave } from "../../../assets/svg/signInWave.svg";
 import Footer from "../../../components/Footer/Footer";
 import {
   Button,
   Heading,
   Input,
-  Separator,
   Popup,
+  Separator,
 } from "../../../components/UI";
 import { StyledForm } from "../../../components/UI/FormElements";
 import * as ROUTES from "../../../constants/routes";
@@ -42,16 +45,13 @@ import {
   GoBack,
   LoginForm,
   LogoContainer,
+  SideWaveWrapper,
   SignUpChangeContent,
   SignUpChangeWrapper,
-  SideWaveWrapper,
   SocialIcons,
   StyledP,
   Wrapper,
 } from "./styles";
-import GoogleLogin from "react-google-login";
-//@ts-ignore
-import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 
 interface SignInProps {}
 
@@ -60,7 +60,7 @@ interface SignInProps {}
  * TODO: Login with Facebook and Google could be extracted from here and be more generic
  */
 
-const SignIn: React.FC<SignInProps> = ({}) => {
+const SignIn: React.FC<SignInProps> = () => {
   const [modalOpened, setModalOpened] = useState<boolean>(false);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [errorText, setErrorText] = useState<string>("");

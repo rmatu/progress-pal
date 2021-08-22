@@ -6,7 +6,7 @@ import {} from "./styles";
 
 interface HomeProps {}
 
-const Home: React.FC<HomeProps> = ({}) => {
+const Home: React.FC<HomeProps> = () => {
   const client = useApolloClient();
   const { data } = useMeQuery();
   const [logout] = useLogoutMutation();

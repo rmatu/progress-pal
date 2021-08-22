@@ -17,6 +17,7 @@ import Home from "./pages/Home/Home";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import Account from "./pages/Account/Account";
 import TermsOfService from "./pages/TermsOfService/TermsOfService";
+import Privacy from "./pages/Privacy/Privacy";
 
 const App: React.FC = () => (
   <AnimatePresence>
@@ -56,6 +57,12 @@ const App: React.FC = () => (
         exact
         path={ROUTES.TERMS_OF_SERVICE}
         component={TermsOfService}
+      />
+      <Route
+        key={ROUTES.PRIVACY_POLICY}
+        exact
+        path={ROUTES.PRIVACY_POLICY}
+        component={Privacy}
       />
       <Route
         key={ROUTES.EMAIL_CONFIRM}

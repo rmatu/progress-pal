@@ -56,7 +56,7 @@ interface SignUpProps {}
  * TODO: Login with Facebook and Google could be extracted from here and be more generic
  */
 
-const SignUp: React.FC<SignUpProps> = ({}) => {
+const SignUp: React.FC<SignUpProps> = () => {
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(false);
   const [errorPopup, setErrorPopup] = useState<boolean>(false);
   const [signUpWithGoogle] = useSignUpWithGoogleMutation();
