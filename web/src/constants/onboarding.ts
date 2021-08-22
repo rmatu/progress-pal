@@ -7,6 +7,6 @@
 
 // prettier-ignore
 export const onboardingSteps = {
-  onboardingStarted:      0,
-  onboardingFinished:     1,
+  ONBOARDING_STARTED:      0,
+  ONBOARDING_FINISHED:     1,
 }

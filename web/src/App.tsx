@@ -18,6 +18,7 @@ import LandingPage from "./pages/LandingPage/LandingPage";
 import Account from "./pages/Account/Account";
 import TermsOfService from "./pages/TermsOfService/TermsOfService";
 import Privacy from "./pages/Privacy/Privacy";
+import PageNotFound from "./pages/PageNotFound/PageNotFound";
 
 const App: React.FC = () => (
   <AnimatePresence>
@@ -65,6 +66,12 @@ const App: React.FC = () => (
         component={Privacy}
       />
       <Route
+        key={ROUTES.PAGE_NOT_FOUND}
+        exact
+        path={ROUTES.PAGE_NOT_FOUND}
+        component={PageNotFound}
+      />
+      <Route
         key={ROUTES.EMAIL_CONFIRM}
         exact
         path={ROUTES.EMAIL_CONFIRM}
@@ -82,7 +89,7 @@ const App: React.FC = () => (
         path={ROUTES.ACCOUNT}
         component={withAuth(Account)}
       />
-      <Redirect to={ROUTES.MAIN_PAGE} />
+      <Redirect to={ROUTES.PAGE_NOT_FOUND} />
     </Switch>
   </AnimatePresence>
 );

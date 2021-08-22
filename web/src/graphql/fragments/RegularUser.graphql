@@ -4,4 +4,6 @@ fragment RegularUser on User {
   email
   isPremium
   emailVerified
+  subscriptionStart
+  onboardingStep
 }
