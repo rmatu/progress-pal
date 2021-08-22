@@ -33,7 +33,7 @@ const Menu: React.FC<MenuProps> = () => {
       <Ul open={open}>
         <Li
           onClick={() => dispatch(toggleNavbar())}
-          to={ROUTES.HOME}
+          to={ROUTES.MAIN_PAGE}
           activeStyle={{ borderBottom: "1px solid white" }}
         >
           Home

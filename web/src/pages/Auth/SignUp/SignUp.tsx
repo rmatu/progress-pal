@@ -75,7 +75,7 @@ const SignUp: React.FC<SignUpProps> = () => {
       });
       if (res.data?.signUpWithGoogle.user) {
         await refetch();
-        router.push(ROUTES.HOME);
+        router.push(ROUTES.MAIN_PAGE);
       }
     } catch (e) {
       setErrorPopup(true);
@@ -101,7 +101,7 @@ const SignUp: React.FC<SignUpProps> = () => {
       });
       if (res.data?.signUpWithFacebook.user) {
         await refetch();
-        router.push(ROUTES.HOME);
+        router.push(ROUTES.MAIN_PAGE);
       } else if (res.data?.signUpWithFacebook.errors) {
         setErrorPopup(true);
         setTimeout(() => {

@@ -26,6 +26,7 @@ export type User = {
   googleRegisetered: Scalars['Boolean'];
   facebookRegisetered: Scalars['Boolean'];
   subscriptionStart: Scalars['String'];
+  onboardingStep: Scalars['Int'];
 };
 
 export type Mutation = {
@@ -120,7 +121,7 @@ export type RegularErrorFragment = (
 
 export type RegularUserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'username' | 'email' | 'isPremium' | 'emailVerified'>
+  & Pick<User, 'id' | 'username' | 'email' | 'isPremium' | 'emailVerified' | 'subscriptionStart' | 'onboardingStep'>
 );
 
 export type RegularUserResponseFragment = (
@@ -275,7 +276,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me?: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'username' | 'isPremium' | 'emailVerified' | 'email'>
+    & RegularUserFragment
   )> }
 );
 
@@ -292,6 +293,8 @@ export const RegularUserFragmentDoc = gql`
   email
   isPremium
   emailVerified
+  subscriptionStart
+  onboardingStep
 }
     `;
 export const RegularUserResponseFragmentDoc = gql`
@@ -655,14 +658,10 @@ export type SignUpWithGoogleMutationOptions = Apollo.BaseMutationOptions<SignUpW
 export const MeDocument = gql`
     query Me {
   me {
-    id
-    username
-    isPremium
-    emailVerified
-    email
+    ...RegularUser
   }
 }
-    `;
+    ${RegularUserFragmentDoc}`;
 
 /**
  * __useMeQuery__

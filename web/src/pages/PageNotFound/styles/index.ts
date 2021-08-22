@@ -8,10 +8,18 @@ export const HeaderWrapper = styled.div`
 `;
 
 export const RestContent = styled.div`
-  min-height: calc(100vh - 6em);
-  background-color: ${({ theme }) => theme.colors.backgroundDarkerGray};
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
-  color: white;
+  align-items: center;
+  min-height: calc(100vh - 6em);
+`;
+
+export const StatusCode = styled.h1`
+  font-size: 20rem;
+`;
+
+export const Text = styled.p`
+  font-size: 3rem;
+  margin-bottom: 3em;
 `;
