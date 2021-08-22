@@ -71,9 +71,9 @@ const App: React.FC = () => (
         component={withEmail(ConfirmEmail)}
       />
       <Route
-        key={ROUTES.HOME}
+        key={ROUTES.MAIN_PAGE}
         exact
-        path={ROUTES.HOME}
+        path={ROUTES.MAIN_PAGE}
         component={withAuth(Home)}
       />
       <Route
@@ -82,7 +82,7 @@ const App: React.FC = () => (
         path={ROUTES.ACCOUNT}
         component={withAuth(Account)}
       />
-      <Redirect to={ROUTES.HOME} />
+      <Redirect to={ROUTES.MAIN_PAGE} />
     </Switch>
   </AnimatePresence>
 );

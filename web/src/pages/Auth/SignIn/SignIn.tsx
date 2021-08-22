@@ -83,7 +83,7 @@ const SignIn: React.FC<SignInProps> = () => {
         });
         if (res.data?.signInWithGoogle.user) {
           await refetch();
-          router.push(ROUTES.HOME);
+          router.push(ROUTES.MAIN_PAGE);
         } else if (res.data?.signInWithGoogle.errors) {
           setErrorText(res.data?.signInWithGoogle.errors[0].message);
           setShowErrorPopup(true);
@@ -112,7 +112,7 @@ const SignIn: React.FC<SignInProps> = () => {
       });
       if (res.data?.signInWithFacebook.user) {
         await refetch();
-        router.push(ROUTES.HOME);
+        router.push(ROUTES.MAIN_PAGE);
       } else if (res.data?.signInWithFacebook.errors) {
         setErrorText(res.data?.signInWithFacebook.errors[0].message);
         setShowErrorPopup(true);
@@ -201,7 +201,7 @@ const SignIn: React.FC<SignInProps> = () => {
                   }
                 } else if (response.data?.signIn.user) {
                   await refetch();
-                  router.push(ROUTES.HOME);
+                  router.push(ROUTES.MAIN_PAGE);
                 }
                 setSubmitting(false);
               }}

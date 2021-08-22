@@ -24,7 +24,7 @@ export const withEmail = <P extends object>(
     }
 
     if (data.me.emailVerified === true) {
-      return <Redirect to={ROUTES.HOME} />;
+      return <Redirect to={ROUTES.MAIN_PAGE} />;
     }
 
     return <Component {...(props as P)} />;
