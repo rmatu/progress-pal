@@ -9,7 +9,7 @@ import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
 
 interface ConfirmEmailProps {}
 
-const ConfirmEmail: React.FC<ConfirmEmailProps> = ({}) => {
+const ConfirmEmail: React.FC<ConfirmEmailProps> = () => {
   const { token }: any = useParams();
   const router = useRouter();
   const [confirmUser] = useConfirmUserMutation();

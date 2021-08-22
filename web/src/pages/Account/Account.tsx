@@ -2,7 +2,7 @@ import React from "react";
 
 interface AccountProps {}
 
-const Account: React.FC<AccountProps> = ({}) => {
+const Account: React.FC<AccountProps> = () => {
   return <div>Account</div>;
 };
 

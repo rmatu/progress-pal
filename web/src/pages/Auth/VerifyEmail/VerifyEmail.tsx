@@ -24,7 +24,7 @@ import Footer from "../../../components/Footer/Footer";
 
 interface VerifyEmailProps {}
 
-const VerifyEmail: React.FC<VerifyEmailProps> = ({}) => {
+const VerifyEmail: React.FC<VerifyEmailProps> = () => {
   const { data } = useMeQuery();
   const [sendEmail, { loading }] = useSendVerifyEmailMutation();
 

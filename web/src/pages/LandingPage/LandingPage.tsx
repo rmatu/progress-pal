@@ -4,7 +4,7 @@ import { Heading } from "../../components/UI";
 import { HeaderWrapper, RestContent } from "./styles";
 interface LandingPageProps {}
 
-const LandingPage: React.FC<LandingPageProps> = ({}) => {
+const LandingPage: React.FC<LandingPageProps> = () => {
   return (
     <>
       <HeaderWrapper>

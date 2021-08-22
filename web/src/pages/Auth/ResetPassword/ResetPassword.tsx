@@ -1,36 +1,35 @@
+import { Field, Formik } from "formik";
 import React, { useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
-import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
 import { ReactComponent as Cancel } from "../../../assets/svg/cancel.svg";
 import { ReactComponent as EyeIcon } from "../../../assets/svg/eye.svg";
 import { ReactComponent as LockIcon } from "../../../assets/svg/lock.svg";
-
-import {
-  LogoContainer,
-  Wrapper,
-  GoBack,
-  Content,
-  StyledP,
-  ExpirationText,
-  StyledForm,
-  FieldWrapper,
-} from "./styles";
-import * as ROUTES from "../../../constants/routes";
-import { Button, Heading, Popup } from "../../../components/UI";
+import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
 import Footer from "../../../components/Footer/Footer";
-import { Field, Formik } from "formik";
+import { Button, Heading, Popup } from "../../../components/UI";
 import Input from "../../../components/UI/Input/Input";
+import * as ROUTES from "../../../constants/routes";
+import { useChangePasswordMutation } from "../../../generated/graphql";
+import { useRouter } from "../../../hooks/useRouter";
 import {
   ResetPasswordSchema,
   ResetPasswordTypes,
   ResetPasswordValues,
 } from "../../../utils/formSchemas";
-import { useChangePasswordMutation } from "../../../generated/graphql";
-import { useRouter } from "../../../hooks/useRouter";
+import {
+  Content,
+  ExpirationText,
+  FieldWrapper,
+  GoBack,
+  LogoContainer,
+  StyledForm,
+  StyledP,
+  Wrapper,
+} from "./styles";
 
 interface ResetPasswordProps {}
 
-const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
+const ResetPassword: React.FC<ResetPasswordProps> = () => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [changePassword] = useChangePasswordMutation();
@@ -63,7 +62,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
           validationSchema={ResetPasswordSchema}
           onSubmit={async (
             { password }: ResetPasswordTypes,
-            { setSubmitting }
+            { setSubmitting },
           ) => {
             await changePassword({
               variables: {

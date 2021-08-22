@@ -4,7 +4,7 @@ import { HeaderWrapper, RestContentWrapper } from "./styles";
 
 interface TermsOfServiceProps {}
 
-const TermsOfService: React.FC<TermsOfServiceProps> = ({}) => {
+const TermsOfService: React.FC<TermsOfServiceProps> = () => {
   return (
     <>
       <HeaderWrapper>
