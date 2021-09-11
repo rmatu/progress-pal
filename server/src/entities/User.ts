@@ -37,7 +37,7 @@ export class User extends BaseEntity {
   @Column({ type: "boolean", default: false })
   facebookRegisetered: boolean;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ nullable: true })
   subscriptionStart: Date;
 

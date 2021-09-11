@@ -1,5 +1,7 @@
 import { createGlobalStyle } from "styled-components";
 
+export const GLOBAL_FONT_SIZE = 12;
+
 export default createGlobalStyle`
  /* Box sizing rules */
 *,
@@ -106,6 +108,7 @@ html{
   --backgroundDarkerGray: ${props => props.theme.colors.backgroundDarkerGray}
   --errorTextColor: ${props => props.theme.colors.errorTextColor}
   --successTextColor: ${props => props.theme.colors.successTextColor}
+  --modalBackground: ${props => props.theme.colors.modalBackground}
 
 input:focus,
 select:focus,

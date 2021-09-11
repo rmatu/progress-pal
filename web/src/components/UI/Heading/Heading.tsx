@@ -3,8 +3,8 @@ import { Heading1, Heading2, Heading3, Heading4 } from "./styles";
 
 export interface HeadingProps {
   children: React.ReactNode[] | React.ReactNode;
-  color: string;
-  marginB: string;
+  color?: string;
+  marginB?: string;
   size: string;
 }
 
@@ -12,8 +12,8 @@ export interface HeadingProps {
 // @ts-ignore
 const Heading: React.FC<HeadingProps> = ({
   children,
-  color,
-  marginB,
+  color = "white",
+  marginB = "0",
   size,
 }) => {
   if (size === "h1")
