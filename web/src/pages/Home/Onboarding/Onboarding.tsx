@@ -1,19 +1,22 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { ReactComponent as Cancel } from "../../../assets/svg/cancel.svg";
-import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
-import { ReactComponent as MaleAvatar } from "../../../assets/svg/male.svg";
 import { ReactComponent as FemaleAvatar } from "../../../assets/svg/female.svg";
 import { ReactComponent as GreenCheckmark } from "../../../assets/svg/green-checkmark.svg";
+import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
+import { ReactComponent as MaleAvatar } from "../../../assets/svg/male.svg";
 import { ReactComponent as QuestionMark } from "../../../assets/svg/question-mark.svg";
 import { Heading } from "../../../components/UI";
 import * as ROUTES from "../../../constants/routes";
-import { GoBack, LogoContainer } from "../../Auth/VerifyEmail/styles";
 import {
+  BulletLi,
   ButtonWrapper,
   CardContent,
   CardWrapper,
   ChooseOption,
+  GoBack,
+  LogoContainer,
+  NavWrapper,
   NextButton,
   Option,
   PrevButton,
@@ -35,10 +38,13 @@ enum STEP_TYPES {
 }
 
 const Onboarding: React.FC<OnboardingProps> = () => {
-  const [step, setStep] = useState<STEP_TYPES>(STEP_TYPES.GENDER);
+  const [step, setStep] = useState<STEP_TYPES>(STEP_TYPES.ACTIVITY_LEVEL);
   const [userChoices, setUserChoices] = useState({
     gender: "",
+    activityLevel: "",
   });
+
+  console.log({ userChoices });
 
   const calculateProgress = (step: number, maxSteps: number) => {
     return `${(step / maxSteps) * 100}%`;
@@ -47,14 +53,17 @@ const Onboarding: React.FC<OnboardingProps> = () => {
   if (step === STEP_TYPES.GENDER) {
     return (
       <>
-        <LogoContainer>
-          <Logo />
-        </LogoContainer>
-        <NavLink to={ROUTES.LANDING_PAGE}>
-          <GoBack>
-            <Cancel />
-          </GoBack>
-        </NavLink>
+        <NavWrapper>
+          <LogoContainer>
+            <Logo />
+          </LogoContainer>
+          <NavLink to={ROUTES.LANDING_PAGE}>
+            <GoBack>
+              <Cancel />
+            </GoBack>
+          </NavLink>
+        </NavWrapper>
+
         <Wrapper>
           <CardWrapper>
             <Progress>
@@ -113,26 +122,112 @@ const Onboarding: React.FC<OnboardingProps> = () => {
   if (step === STEP_TYPES.ACTIVITY_LEVEL) {
     return (
       <>
-        <LogoContainer>
-          <Logo />
-        </LogoContainer>
-        <NavLink to={ROUTES.LANDING_PAGE}>
-          <GoBack>
-            <Cancel />
-          </GoBack>
-        </NavLink>
+        <NavWrapper>
+          <LogoContainer>
+            <Logo />
+          </LogoContainer>
+          <NavLink to={ROUTES.LANDING_PAGE}>
+            <GoBack>
+              <Cancel />
+            </GoBack>
+          </NavLink>
+        </NavWrapper>
         <Wrapper>
-          <CardWrapper>
+          <CardWrapper margin="2em 0">
             <Progress>
               <ProgressBar progressWidth={calculateProgress(step, ALL_STEPS)} />
             </Progress>
             <CardContent>
-              <Heading size="h2">Tell us something about you</Heading>
+              <Heading size="h2">What is you physical activity level?</Heading>
+              <ChooseOption flexDirection="column">
+                <Option
+                  rowStyling
+                  selected={userChoices.activityLevel === "sedentary"}
+                  onClick={() =>
+                    setUserChoices(prev => ({
+                      ...prev,
+                      activityLevel: "sedentary",
+                    }))
+                  }
+                >
+                  <GreenCheckmark id="checkmark" />
+                  <Heading size="h4">Sedentary</Heading>
+                  <BulletLi>
+                    A person that spends most of the day sitting or lying.
+                  </BulletLi>
+                  <BulletLi>
+                    Example jobs: receptionist, surveillance systems monitor,
+                    programmer.
+                  </BulletLi>
+                </Option>
+                <Option
+                  rowStyling
+                  selected={userChoices.activityLevel === "lightlyActive"}
+                  onClick={() =>
+                    setUserChoices(prev => ({
+                      ...prev,
+                      activityLevel: "lightlyActive",
+                    }))
+                  }
+                >
+                  <GreenCheckmark id="checkmark" />
+                  <Heading size="h4">Lighty Active</Heading>
+                  <BulletLi>
+                    A person that spends a good amount of time standing/walking.
+                  </BulletLi>
+                  <BulletLi>
+                    Example jobs: security guard, teacher, cashier.
+                  </BulletLi>
+                </Option>
+                <Option
+                  rowStyling
+                  selected={userChoices.activityLevel === "active"}
+                  onClick={() =>
+                    setUserChoices(prev => ({
+                      ...prev,
+                      activityLevel: "active",
+                    }))
+                  }
+                >
+                  <GreenCheckmark id="checkmark" />
+                  <Heading size="h4">Active</Heading>
+                  <BulletLi>
+                    A person that spends a good amount of time doing some
+                    physical activity.
+                  </BulletLi>
+                  <BulletLi>
+                    Example jobs: plumber, paramedic, postal carrier.
+                  </BulletLi>
+                </Option>
+                <Option
+                  rowStyling
+                  selected={userChoices.activityLevel === "veryActive"}
+                  onClick={() =>
+                    setUserChoices(prev => ({
+                      ...prev,
+                      activityLevel: "veryActive",
+                    }))
+                  }
+                >
+                  <GreenCheckmark id="checkmark" />
+                  <Heading size="h4">Very Active</Heading>
+                  <BulletLi>
+                    A person that spends most of the time doing heavy physical
+                    activities.
+                  </BulletLi>
+                  <BulletLi>
+                    Example jobs: football player, volleyball player, strongman
+                  </BulletLi>
+                </Option>
+              </ChooseOption>
               <ButtonWrapper>
                 <PrevButton onClick={() => setStep(STEP_TYPES.GENDER)}>
                   Back
                 </PrevButton>
-                <NextButton onClick={() => setStep(STEP_TYPES.WIEGHT_GOAL)}>
+                <NextButton
+                  onClick={() => setStep(STEP_TYPES.WIEGHT_GOAL)}
+                  disabled={!userChoices.activityLevel}
+                >
                   Next
                 </NextButton>
               </ButtonWrapper>
@@ -146,14 +241,16 @@ const Onboarding: React.FC<OnboardingProps> = () => {
   if (step === STEP_TYPES.WIEGHT_GOAL) {
     return (
       <>
-        <LogoContainer>
-          <Logo />
-        </LogoContainer>
-        <NavLink to={ROUTES.LANDING_PAGE}>
-          <GoBack>
-            <Cancel />
-          </GoBack>
-        </NavLink>
+        <NavWrapper>
+          <LogoContainer>
+            <Logo />
+          </LogoContainer>
+          <NavLink to={ROUTES.LANDING_PAGE}>
+            <GoBack>
+              <Cancel />
+            </GoBack>
+          </NavLink>
+        </NavWrapper>
         <Wrapper>
           <CardWrapper>
             <Progress>
@@ -178,14 +275,16 @@ const Onboarding: React.FC<OnboardingProps> = () => {
 
   return (
     <>
-      <LogoContainer>
-        <Logo />
-      </LogoContainer>
-      <NavLink to={ROUTES.LANDING_PAGE}>
-        <GoBack>
-          <Cancel />
-        </GoBack>
-      </NavLink>
+      <NavWrapper>
+        <LogoContainer>
+          <Logo />
+        </LogoContainer>
+        <NavLink to={ROUTES.LANDING_PAGE}>
+          <GoBack>
+            <Cancel />
+          </GoBack>
+        </NavLink>
+      </NavWrapper>
       <Wrapper>
         <CardWrapper>
           <Progress>

@@ -4,6 +4,7 @@ declare module "styled-components" {
   export interface DefaultTheme {
     colors: {
       background: string;
+      black: string;
       gray: string;
       orange: string;
       grayText: string;
@@ -12,6 +13,7 @@ declare module "styled-components" {
       errorTextColor: string;
       successTextColor: string;
       modalBackground: string;
+      white: string;
     };
     mediaQueries: {
       phones: string;

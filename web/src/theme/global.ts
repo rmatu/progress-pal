@@ -101,6 +101,7 @@ html{
   box-sizing: border-box;
 
   --background: ${props => props.theme.colors.background}
+  --black: ${props => props.theme.colors.black}
   --gray: ${props => props.theme.colors.gray}
   --orange: ${props => props.theme.colors.orange}
   --grayText: ${props => props.theme.colors.grayText}
@@ -109,6 +110,7 @@ html{
   --errorTextColor: ${props => props.theme.colors.errorTextColor}
   --successTextColor: ${props => props.theme.colors.successTextColor}
   --modalBackground: ${props => props.theme.colors.modalBackground}
+  --white: ${props => props.theme.colors.white}
 
 input:focus,
 select:focus,

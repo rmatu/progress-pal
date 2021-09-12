@@ -2,8 +2,44 @@ import styled, { css } from "styled-components/macro";
 import { Button } from "../../../../components/UI";
 import { convertPxToRem } from "../../../../utils/cssHelpers";
 
+export const NavWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 5em;
+`;
+
+export const LogoContainer = styled.div`
+  svg {
+    height: 5em;
+    width: 15em;
+  }
+
+  @media (max-width: 420px) {
+    svg {
+      height: 4.5em;
+      width: 13em;
+    }
+  }
+`;
+
+export const GoBack = styled.div`
+  height: 3em;
+  width: 3em;
+  margin: 1em 1em 0 0;
+
+  @media (max-width: 600px) {
+    height: 1.5em;
+    width: 1.5em;
+  }
+
+  svg {
+    fill: white;
+  }
+`;
+
 export const Wrapper = styled.div`
-  height: 100vh;
+  min-height: calc(100vh - 10em);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -11,9 +47,10 @@ export const Wrapper = styled.div`
   padding: 0 1em;
 `;
 
-export const CardWrapper = styled.div`
+export const CardWrapper = styled.div<{ margin?: string }>`
   max-width: ${convertPxToRem(600)};
   width: 100%;
+  margin: ${({ margin }) => margin};
 `;
 
 export const Progress = styled.div`
@@ -70,18 +107,24 @@ export const PrevButton = styled(Button)`
 export const Text = styled.p<{ margin?: string }>`
   text-align: center;
   font-size: 1.125rem;
-  color: ${({ theme }) => theme.colors.grayText};
   margin: ${({ margin }) => margin};
 `;
 
-export const ChooseOption = styled.ul`
+export const ChooseOption = styled.ul<{
+  flexDirection?: string;
+}>`
   display: flex;
-  flex-direction: row;
+  flex-direction: ${({ flexDirection }) =>
+    flexDirection ? flexDirection : "row"};
   align-items: center;
   justify-content: center;
+
+  @media screen and (max-width: 390px) {
+    flex-wrap: wrap;
+  }
 `;
 
-export const Option = styled.li<{ selected: boolean }>`
+export const Option = styled.li<{ selected: boolean; rowStyling?: boolean }>`
   position: relative;
   margin: 2em 0;
   border: 2px solid ${({ theme }) => theme.colors.gray};
@@ -92,12 +135,16 @@ export const Option = styled.li<{ selected: boolean }>`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  transition: all 0.1s ease-in-out;
   margin-right: 1em;
 
   :hover {
     cursor: pointer;
     border: 2px solid ${({ theme }) => theme.colors.orange};
+    transition: all 0.1s ease-in-out;
+  }
+
+  p {
+    color: ${({ theme }) => theme.colors.grayText};
   }
 
   :last-of-type {
@@ -122,5 +169,48 @@ export const Option = styled.li<{ selected: boolean }>`
     selected &&
     css`
       border: 2px solid ${({ theme }) => theme.colors.orange};
+      background-color: ${({ theme }) => theme.colors.orange};
+      font-color: #000;
+
+      p {
+        color: ${({ theme }) => theme.colors.white};
+      }
     `}
+
+  ${({ rowStyling }) =>
+    rowStyling &&
+    css`
+      margin: 0.5em 0;
+      width: ${convertPxToRem(400)};
+      justify-content: flex-start;
+      align-items: flex-start;
+
+      p {
+        text-align: left;
+      }
+
+      h4 {
+        padding-left: 0;
+        margin-bottom: 0.5em;
+      }
+
+      :first-of-type {
+        margin-top: 2em;
+      }
+
+      @media screen and (max-width: 600px) {
+        width: 100%;
+      }
+    `}
+
+  @media screen and (max-width: 390px) {
+    :last-of-type {
+      margin-top: 0;
+    }
+  }
+`;
+
+export const BulletLi = styled.li`
+  list-style-position: inside;
+  list-style-type: disc;
 `;
