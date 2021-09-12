@@ -1,4 +1,4 @@
-import styled from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
 import { Button } from "../../../../components/UI";
 import { convertPxToRem } from "../../../../utils/cssHelpers";
 
@@ -40,6 +40,7 @@ export const CardContent = styled.div`
   background-color: ${({ theme }) => theme.colors.modalBackground};
   padding: 1em;
   width: 100%;
+  border-radius: 0 0 1em 1em;
 `;
 
 export const ButtonWrapper = styled.div`
@@ -48,10 +49,78 @@ export const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  margin-bottom: 2em;
+
+  @media screen and (max-width: 500px) {
+    flex-direction: column-reverse;
+    width: 100%;
+  }
 `;
 
-export const NextButton = styled(Button)``;
+export const NextButton = styled(Button)`
+  @media screen and (max-width: 500px) {
+    margin-bottom: 1em;
+  }
+`;
 
 export const PrevButton = styled(Button)`
   background-color: transparent;
+`;
+
+export const Text = styled.p<{ margin?: string }>`
+  text-align: center;
+  font-size: 1.125rem;
+  color: ${({ theme }) => theme.colors.grayText};
+  margin: ${({ margin }) => margin};
+`;
+
+export const ChooseOption = styled.ul`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const Option = styled.li<{ selected: boolean }>`
+  position: relative;
+  margin: 2em 0;
+  border: 2px solid ${({ theme }) => theme.colors.gray};
+  border-radius: 0.5em;
+  padding: 1em;
+  width: ${convertPxToRem(100)};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  transition: all 0.1s ease-in-out;
+  margin-right: 1em;
+
+  :hover {
+    cursor: pointer;
+    border: 2px solid ${({ theme }) => theme.colors.orange};
+  }
+
+  :last-of-type {
+    margin-right: 0;
+  }
+
+  svg {
+    width: ${convertPxToRem(60)};
+    height: ${convertPxToRem(60)};
+  }
+
+  #checkmark {
+    display: ${({ selected }) => (selected ? "normal" : "none")};
+    width: ${convertPxToRem(16)};
+    height: ${convertPxToRem(16)};
+    position: absolute;
+    top: 0.5em;
+    right: 0.5em;
+  }
+
+  ${({ selected }) =>
+    selected &&
+    css`
+      border: 2px solid ${({ theme }) => theme.colors.orange};
+    `}
 `;
