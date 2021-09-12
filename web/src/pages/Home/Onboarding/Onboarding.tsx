@@ -6,6 +6,9 @@ import { ReactComponent as GreenCheckmark } from "../../../assets/svg/green-chec
 import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
 import { ReactComponent as MaleAvatar } from "../../../assets/svg/male.svg";
 import { ReactComponent as QuestionMark } from "../../../assets/svg/question-mark.svg";
+import { ReactComponent as Increase } from "../../../assets/svg/increase.svg";
+import { ReactComponent as Decrease } from "../../../assets/svg/decrease.svg";
+import { ReactComponent as Balance } from "../../../assets/svg/balance.svg";
 import { Heading } from "../../../components/UI";
 import * as ROUTES from "../../../constants/routes";
 import {
@@ -32,8 +35,8 @@ const ALL_STEPS = 4;
 
 enum STEP_TYPES {
   GENDER = 1,
-  ACTIVITY_LEVEL = 2,
-  WIEGHT_GOAL = 3,
+  WIEGHT_GOAL = 2,
+  ACTIVITY_LEVEL = 3,
   GENERAL_INFO = 4,
 }
 
@@ -42,9 +45,8 @@ const Onboarding: React.FC<OnboardingProps> = () => {
   const [userChoices, setUserChoices] = useState({
     gender: "",
     activityLevel: "",
+    weightGoal: "",
   });
-
-  console.log({ userChoices });
 
   const calculateProgress = (step: number, maxSteps: number) => {
     return `${(step / maxSteps) * 100}%`;
@@ -106,8 +108,87 @@ const Onboarding: React.FC<OnboardingProps> = () => {
               <ButtonWrapper>
                 <PrevButton disabled>Back</PrevButton>
                 <NextButton
-                  onClick={() => setStep(STEP_TYPES.ACTIVITY_LEVEL)}
+                  onClick={() => setStep(STEP_TYPES.WIEGHT_GOAL)}
                   disabled={!userChoices.gender}
+                >
+                  Next
+                </NextButton>
+              </ButtonWrapper>
+            </CardContent>
+          </CardWrapper>
+        </Wrapper>
+      </>
+    );
+  }
+
+  if (step === STEP_TYPES.WIEGHT_GOAL) {
+    return (
+      <>
+        <NavWrapper>
+          <LogoContainer>
+            <Logo />
+          </LogoContainer>
+          <NavLink to={ROUTES.LANDING_PAGE}>
+            <GoBack>
+              <Cancel />
+            </GoBack>
+          </NavLink>
+        </NavWrapper>
+        <Wrapper>
+          <CardWrapper>
+            <Progress>
+              <ProgressBar progressWidth={calculateProgress(step, ALL_STEPS)} />
+            </Progress>
+            <CardContent>
+              <Heading size="h2">What's your weight goal?</Heading>
+              <ChooseOption>
+                <Option
+                  selected={userChoices.weightGoal === "loseWeight"}
+                  onClick={() =>
+                    setUserChoices(prev => ({
+                      ...prev,
+                      weightGoal: "loseWeight",
+                    }))
+                  }
+                >
+                  <GreenCheckmark id="checkmark" />
+                  <Decrease />
+                  <Text margin="0.5em 0 0 0">Lose Weight</Text>
+                </Option>
+                <Option
+                  selected={userChoices.weightGoal === "gainWeight"}
+                  onClick={() =>
+                    setUserChoices(prev => ({
+                      ...prev,
+                      weightGoal: "gainWeight",
+                    }))
+                  }
+                >
+                  <GreenCheckmark id="checkmark" />
+                  <Increase />
+                  <Text margin="0.5em 0 0 0">Gain Weight</Text>
+                </Option>
+                <Option
+                  selected={userChoices.weightGoal === "maintainWeight"}
+                  onClick={() =>
+                    setUserChoices(prev => ({
+                      ...prev,
+                      weightGoal: "maintainWeight",
+                    }))
+                  }
+                >
+                  <GreenCheckmark id="checkmark" />
+                  <Balance />
+                  <Text margin="0.5em 0 0 0">Maintain Weight</Text>
+                </Option>
+              </ChooseOption>
+              <ButtonWrapper>
+                <PrevButton onClick={() => setStep(STEP_TYPES.GENDER)}>
+                  Back
+                </PrevButton>
+                <NextButton
+                  onClick={() => setStep(STEP_TYPES.ACTIVITY_LEVEL)}
+                  disabled={!userChoices.weightGoal}
                 >
                   Next
                 </NextButton>
@@ -221,48 +302,13 @@ const Onboarding: React.FC<OnboardingProps> = () => {
                 </Option>
               </ChooseOption>
               <ButtonWrapper>
-                <PrevButton onClick={() => setStep(STEP_TYPES.GENDER)}>
+                <PrevButton onClick={() => setStep(STEP_TYPES.WIEGHT_GOAL)}>
                   Back
                 </PrevButton>
                 <NextButton
-                  onClick={() => setStep(STEP_TYPES.WIEGHT_GOAL)}
+                  onClick={() => setStep(STEP_TYPES.GENERAL_INFO)}
                   disabled={!userChoices.activityLevel}
                 >
-                  Next
-                </NextButton>
-              </ButtonWrapper>
-            </CardContent>
-          </CardWrapper>
-        </Wrapper>
-      </>
-    );
-  }
-
-  if (step === STEP_TYPES.WIEGHT_GOAL) {
-    return (
-      <>
-        <NavWrapper>
-          <LogoContainer>
-            <Logo />
-          </LogoContainer>
-          <NavLink to={ROUTES.LANDING_PAGE}>
-            <GoBack>
-              <Cancel />
-            </GoBack>
-          </NavLink>
-        </NavWrapper>
-        <Wrapper>
-          <CardWrapper>
-            <Progress>
-              <ProgressBar progressWidth={calculateProgress(step, ALL_STEPS)} />
-            </Progress>
-            <CardContent>
-              <Heading size="h2">What's your weight goal?</Heading>
-              <ButtonWrapper>
-                <PrevButton onClick={() => setStep(STEP_TYPES.ACTIVITY_LEVEL)}>
-                  Back
-                </PrevButton>
-                <NextButton onClick={() => setStep(STEP_TYPES.GENERAL_INFO)}>
                   Next
                 </NextButton>
               </ButtonWrapper>
@@ -293,7 +339,7 @@ const Onboarding: React.FC<OnboardingProps> = () => {
           <CardContent>
             <Heading size="h2">General Info</Heading>
             <ButtonWrapper>
-              <PrevButton onClick={() => setStep(STEP_TYPES.WIEGHT_GOAL)}>
+              <PrevButton onClick={() => setStep(STEP_TYPES.ACTIVITY_LEVEL)}>
                 Back
               </PrevButton>
               <NextButton>Next</NextButton>

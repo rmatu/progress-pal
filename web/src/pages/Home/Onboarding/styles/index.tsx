@@ -10,6 +10,8 @@ export const NavWrapper = styled.div`
 `;
 
 export const LogoContainer = styled.div`
+  margin-top: 1em;
+
   svg {
     height: 5em;
     width: 15em;
@@ -124,7 +126,11 @@ export const ChooseOption = styled.ul<{
   }
 `;
 
-export const Option = styled.li<{ selected: boolean; rowStyling?: boolean }>`
+export const Option = styled.li<{
+  selected: boolean;
+  rowStyling?: boolean;
+  center?: boolean;
+}>`
   position: relative;
   margin: 2em 0;
   border: 2px solid ${({ theme }) => theme.colors.gray};
@@ -143,7 +149,8 @@ export const Option = styled.li<{ selected: boolean; rowStyling?: boolean }>`
     transition: all 0.1s ease-in-out;
   }
 
-  p {
+  p,
+  li {
     color: ${({ theme }) => theme.colors.grayText};
   }
 
@@ -169,10 +176,10 @@ export const Option = styled.li<{ selected: boolean; rowStyling?: boolean }>`
     selected &&
     css`
       border: 2px solid ${({ theme }) => theme.colors.orange};
-      background-color: ${({ theme }) => theme.colors.orange};
       font-color: #000;
 
-      p {
+      p,
+      li {
         color: ${({ theme }) => theme.colors.white};
       }
     `}
@@ -200,6 +207,17 @@ export const Option = styled.li<{ selected: boolean; rowStyling?: boolean }>`
 
       @media screen and (max-width: 600px) {
         width: 100%;
+      }
+    `}
+
+    ${({ center }) =>
+    center &&
+    css`
+      display: flex;
+      align-items: center;
+
+      h4 {
+        margin-bottom: 0;
       }
     `}
 
