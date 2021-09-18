@@ -4,6 +4,7 @@ export interface Props {
   color: string;
   marginB: string;
   size?: string;
+  textAlign?: string;
 }
 
 const baseStyle = css<Props>`
@@ -13,7 +14,7 @@ const baseStyle = css<Props>`
   }};
   margin-top: 0;
   margin-bottom: ${({ marginB }) => marginB};
-  text-align: center;
+  text-align: ${({ textAlign }) => (textAlign ? textAlign : "center")};
   padding: 0 0.5em;
 `;
 

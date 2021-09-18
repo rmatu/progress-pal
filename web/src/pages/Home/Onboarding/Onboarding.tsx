@@ -30,12 +30,14 @@ import {
   LogoContainer,
   NavWrapper,
   NextButton,
+  Flex,
   Option,
   PrevButton,
   Progress,
   ProgressBar,
   Text,
   Wrapper,
+  Row,
 } from "./styles";
 
 interface OnboardingProps {}
@@ -396,26 +398,62 @@ const Onboarding: React.FC<OnboardingProps> = () => {
               >
                 {({ setFieldValue, values }) => (
                   <>
-                    <Field
-                      type="text"
-                      name="birthDate"
-                      placeholder="dd/mm/yyyy"
-                      width="15em"
-                      maxLength={10}
-                      onChange={(e: React.ChangeEvent<any>) => {
-                        handleChange(
-                          e,
-                          "birthDate",
-                          values.birthDate,
-                          setFieldValue,
-                        );
-                      }}
-                      component={Input}
-                    >
-                      <CalendarIcon
-                        onClick={() => setShowCalendar(prev => !prev)}
-                      />
-                    </Field>
+                    {console.log({ values })}
+                    <Flex flexDirection="row">
+                      <Row>
+                        <Heading size="h4" marginB="0.5em">
+                          Height
+                        </Heading>
+                        <Field
+                          type="number"
+                          name="height"
+                          placeholder="in cm"
+                          width="15em"
+                          min={100}
+                          max={300}
+                          component={Input}
+                        />
+                      </Row>
+                      <Row>
+                        <Heading size="h4" marginB="0.5em">
+                          Wieght
+                        </Heading>
+                        <Field
+                          type="number"
+                          name="weight"
+                          placeholder="in kg"
+                          width="15em"
+                          min={25}
+                          max={635}
+                          component={Input}
+                        />
+                      </Row>
+                    </Flex>
+                    <Row>
+                      <Heading size="h4" marginB="0.5em" textAlign="left">
+                        Birth Date
+                      </Heading>
+                      <Field
+                        type="text"
+                        name="birthDate"
+                        placeholder="dd/mm/yyyy"
+                        width="15em"
+                        maxLength={10}
+                        component={Input}
+                        onChange={(e: React.ChangeEvent<any>) => {
+                          handleChange(
+                            e,
+                            "birthDate",
+                            values.birthDate,
+                            setFieldValue,
+                          );
+                        }}
+                      >
+                        <CalendarIcon
+                          onClick={() => setShowCalendar(prev => !prev)}
+                        />
+                      </Field>
+                    </Row>
                     {showCalendar && (
                       <Calendar
                         position={"absolute"}

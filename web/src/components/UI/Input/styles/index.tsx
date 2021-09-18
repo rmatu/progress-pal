@@ -29,11 +29,12 @@ export const IconWrapper = styled.div`
   }
 `;
 
-export const Wrapper = styled.div<{ width?: string }>`
+export const Wrapper = styled.div<{ width?: string; borderRadius?: string }>`
   width: 100%;
   width: ${({ width }) => width};
   background-color: #fff;
   border-radius: 2rem;
+  border-radius: ${({ borderRadius }) => borderRadius};
   padding: 1rem;
   font-weight: 700;
   position: relative;

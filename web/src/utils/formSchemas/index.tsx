@@ -103,8 +103,17 @@ export const GeneralInfoSchema = Yup.object().shape({
     )
     .max(10, "Invalid date")
     .required("Birthday is required"),
+  height: Yup.number()
+    .min(100, "Min height is 100cm")
+    .max(300, "Max height is 360cm")
+    .required("Height is required"),
+  weight: Yup.number()
+    .min(25, "Min wieght is 25")
+    .max(635, "Max height is 635"),
 });
 
 export const GeneralInfoInitialValues = {
   birthDate: "",
+  height: "",
+  weight: "",
 };

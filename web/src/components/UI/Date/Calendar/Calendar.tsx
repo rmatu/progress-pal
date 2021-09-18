@@ -29,6 +29,7 @@ const Calendar: React.FC<CalendarProps> = ({
     if (setFieldValue) {
       setFieldValue("birthDate", moment(date).format("DD[/]MM[/]YYYY"), true);
     }
+    handleClose();
   };
 
   return (

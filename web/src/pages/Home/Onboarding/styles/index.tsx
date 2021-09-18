@@ -235,5 +235,32 @@ export const BulletLi = styled.li`
 
 export const Form = styled.form`
   margin-top: 1em;
-  width: 80%;
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  @media screen and (max-width: 600px) {
+    justify-content: center;
+    align-items: center;
+  }
+
+  h4 {
+    text-align: left;
+  }
 `;
+
+export const Flex = styled.div<{ flexDirection?: string }>`
+  display: flex;
+  flex-direction: ${({ flexDirection }) => flexDirection};
+  justify-content: space-between;
+  width: 100%;
+
+  @media screen and (max-width: 600px) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
+export const Row = styled.div``;

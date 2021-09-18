@@ -13,6 +13,12 @@ export const Wrapper = styled.div<{ position?: string }>`
   > div {
     padding: 1em;
   }
+
+  @media screen and (max-width: 500px) {
+    transform: scale(0.9);
+    position: absolute;
+    left: 0.5em;
+  }
 `;
 
 export const CloseWrapper = styled.div`
