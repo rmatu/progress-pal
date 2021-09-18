@@ -235,4 +235,5 @@ export const BulletLi = styled.li`
 
 export const Form = styled.form`
   margin-top: 1em;
+  width: 80%;
 `;

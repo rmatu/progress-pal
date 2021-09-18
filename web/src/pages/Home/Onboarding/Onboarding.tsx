@@ -53,11 +53,6 @@ type UserChoices = {
   gender: null | string;
   activityLevel: null | string;
   weightGoal: null | string;
-  bodyInfo: {
-    weight: null | number;
-    height: null | number;
-    age: null | number;
-  };
 };
 
 const Onboarding: React.FC<OnboardingProps> = () => {
@@ -68,11 +63,6 @@ const Onboarding: React.FC<OnboardingProps> = () => {
     gender: null,
     activityLevel: null,
     weightGoal: null,
-    bodyInfo: {
-      weight: null,
-      height: null,
-      age: null,
-    },
   });
 
   const calculateProgress = (step: number, maxSteps: number) => {
@@ -428,8 +418,10 @@ const Onboarding: React.FC<OnboardingProps> = () => {
                     </Field>
                     {showCalendar && (
                       <Calendar
+                        position={"absolute"}
                         selectedDate={bornDate}
                         changeDate={setBornDate}
+                        handleClose={() => setShowCalendar(false)}
                         setFieldValue={setFieldValue}
                       />
                     )}

@@ -1,10 +1,15 @@
 import moment from "moment";
 import React from "react";
 import { Calendar as PackageCalendar } from "react-date-range";
+import { ReactComponent as Close } from "../../../../assets/svg/cancel.svg";
+import { Wrapper, CloseWrapper } from "./styles";
+import { enGB } from "date-fns/locale";
 
 interface CalendarProps {
+  position?: string;
   selectedDate: Date;
   changeDate: (currDate: Date) => void;
+  handleClose: () => void;
   setFieldValue?: (
     field: string,
     value: any,
@@ -13,8 +18,10 @@ interface CalendarProps {
 }
 
 const Calendar: React.FC<CalendarProps> = ({
+  position,
   selectedDate,
   changeDate,
+  handleClose,
   setFieldValue,
 }) => {
   const handleSelect = (date: Date) => {
@@ -25,11 +32,17 @@ const Calendar: React.FC<CalendarProps> = ({
   };
 
   return (
-    <PackageCalendar
-      date={moment(selectedDate).toDate()}
-      onChange={handleSelect}
-      maxDate={moment().toDate()}
-    />
+    <Wrapper position={position}>
+      <PackageCalendar
+        date={moment(selectedDate).toDate()}
+        onChange={handleSelect}
+        maxDate={moment().toDate()}
+        locale={enGB}
+      />
+      <CloseWrapper onClick={handleClose}>
+        <Close />
+      </CloseWrapper>
+    </Wrapper>
   );
 };
 
