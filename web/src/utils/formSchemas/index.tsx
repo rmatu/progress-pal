@@ -90,3 +90,21 @@ export const ResetPasswordValues = {
   password: "",
   confirmPassword: "",
 };
+
+/**
+ * * Onboarding General Info
+ */
+
+export const GeneralInfoSchema = Yup.object().shape({
+  birthDate: Yup.string()
+    .matches(
+      /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/,
+      "Invalid date",
+    )
+    .max(10, "Invalid date")
+    .required("Birthday is required"),
+});
+
+export const GeneralInfoInitialValues = {
+  birthDate: "",
+};

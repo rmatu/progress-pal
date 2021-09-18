@@ -29,8 +29,9 @@ export const IconWrapper = styled.div`
   }
 `;
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<{ width?: string }>`
   width: 100%;
+  width: ${({ width }) => width};
   background-color: #fff;
   border-radius: 2rem;
   padding: 1rem;

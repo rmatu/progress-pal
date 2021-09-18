@@ -101,8 +101,6 @@ const SignIn: React.FC<SignInProps> = () => {
   };
 
   const responseFacebook = async (response: any) => {
-    console.log(response);
-
     const { email } = response;
     try {
       const res = await signInWithFacebook({

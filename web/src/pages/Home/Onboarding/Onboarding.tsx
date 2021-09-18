@@ -1,22 +1,31 @@
+import { Field, Formik } from "formik";
+import moment from "moment";
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { ReactComponent as Balance } from "../../../assets/svg/balance.svg";
 import { ReactComponent as Cancel } from "../../../assets/svg/cancel.svg";
+import { ReactComponent as Decrease } from "../../../assets/svg/decrease.svg";
 import { ReactComponent as FemaleAvatar } from "../../../assets/svg/female.svg";
 import { ReactComponent as GreenCheckmark } from "../../../assets/svg/green-checkmark.svg";
+import { ReactComponent as Increase } from "../../../assets/svg/increase.svg";
 import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
 import { ReactComponent as MaleAvatar } from "../../../assets/svg/male.svg";
 import { ReactComponent as QuestionMark } from "../../../assets/svg/question-mark.svg";
-import { ReactComponent as Increase } from "../../../assets/svg/increase.svg";
-import { ReactComponent as Decrease } from "../../../assets/svg/decrease.svg";
-import { ReactComponent as Balance } from "../../../assets/svg/balance.svg";
-import { Heading } from "../../../components/UI";
+import { ReactComponent as CalendarIcon } from "../../../assets/svg/calendar.svg";
+import { Heading, Input } from "../../../components/UI";
+import Calendar from "../../../components/UI/Date/Calendar/Calendar";
 import * as ROUTES from "../../../constants/routes";
+import {
+  GeneralInfoInitialValues,
+  GeneralInfoSchema,
+} from "../../../utils/formSchemas";
 import {
   BulletLi,
   ButtonWrapper,
   CardContent,
   CardWrapper,
   ChooseOption,
+  Form,
   GoBack,
   LogoContainer,
   NavWrapper,
@@ -40,16 +49,67 @@ enum STEP_TYPES {
   GENERAL_INFO = 4,
 }
 
+type UserChoices = {
+  gender: null | string;
+  activityLevel: null | string;
+  weightGoal: null | string;
+  bodyInfo: {
+    weight: null | number;
+    height: null | number;
+    age: null | number;
+  };
+};
+
 const Onboarding: React.FC<OnboardingProps> = () => {
-  const [step, setStep] = useState<STEP_TYPES>(STEP_TYPES.ACTIVITY_LEVEL);
-  const [userChoices, setUserChoices] = useState({
-    gender: "",
-    activityLevel: "",
-    weightGoal: "",
+  const [step, setStep] = useState<STEP_TYPES>(STEP_TYPES.GENERAL_INFO);
+  const [bornDate, setBornDate] = useState<Date>(moment().toDate());
+  const [showCalendar, setShowCalendar] = useState<boolean>(false);
+  const [userChoices, setUserChoices] = useState<UserChoices>({
+    gender: null,
+    activityLevel: null,
+    weightGoal: null,
+    bodyInfo: {
+      weight: null,
+      height: null,
+      age: null,
+    },
   });
 
   const calculateProgress = (step: number, maxSteps: number) => {
     return `${(step / maxSteps) * 100}%`;
+  };
+
+  const handleChange = (
+    e: any,
+    fieldName: string,
+    formikValue: string,
+    setFieldValue: (
+      field: string,
+      value: any,
+      shouldValidate?: boolean | undefined,
+    ) => void,
+  ) => {
+    if (fieldName === "birthDate") {
+      let updatedValue = e.target.value;
+
+      //User is deleting
+      if (updatedValue.length <= formikValue.length) {
+        setFieldValue(fieldName, updatedValue, true);
+        return;
+      }
+
+      // not a number
+      const lastChar = updatedValue.charCodeAt(updatedValue.length - 1);
+      console.log({ lastChar });
+      if (lastChar < 48 || lastChar > 57) {
+        return;
+      }
+
+      setFieldValue(fieldName, updatedValue, true);
+      if (updatedValue.length === 2 || updatedValue.length === 5) {
+        setFieldValue(fieldName, `${updatedValue}/`, true);
+      }
+    }
   };
 
   if (step === STEP_TYPES.GENDER) {
@@ -338,6 +398,45 @@ const Onboarding: React.FC<OnboardingProps> = () => {
           </Progress>
           <CardContent>
             <Heading size="h2">General Info</Heading>
+            <Form>
+              <Formik
+                initialValues={GeneralInfoInitialValues}
+                validationSchema={GeneralInfoSchema}
+                onSubmit={({}) => {}}
+              >
+                {({ setFieldValue, values }) => (
+                  <>
+                    <Field
+                      type="text"
+                      name="birthDate"
+                      placeholder="dd/mm/yyyy"
+                      width="15em"
+                      maxLength={10}
+                      onChange={(e: React.ChangeEvent<any>) => {
+                        handleChange(
+                          e,
+                          "birthDate",
+                          values.birthDate,
+                          setFieldValue,
+                        );
+                      }}
+                      component={Input}
+                    >
+                      <CalendarIcon
+                        onClick={() => setShowCalendar(prev => !prev)}
+                      />
+                    </Field>
+                    {showCalendar && (
+                      <Calendar
+                        selectedDate={bornDate}
+                        changeDate={setBornDate}
+                        setFieldValue={setFieldValue}
+                      />
+                    )}
+                  </>
+                )}
+              </Formik>
+            </Form>
             <ButtonWrapper>
               <PrevButton onClick={() => setStep(STEP_TYPES.ACTIVITY_LEVEL)}>
                 Back

@@ -232,3 +232,7 @@ export const BulletLi = styled.li`
   list-style-position: inside;
   list-style-type: disc;
 `;
+
+export const Form = styled.form`
+  margin-top: 1em;
+`;
