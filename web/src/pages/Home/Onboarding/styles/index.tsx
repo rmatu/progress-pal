@@ -120,6 +120,7 @@ export const ChooseOption = styled.ul<{
     flexDirection ? flexDirection : "row"};
   align-items: center;
   justify-content: center;
+  margin: 1em;
 
   @media screen and (max-width: 390px) {
     flex-wrap: wrap;
@@ -132,7 +133,6 @@ export const Option = styled.li<{
   center?: boolean;
 }>`
   position: relative;
-  margin: 2em 0;
   border: 2px solid ${({ theme }) => theme.colors.gray};
   border-radius: 0.5em;
   padding: 1em;
@@ -140,6 +140,7 @@ export const Option = styled.li<{
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 1em 0;
   flex-direction: column;
   margin-right: 1em;
 

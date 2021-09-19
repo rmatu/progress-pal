@@ -1,5 +1,14 @@
 import { Field, Int, ObjectType } from "type-graphql";
-import { Column, Entity, BaseEntity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  BaseEntity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  OneToOne,
+  JoinColumn,
+} from "typeorm";
+import { UserMetrics } from "./UserMetrics";
 
 @ObjectType()
 @Entity()
@@ -44,4 +53,12 @@ export class User extends BaseEntity {
   @Field(() => Int)
   @Column({ type: "int", default: 0 })
   onboardingStep: number;
+
+  @Field(() => String)
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @OneToOne(() => UserMetrics, userMetrics => userMetrics.user)
+  @JoinColumn()
+  userMetrics: UserMetrics;
 }

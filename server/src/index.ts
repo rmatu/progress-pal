@@ -18,20 +18,21 @@ import { User } from "./entities/User";
 import { oAuth2Client } from "./OAuth2Client";
 import { redis } from "./redis";
 import { UserResolver } from "./resolvers/user";
+import { UserMetrics } from "./entities/UserMetrics";
 
 const main = async () => {
   oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
 
   const conn = await createConnection({
     type: "postgres",
-    database: "progresspal",
-    username: "postgres",
-    password: "adammalysz55",
+    database: process.env.DB_DATABASE_NAME,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
     port: 5432,
     logging: true,
     synchronize: true,
     migrations: [path.join(__dirname, "./migrations/*")],
-    entities: [User],
+    entities: [User, UserMetrics],
   });
 
   // await conn.runMigrations();
@@ -43,7 +44,7 @@ const main = async () => {
       key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
       cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
     },
-    app
+    app,
   );
 
   const RedisStore = connectRedis(session);
@@ -53,7 +54,7 @@ const main = async () => {
     cors({
       origin: process.env.CORS_ORIGIN,
       credentials: true,
-    })
+    }),
   );
   app.use(
     session({
@@ -71,7 +72,7 @@ const main = async () => {
       saveUninitialized: false,
       secret: process.env.SESSION_SECRET as string,
       resave: false,
-    })
+    }),
   );
 
   const apolloServer = new ApolloServer({
@@ -97,6 +98,6 @@ const main = async () => {
   });
 };
 
-main().catch((err) => {
+main().catch(err => {
   console.log(err);
 });

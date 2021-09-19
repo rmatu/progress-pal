@@ -100,6 +100,10 @@ html{
   font-size: 80%;
   box-sizing: border-box;
 
+  @media ${props => props.theme.mediaQueries.phones} {
+      font-size: 70%;
+    }
+
   --background: ${props => props.theme.colors.background}
   --black: ${props => props.theme.colors.black}
   --gray: ${props => props.theme.colors.gray}

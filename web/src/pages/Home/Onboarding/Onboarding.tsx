@@ -58,7 +58,7 @@ type UserChoices = {
 };
 
 const Onboarding: React.FC<OnboardingProps> = () => {
-  const [step, setStep] = useState<STEP_TYPES>(STEP_TYPES.GENERAL_INFO);
+  const [step, setStep] = useState<STEP_TYPES>(STEP_TYPES.GENDER);
   const [bornDate, setBornDate] = useState<Date>(moment().toDate());
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [userChoices, setUserChoices] = useState<UserChoices>({

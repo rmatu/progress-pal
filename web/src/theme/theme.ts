@@ -13,7 +13,8 @@ const theme = {
     white: "#fff",
   },
   mediaQueries: {
-    phones: `only screen and (max-width: 920px)`,
+    phones: `screen and (max-width: 480px)`,
+    tablets: `screen and (max-width: 768px)`,
   },
 };
 
