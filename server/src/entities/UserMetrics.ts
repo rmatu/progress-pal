@@ -4,8 +4,9 @@ import {
   Entity,
   BaseEntity,
   PrimaryGeneratedColumn,
-  OneToOne,
   UpdateDateColumn,
+  CreateDateColumn,
+  ManyToOne,
 } from "typeorm";
 import { User } from "./User";
 
@@ -13,43 +14,36 @@ import { User } from "./User";
 @Entity()
 export class UserMetrics extends BaseEntity {
   // SQL
-
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id!: number;
+
+  // Fields
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  weightGoal: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  activityLevel: string;
+
+  @Field(() => Number, { nullable: true })
+  @Column({ nullable: true })
+  height: number; // in cm
+
+  @Field(() => Number, { nullable: true })
+  @Column({ nullable: true })
+  weight: number; // in grams
 
   @Field(() => String)
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // Fields
-
   @Field(() => String)
-  @Column()
-  gender: string;
-
-  @Field(() => String)
-  @Column()
-  weightGoal: string;
-
-  @Field(() => String)
-  @Column()
-  activityLevel: string;
-
-  @Field(() => Number)
-  @Column()
-  height: number;
-
-  @Field(() => Number)
-  @Column()
-  weight: number;
-
-  @Field(() => String)
-  @Column()
-  birthDate: string;
+  @CreateDateColumn()
+  createdAt: Date;
 
   // Relations
-
-  @OneToOne(() => User, user => user.userMetrics)
+  @ManyToOne(() => User, (user: User) => user.userMetrics)
   user: User;
 }

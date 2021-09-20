@@ -4,21 +4,23 @@ import connectRedis from "connect-redis";
 import cors from "cors";
 import express from "express";
 import session from "express-session";
-import path from "path";
-import https from "https";
 import fs from "fs";
-
+import https from "https";
+import path from "path";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
 import { COOKIE_NAME, __prod__ } from "./constants";
+import { oAuth2Client } from "./OAuth2Client";
+import { redis } from "./redis";
 
 //Entities
 import { User } from "./entities/User";
-import { oAuth2Client } from "./OAuth2Client";
-import { redis } from "./redis";
-import { UserResolver } from "./resolvers/user";
 import { UserMetrics } from "./entities/UserMetrics";
+
+//Resolvers
+import { UserResolver } from "./resolvers/user";
+import { UserMetricsResolver } from "./resolvers/userMetrics";
 
 const main = async () => {
   oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
@@ -77,7 +79,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver],
+      resolvers: [UserResolver, UserMetricsResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({
