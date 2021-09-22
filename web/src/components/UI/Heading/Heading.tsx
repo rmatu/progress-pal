@@ -3,8 +3,9 @@ import { Heading1, Heading2, Heading3, Heading4 } from "./styles";
 
 export interface HeadingProps {
   children: React.ReactNode[] | React.ReactNode;
-  color: string;
-  marginB: string;
+  color?: string;
+  marginB?: string;
+  textAlign?: string;
   size: string;
 }
 
@@ -12,31 +13,32 @@ export interface HeadingProps {
 // @ts-ignore
 const Heading: React.FC<HeadingProps> = ({
   children,
-  color,
-  marginB,
+  color = "white",
+  marginB = "0",
+  textAlign,
   size,
 }) => {
   if (size === "h1")
     return (
-      <Heading1 color={color} marginB={marginB}>
+      <Heading1 color={color} marginB={marginB} textAlign={textAlign}>
         {children}
       </Heading1>
     );
   if (size === "h2")
     return (
-      <Heading2 color={color} marginB={marginB}>
+      <Heading2 color={color} marginB={marginB} textAlign={textAlign}>
         {children}
       </Heading2>
     );
   if (size === "h3")
     return (
-      <Heading3 color={color} marginB={marginB}>
+      <Heading3 color={color} marginB={marginB} textAlign={textAlign}>
         {children}
       </Heading3>
     );
   if (size === "h4")
     return (
-      <Heading4 color={color} marginB={marginB}>
+      <Heading4 color={color} marginB={marginB} textAlign={textAlign}>
         {children}
       </Heading4>
     );

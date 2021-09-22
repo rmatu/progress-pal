@@ -1,0 +1,7 @@
+fragment RegularUserMetrics on UserMetrics {
+  id
+  weightGoal
+  activityLevel
+  height
+  weight
+}

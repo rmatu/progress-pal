@@ -1,0 +1,5 @@
+mutation ChangeOnboardingStep($step: Float!) {
+  changeOnboardingStep(step: $step) {
+    ...RegularUser
+  }
+}

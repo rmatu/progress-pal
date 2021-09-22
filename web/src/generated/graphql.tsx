@@ -14,6 +14,7 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   me?: Maybe<User>;
+  getUserMetrics?: Maybe<Array<UserMetrics>>;
 };
 
 export type User = {
@@ -21,12 +22,27 @@ export type User = {
   id: Scalars['Int'];
   username: Scalars['String'];
   email: Scalars['String'];
+  birthDate?: Maybe<Scalars['String']>;
+  gender?: Maybe<Scalars['String']>;
   isPremium: Scalars['Boolean'];
   emailVerified: Scalars['Boolean'];
   googleRegisetered: Scalars['Boolean'];
   facebookRegisetered: Scalars['Boolean'];
-  subscriptionStart: Scalars['String'];
+  subscriptionStart?: Maybe<Scalars['String']>;
   onboardingStep: Scalars['Int'];
+  updatedAt: Scalars['String'];
+  createdAt: Scalars['String'];
+};
+
+export type UserMetrics = {
+  __typename?: 'UserMetrics';
+  id: Scalars['Int'];
+  weightGoal?: Maybe<Scalars['String']>;
+  activityLevel?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['Float']>;
+  weight?: Maybe<Scalars['Float']>;
+  updatedAt: Scalars['String'];
+  createdAt: Scalars['String'];
 };
 
 export type Mutation = {
@@ -42,6 +58,8 @@ export type Mutation = {
   signInWithGoogle: UserResponse;
   signInWithFacebook: UserResponse;
   logout: Scalars['Boolean'];
+  changeOnboardingStep: User;
+  finishOnboarding: UpdateOnboardingResponse;
 };
 
 
@@ -96,6 +114,16 @@ export type MutationSignInWithFacebookArgs = {
   email: Scalars['String'];
 };
 
+
+export type MutationChangeOnboardingStepArgs = {
+  step: Scalars['Float'];
+};
+
+
+export type MutationFinishOnboardingArgs = {
+  input: CreateUserMetricsInput;
+};
+
 export type UserResponse = {
   __typename?: 'UserResponse';
   errors?: Maybe<Array<FieldError>>;
@@ -114,14 +142,45 @@ export type UsernamePasswordInput = {
   password: Scalars['String'];
 };
 
+export type UpdateOnboardingResponse = {
+  __typename?: 'UpdateOnboardingResponse';
+  userMetrics?: Maybe<UserMetrics>;
+  user?: Maybe<User>;
+};
+
+export type CreateUserMetricsInput = {
+  gender: Scalars['String'];
+  weightGoal: Scalars['String'];
+  activityLevel: Scalars['String'];
+  height: Scalars['Float'];
+  weight: Scalars['Float'];
+  birthDate: Scalars['String'];
+};
+
 export type RegularErrorFragment = (
   { __typename?: 'FieldError' }
   & Pick<FieldError, 'field' | 'message'>
 );
 
+export type RegularUpdateOnboardingResponseFragment = (
+  { __typename?: 'UpdateOnboardingResponse' }
+  & { userMetrics?: Maybe<(
+    { __typename?: 'UserMetrics' }
+    & RegularUserMetricsFragment
+  )>, user?: Maybe<(
+    { __typename?: 'User' }
+    & RegularUserFragment
+  )> }
+);
+
 export type RegularUserFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'username' | 'email' | 'isPremium' | 'emailVerified' | 'subscriptionStart' | 'onboardingStep'>
+);
+
+export type RegularUserMetricsFragment = (
+  { __typename?: 'UserMetrics' }
+  & Pick<UserMetrics, 'id' | 'weightGoal' | 'activityLevel' | 'height' | 'weight'>
 );
 
 export type RegularUserResponseFragment = (
@@ -133,6 +192,19 @@ export type RegularUserResponseFragment = (
     { __typename?: 'User' }
     & RegularUserFragment
   )> }
+);
+
+export type ChangeOnboardingStepMutationVariables = Exact<{
+  step: Scalars['Float'];
+}>;
+
+
+export type ChangeOnboardingStepMutation = (
+  { __typename?: 'Mutation' }
+  & { changeOnboardingStep: (
+    { __typename?: 'User' }
+    & RegularUserFragment
+  ) }
 );
 
 export type ChangePasswordMutationVariables = Exact<{
@@ -157,6 +229,19 @@ export type ConfirmUserMutationVariables = Exact<{
 export type ConfirmUserMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'confirmUser'>
+);
+
+export type FinishOnboardingMutationVariables = Exact<{
+  input: CreateUserMetricsInput;
+}>;
+
+
+export type FinishOnboardingMutation = (
+  { __typename?: 'Mutation' }
+  & { finishOnboarding: (
+    { __typename?: 'UpdateOnboardingResponse' }
+    & RegularUpdateOnboardingResponseFragment
+  ) }
 );
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
@@ -280,10 +365,13 @@ export type MeQuery = (
   )> }
 );
 
-export const RegularErrorFragmentDoc = gql`
-    fragment RegularError on FieldError {
-  field
-  message
+export const RegularUserMetricsFragmentDoc = gql`
+    fragment RegularUserMetrics on UserMetrics {
+  id
+  weightGoal
+  activityLevel
+  height
+  weight
 }
     `;
 export const RegularUserFragmentDoc = gql`
@@ -297,6 +385,23 @@ export const RegularUserFragmentDoc = gql`
   onboardingStep
 }
     `;
+export const RegularUpdateOnboardingResponseFragmentDoc = gql`
+    fragment RegularUpdateOnboardingResponse on UpdateOnboardingResponse {
+  userMetrics {
+    ...RegularUserMetrics
+  }
+  user {
+    ...RegularUser
+  }
+}
+    ${RegularUserMetricsFragmentDoc}
+${RegularUserFragmentDoc}`;
+export const RegularErrorFragmentDoc = gql`
+    fragment RegularError on FieldError {
+  field
+  message
+}
+    `;
 export const RegularUserResponseFragmentDoc = gql`
     fragment RegularUserResponse on UserResponse {
   errors {
@@ -308,6 +413,38 @@ export const RegularUserResponseFragmentDoc = gql`
 }
     ${RegularErrorFragmentDoc}
 ${RegularUserFragmentDoc}`;
+export const ChangeOnboardingStepDocument = gql`
+    mutation ChangeOnboardingStep($step: Float!) {
+  changeOnboardingStep(step: $step) {
+    ...RegularUser
+  }
+}
+    ${RegularUserFragmentDoc}`;
+export type ChangeOnboardingStepMutationFn = Apollo.MutationFunction<ChangeOnboardingStepMutation, ChangeOnboardingStepMutationVariables>;
+
+/**
+ * __useChangeOnboardingStepMutation__
+ *
+ * To run a mutation, you first call `useChangeOnboardingStepMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangeOnboardingStepMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changeOnboardingStepMutation, { data, loading, error }] = useChangeOnboardingStepMutation({
+ *   variables: {
+ *      step: // value for 'step'
+ *   },
+ * });
+ */
+export function useChangeOnboardingStepMutation(baseOptions?: Apollo.MutationHookOptions<ChangeOnboardingStepMutation, ChangeOnboardingStepMutationVariables>) {
+        return Apollo.useMutation<ChangeOnboardingStepMutation, ChangeOnboardingStepMutationVariables>(ChangeOnboardingStepDocument, baseOptions);
+      }
+export type ChangeOnboardingStepMutationHookResult = ReturnType<typeof useChangeOnboardingStepMutation>;
+export type ChangeOnboardingStepMutationResult = Apollo.MutationResult<ChangeOnboardingStepMutation>;
+export type ChangeOnboardingStepMutationOptions = Apollo.BaseMutationOptions<ChangeOnboardingStepMutation, ChangeOnboardingStepMutationVariables>;
 export const ChangePasswordDocument = gql`
     mutation ChangePassword($password: String!, $token: String!) {
   changePassword(password: $password, token: $token) {
@@ -371,6 +508,38 @@ export function useConfirmUserMutation(baseOptions?: Apollo.MutationHookOptions<
 export type ConfirmUserMutationHookResult = ReturnType<typeof useConfirmUserMutation>;
 export type ConfirmUserMutationResult = Apollo.MutationResult<ConfirmUserMutation>;
 export type ConfirmUserMutationOptions = Apollo.BaseMutationOptions<ConfirmUserMutation, ConfirmUserMutationVariables>;
+export const FinishOnboardingDocument = gql`
+    mutation FinishOnboarding($input: CreateUserMetricsInput!) {
+  finishOnboarding(input: $input) {
+    ...RegularUpdateOnboardingResponse
+  }
+}
+    ${RegularUpdateOnboardingResponseFragmentDoc}`;
+export type FinishOnboardingMutationFn = Apollo.MutationFunction<FinishOnboardingMutation, FinishOnboardingMutationVariables>;
+
+/**
+ * __useFinishOnboardingMutation__
+ *
+ * To run a mutation, you first call `useFinishOnboardingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useFinishOnboardingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [finishOnboardingMutation, { data, loading, error }] = useFinishOnboardingMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useFinishOnboardingMutation(baseOptions?: Apollo.MutationHookOptions<FinishOnboardingMutation, FinishOnboardingMutationVariables>) {
+        return Apollo.useMutation<FinishOnboardingMutation, FinishOnboardingMutationVariables>(FinishOnboardingDocument, baseOptions);
+      }
+export type FinishOnboardingMutationHookResult = ReturnType<typeof useFinishOnboardingMutation>;
+export type FinishOnboardingMutationResult = Apollo.MutationResult<FinishOnboardingMutation>;
+export type FinishOnboardingMutationOptions = Apollo.BaseMutationOptions<FinishOnboardingMutation, FinishOnboardingMutationVariables>;
 export const LogoutDocument = gql`
     mutation Logout {
   logout

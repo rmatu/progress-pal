@@ -4,34 +4,37 @@ import connectRedis from "connect-redis";
 import cors from "cors";
 import express from "express";
 import session from "express-session";
-import path from "path";
-import https from "https";
 import fs from "fs";
-
+import https from "https";
+import path from "path";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
 import { COOKIE_NAME, __prod__ } from "./constants";
+import { oAuth2Client } from "./OAuth2Client";
+import { redis } from "./redis";
 
 //Entities
 import { User } from "./entities/User";
-import { oAuth2Client } from "./OAuth2Client";
-import { redis } from "./redis";
+import { UserMetrics } from "./entities/UserMetrics";
+
+//Resolvers
 import { UserResolver } from "./resolvers/user";
+import { UserMetricsResolver } from "./resolvers/userMetrics";
 
 const main = async () => {
   oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
 
   const conn = await createConnection({
     type: "postgres",
-    database: "progresspal",
-    username: "postgres",
-    password: "adammalysz55",
+    database: process.env.DB_DATABASE_NAME,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
     port: 5432,
     logging: true,
     synchronize: true,
     migrations: [path.join(__dirname, "./migrations/*")],
-    entities: [User],
+    entities: [User, UserMetrics],
   });
 
   // await conn.runMigrations();
@@ -43,7 +46,7 @@ const main = async () => {
       key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
       cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
     },
-    app
+    app,
   );
 
   const RedisStore = connectRedis(session);
@@ -53,7 +56,7 @@ const main = async () => {
     cors({
       origin: process.env.CORS_ORIGIN,
       credentials: true,
-    })
+    }),
   );
   app.use(
     session({
@@ -71,12 +74,12 @@ const main = async () => {
       saveUninitialized: false,
       secret: process.env.SESSION_SECRET as string,
       resave: false,
-    })
+    }),
   );
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver],
+      resolvers: [UserResolver, UserMetricsResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({
@@ -97,6 +100,6 @@ const main = async () => {
   });
 };
 
-main().catch((err) => {
+main().catch(err => {
   console.log(err);
 });

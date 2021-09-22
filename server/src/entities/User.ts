@@ -1,5 +1,14 @@
 import { Field, Int, ObjectType } from "type-graphql";
-import { Column, Entity, BaseEntity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  BaseEntity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  OneToMany,
+  CreateDateColumn,
+} from "typeorm";
+import { UserMetrics } from "./UserMetrics";
 
 @ObjectType()
 @Entity()
@@ -8,6 +17,7 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn() // This is a PK
   id!: number;
 
+  // Fields
   @Field(() => String)
   @Column({ unique: true })
   // ! -> can't be null
@@ -16,6 +26,14 @@ export class User extends BaseEntity {
   @Field(() => String)
   @Column({ unique: true })
   email!: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  birthDate: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  gender: string;
 
   // This could not be selected from GraphQL
   @Column({ nullable: true })
@@ -37,11 +55,29 @@ export class User extends BaseEntity {
   @Column({ type: "boolean", default: false })
   facebookRegisetered: boolean;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ nullable: true })
   subscriptionStart: Date;
 
   @Field(() => Int)
   @Column({ type: "int", default: 0 })
   onboardingStep: number;
+
+  @Field(() => String)
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @Field(() => String)
+  @CreateDateColumn()
+  createdAt: Date;
+
+  // Relations;
+  @OneToMany(
+    () => UserMetrics,
+    (userMetrics: UserMetrics) => userMetrics.user,
+    {
+      onDelete: "CASCADE",
+    },
+  )
+  userMetrics: UserMetrics;
 }

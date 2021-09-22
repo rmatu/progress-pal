@@ -1,3 +1,4 @@
+import { isAuth } from "./../middleware/isAuth";
 import {
   Resolver,
   Mutation,
@@ -8,6 +9,7 @@ import {
   Query,
   Root,
   FieldResolver,
+  UseMiddleware,
 } from "type-graphql";
 import { MyContext } from "../types";
 import { User } from "../entities/User";
@@ -15,7 +17,7 @@ import argon2 from "argon2";
 import { UsernamePasswordInput } from "./UsernamePasswordInput";
 import { validateRegister } from "../utils/validateRegister";
 import { getConnection } from "typeorm";
-import { COOKIE_NAME } from "../constants";
+import { COOKIE_NAME, onboardingSteps } from "../constants";
 import { redis } from "../redis";
 import { sendEmail } from "../utils/sendEmail";
 import {
@@ -24,6 +26,7 @@ import {
   createVerificationEmail,
 } from "../emails";
 import { createUrl } from "../utils/createUrl";
+import { checkIfObjectHasValue } from "../utils/objectUtils";
 
 @ObjectType()
 class FieldError {
@@ -44,6 +47,10 @@ class UserResponse {
 
 @Resolver(User)
 export class UserResolver {
+  // ===========================
+  // ====== FIELD RESOLVERS ====
+  // ===========================
+
   @FieldResolver(() => String)
   email(@Root() user: User, @Ctx() { req }: MyContext) {
     // this is the current user and its ok to show them their own email
@@ -54,8 +61,12 @@ export class UserResolver {
     return "";
   }
 
-  @Mutation(() => User)
-  async sendVerifyEmail(@Arg("email") email: string, @Ctx() { req }: MyContext) {
+  // ===========================
+  // ========= QUERYS ==========
+  // ===========================
+
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() { req }: MyContext) {
     // you are not logged in
     if (!req.session.userId) {
       return null;
@@ -67,7 +78,33 @@ export class UserResolver {
       return null;
     }
 
-    const emailObject = createVerificationEmail(email, await createUrl(user?.id, "email-confirm"));
+    return await User.findOne(req.session.userId);
+  }
+
+  // ===========================
+  // ======= MUTATIONS =========
+  // ===========================
+
+  @Mutation(() => User)
+  async sendVerifyEmail(
+    @Arg("email") email: string,
+    @Ctx() { req }: MyContext,
+  ) {
+    // you are not logged in
+    if (!req.session.userId) {
+      return null;
+    }
+
+    const user = await User.findOne(req.session.userId);
+
+    if (!user) {
+      return null;
+    }
+
+    const emailObject = createVerificationEmail(
+      email,
+      await createUrl(user?.id, "email-confirm"),
+    );
 
     await sendEmail(emailObject);
 
@@ -84,7 +121,7 @@ export class UserResolver {
 
     const emailObject = createResetPasswordEmail(
       email,
-      await createUrl(user?.id, "reset-password")
+      await createUrl(user?.id, "reset-password"),
     );
 
     await sendEmail(emailObject);
@@ -95,7 +132,7 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async changePassword(
     @Arg("password") password: string,
-    @Arg("token") token: string
+    @Arg("token") token: string,
   ): Promise<UserResponse> {
     const userId = await redis.get(token);
 
@@ -112,7 +149,10 @@ export class UserResolver {
 
     const hashedPassword = await argon2.hash(password);
 
-    await User.update({ id: parseInt(userId, 10) }, { password: hashedPassword });
+    await User.update(
+      { id: parseInt(userId, 10) },
+      { password: hashedPassword },
+    );
 
     const user = await User.findOne(userId);
 
@@ -133,19 +173,10 @@ export class UserResolver {
     return true;
   }
 
-  @Query(() => User, { nullable: true })
-  async me(@Ctx() { req }: MyContext) {
-    // you are not logged in
-    if (!req.session.userId) {
-      return null;
-    }
-    return await User.findOne(req.session.userId);
-  }
-
   @Mutation(() => UserResponse)
   async signUpWithGoogle(
     @Arg("email") email: string,
-    @Ctx() { req }: MyContext
+    @Ctx() { req }: MyContext,
   ): Promise<UserResponse> {
     let user;
 
@@ -182,7 +213,7 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async signUpWithFacebook(
     @Arg("email") email: string,
-    @Ctx() { req }: MyContext
+    @Ctx() { req }: MyContext,
   ): Promise<UserResponse> {
     let user;
 
@@ -219,7 +250,7 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async signUp(
     @Arg("options") options: UsernamePasswordInput,
-    @Ctx() { req }: MyContext
+    @Ctx() { req }: MyContext,
   ): Promise<UserResponse> {
     const errors = validateRegister(options);
     if (errors) {
@@ -275,7 +306,7 @@ export class UserResolver {
 
     const emailObject = createVerificationEmail(
       options.email,
-      await createUrl(user?.id, "email-confirm")
+      await createUrl(user?.id, "email-confirm"),
     );
 
     // sending the verification email
@@ -288,12 +319,12 @@ export class UserResolver {
   async signIn(
     @Arg("usernameOrEmail") usernameOrEmail: string,
     @Arg("password") password: string,
-    @Ctx() { req }: MyContext
+    @Ctx() { req }: MyContext,
   ): Promise<UserResponse> {
     const user = await User.findOne(
       usernameOrEmail.includes("@")
         ? { where: { email: usernameOrEmail } }
-        : { where: { username: usernameOrEmail } }
+        : { where: { username: usernameOrEmail } },
     );
 
     // This email is associated with registered with Google button
@@ -354,7 +385,7 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async signInWithGoogle(
     @Arg("email") email: string,
-    @Ctx() { req }: MyContext
+    @Ctx() { req }: MyContext,
   ): Promise<UserResponse> {
     const user = await User.findOne({ where: { email } });
 
@@ -408,7 +439,7 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async signInWithFacebook(
     @Arg("email") email: string,
-    @Ctx() { req }: MyContext
+    @Ctx() { req }: MyContext,
   ): Promise<UserResponse> {
     const user = await User.findOne({ where: { email } });
 
@@ -461,8 +492,8 @@ export class UserResolver {
 
   @Mutation(() => Boolean)
   logout(@Ctx() { req, res }: MyContext) {
-    return new Promise((resolve) =>
-      req.session.destroy((err) => {
+    return new Promise(resolve =>
+      req.session.destroy(err => {
         res.clearCookie(COOKIE_NAME);
         if (err) {
           console.log(err);
@@ -470,7 +501,30 @@ export class UserResolver {
           return;
         }
         resolve(true);
-      })
+      }),
     );
+  }
+
+  @Mutation(() => User)
+  @UseMiddleware(isAuth)
+  async changeOnboardingStep(
+    @Ctx() { req }: MyContext,
+    @Arg("step") step: number,
+  ): Promise<User | null | Error> {
+    if (!checkIfObjectHasValue(step, onboardingSteps)) {
+      return new Error("There went something wrong due to your onboarding");
+    }
+
+    const user = await User.findOne(req.session.userId);
+
+    if (!user) {
+      return new Error("This user does not exist");
+    }
+
+    user.onboardingStep = step;
+
+    User.save(user);
+
+    return user;
   }
 }

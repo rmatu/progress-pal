@@ -10,6 +10,8 @@ import store from "./redux/store";
 import { ApolloProvider } from "@apollo/client";
 import { client } from "./utils/client";
 import { BrowserRouter } from "react-router-dom";
+import "react-date-range/dist/styles.css"; // main css file
+import "react-date-range/dist/theme/default.css"; // theme css file
 
 ReactDOM.render(
   <ApolloProvider client={client}>
@@ -22,7 +24,7 @@ ReactDOM.render(
       </BrowserRouter>
     </ReduxProvider>
   </ApolloProvider>,
-  document.getElementById("root")
+  document.getElementById("root"),
 );
 
 // If you want to start measuring performance in your app, pass a function

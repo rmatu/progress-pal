@@ -1,0 +1,8 @@
+fragment RegularUpdateOnboardingResponse on UpdateOnboardingResponse {
+  userMetrics {
+    ...RegularUserMetrics
+  }
+  user {
+    ...RegularUser
+  }
+}

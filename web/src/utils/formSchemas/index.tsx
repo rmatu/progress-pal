@@ -90,3 +90,31 @@ export const ResetPasswordValues = {
   password: "",
   confirmPassword: "",
 };
+
+/**
+ * * Onboarding General Info
+ */
+
+export const GeneralInfoSchema = Yup.object().shape({
+  birthDate: Yup.string()
+    .matches(
+      /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/,
+      "Invalid date",
+    )
+    .max(10, "Invalid date")
+    .required("Birthday is required"),
+  height: Yup.number()
+    .min(100, "Min height is 100cm")
+    .max(300, "Max height is 360cm")
+    .required("Height is required"),
+  weight: Yup.number()
+    .min(25, "Min wieght is 25")
+    .max(635, "Max height is 635")
+    .required("Weight is required"),
+});
+
+export const GeneralInfoInitialValues = {
+  birthDate: "",
+  height: "",
+  weight: "",
+};
