@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components/macro";
 import { Button } from "../../../../components/UI";
 import { convertPxToRem } from "../../../../utils/cssHelpers";
+import { Form } from "formik";
 
 export const NavWrapper = styled.div`
   display: flex;
@@ -82,7 +83,7 @@ export const CardContent = styled.div`
   border-radius: 0 0 1em 1em;
 `;
 
-export const ButtonWrapper = styled.div`
+export const ButtonWrapper = styled.div<{ lastStep?: boolean }>`
   margin-top: 1em;
   width: ${convertPxToRem(450)};
   display: flex;
@@ -90,7 +91,14 @@ export const ButtonWrapper = styled.div`
   justify-content: space-around;
   margin-bottom: 2em;
 
-  @media screen and (max-width: 500px) {
+  ${({ lastStep }) =>
+    lastStep &&
+    css`
+      width: 100%;
+      justify-content: space-between;
+    `}
+
+  @media screen and (max-width: 600px) {
     flex-direction: column-reverse;
     width: 100%;
   }
@@ -234,7 +242,7 @@ export const BulletLi = styled.li`
   list-style-type: disc;
 `;
 
-export const Form = styled.form`
+export const StyledForm = styled(Form)`
   margin-top: 1em;
   width: 70%;
   display: flex;

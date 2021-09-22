@@ -1,7 +1,7 @@
 import { Field, Formik } from "formik";
 import moment from "moment";
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, useHistory } from "react-router-dom";
 import { ReactComponent as Balance } from "../../../assets/svg/balance.svg";
 import { ReactComponent as Cancel } from "../../../assets/svg/cancel.svg";
 import { ReactComponent as Decrease } from "../../../assets/svg/decrease.svg";
@@ -12,7 +12,7 @@ import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
 import { ReactComponent as MaleAvatar } from "../../../assets/svg/male.svg";
 import { ReactComponent as QuestionMark } from "../../../assets/svg/question-mark.svg";
 import { ReactComponent as CalendarIcon } from "../../../assets/svg/calendar.svg";
-import { Heading, Input } from "../../../components/UI";
+import { Heading, Input, Popup } from "../../../components/UI";
 import Calendar from "../../../components/UI/Date/Calendar/Calendar";
 import * as ROUTES from "../../../constants/routes";
 import {
@@ -25,7 +25,7 @@ import {
   CardContent,
   CardWrapper,
   ChooseOption,
-  Form,
+  StyledForm,
   GoBack,
   LogoContainer,
   NavWrapper,
@@ -39,8 +39,15 @@ import {
   Wrapper,
   Row,
 } from "./styles";
+import {
+  useChangeOnboardingStepMutation,
+  useFinishOnboardingMutation,
+} from "../../../generated/graphql";
+import { onboardingSteps } from "../../../constants/onboarding";
 
-interface OnboardingProps {}
+interface OnboardingProps {
+  refetchUseMeQuery: () => void;
+}
 
 const ALL_STEPS = 4;
 
@@ -57,10 +64,20 @@ type UserChoices = {
   weightGoal: null | string;
 };
 
-const Onboarding: React.FC<OnboardingProps> = () => {
+const Onboarding: React.FC<OnboardingProps> = ({ refetchUseMeQuery }) => {
+  const history = useHistory();
+  const [
+    finishOnboarding,
+    { loading: onboardingLoading, error: onboardingError },
+  ] = useFinishOnboardingMutation();
+  const [changeOnboardingStep, { error: stepError }] =
+    useChangeOnboardingStepMutation();
+
   const [step, setStep] = useState<STEP_TYPES>(STEP_TYPES.GENDER);
   const [bornDate, setBornDate] = useState<Date>(moment().toDate());
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
+  const [errorPopup, setErrorPopup] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>("");
   const [userChoices, setUserChoices] = useState<UserChoices>({
     gender: null,
     activityLevel: null,
@@ -92,7 +109,6 @@ const Onboarding: React.FC<OnboardingProps> = () => {
 
       // not a number
       const lastChar = updatedValue.charCodeAt(updatedValue.length - 1);
-      console.log({ lastChar });
       if (lastChar < 48 || lastChar > 57) {
         return;
       }
@@ -103,6 +119,17 @@ const Onboarding: React.FC<OnboardingProps> = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (stepError || onboardingError) {
+      const message = stepError?.message || onboardingError?.message;
+      setErrorPopup(true);
+      setErrorMessage(message);
+      setTimeout(() => {
+        setErrorPopup(false);
+      }, 5000);
+    }
+  }, [stepError, onboardingError]);
 
   if (step === STEP_TYPES.GENDER) {
     return (
@@ -390,15 +417,38 @@ const Onboarding: React.FC<OnboardingProps> = () => {
           </Progress>
           <CardContent>
             <Heading size="h2">General Info</Heading>
-            <Form>
-              <Formik
-                initialValues={GeneralInfoInitialValues}
-                validationSchema={GeneralInfoSchema}
-                onSubmit={({}) => {}}
-              >
-                {({ setFieldValue, values }) => (
-                  <>
-                    {console.log({ values })}
+            <Formik
+              validateOnMount
+              initialValues={GeneralInfoInitialValues}
+              validationSchema={GeneralInfoSchema}
+              onSubmit={async values => {
+                const onboardingRes = await finishOnboarding({
+                  variables: {
+                    input: {
+                      birthDate: values.birthDate,
+                      height: Number(values.height),
+                      weight: Number(values.weight),
+                      gender: userChoices.gender!,
+                      weightGoal: userChoices.weightGoal!,
+                      activityLevel: userChoices.activityLevel!,
+                    },
+                  },
+                });
+
+                if (onboardingRes.errors) return;
+                const stepRes = await changeOnboardingStep({
+                  variables: {
+                    step: onboardingSteps.ONBOARDING_FINISHED,
+                  },
+                });
+
+                if (stepRes.errors) return;
+                await refetchUseMeQuery();
+              }}
+            >
+              {({ setFieldValue, values, isValid }) => (
+                <>
+                  <StyledForm>
                     <Flex flexDirection="row">
                       <Row>
                         <Heading size="h4" marginB="0.5em">
@@ -463,18 +513,29 @@ const Onboarding: React.FC<OnboardingProps> = () => {
                         setFieldValue={setFieldValue}
                       />
                     )}
-                  </>
-                )}
-              </Formik>
-            </Form>
-            <ButtonWrapper>
-              <PrevButton onClick={() => setStep(STEP_TYPES.ACTIVITY_LEVEL)}>
-                Back
-              </PrevButton>
-              <NextButton>Next</NextButton>
-            </ButtonWrapper>
+                    <ButtonWrapper lastStep>
+                      <PrevButton
+                        onClick={() => setStep(STEP_TYPES.ACTIVITY_LEVEL)}
+                      >
+                        Back
+                      </PrevButton>
+                      <NextButton
+                        type="submit"
+                        disabled={!isValid}
+                        loading={onboardingLoading ? "Finishing..." : null}
+                      >
+                        Next
+                      </NextButton>
+                    </ButtonWrapper>
+                  </StyledForm>
+                </>
+              )}
+            </Formik>
           </CardContent>
         </CardWrapper>
+        <Popup showPopup={errorPopup} error={true}>
+          {errorMessage}
+        </Popup>
       </Wrapper>
     </>
   );

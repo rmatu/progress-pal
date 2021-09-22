@@ -81,7 +81,7 @@ export class UserMetricsResolver {
       weightGoal: input.weightGoal,
       activityLevel: input.activityLevel,
       height: input.height,
-      weight: input.height,
+      weight: input.weight,
       user: req.session.userId,
     }).save();
 

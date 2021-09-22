@@ -1,3 +1,4 @@
+import { isAuth } from "./../middleware/isAuth";
 import {
   Resolver,
   Mutation,
@@ -8,6 +9,7 @@ import {
   Query,
   Root,
   FieldResolver,
+  UseMiddleware,
 } from "type-graphql";
 import { MyContext } from "../types";
 import { User } from "../entities/User";
@@ -15,7 +17,7 @@ import argon2 from "argon2";
 import { UsernamePasswordInput } from "./UsernamePasswordInput";
 import { validateRegister } from "../utils/validateRegister";
 import { getConnection } from "typeorm";
-import { COOKIE_NAME } from "../constants";
+import { COOKIE_NAME, onboardingSteps } from "../constants";
 import { redis } from "../redis";
 import { sendEmail } from "../utils/sendEmail";
 import {
@@ -24,6 +26,7 @@ import {
   createVerificationEmail,
 } from "../emails";
 import { createUrl } from "../utils/createUrl";
+import { checkIfObjectHasValue } from "../utils/objectUtils";
 
 @ObjectType()
 class FieldError {
@@ -500,5 +503,28 @@ export class UserResolver {
         resolve(true);
       }),
     );
+  }
+
+  @Mutation(() => User)
+  @UseMiddleware(isAuth)
+  async changeOnboardingStep(
+    @Ctx() { req }: MyContext,
+    @Arg("step") step: number,
+  ): Promise<User | null | Error> {
+    if (!checkIfObjectHasValue(step, onboardingSteps)) {
+      return new Error("There went something wrong due to your onboarding");
+    }
+
+    const user = await User.findOne(req.session.userId);
+
+    if (!user) {
+      return new Error("This user does not exist");
+    }
+
+    user.onboardingStep = step;
+
+    User.save(user);
+
+    return user;
   }
 }

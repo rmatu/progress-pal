@@ -58,6 +58,7 @@ export type Mutation = {
   signInWithGoogle: UserResponse;
   signInWithFacebook: UserResponse;
   logout: Scalars['Boolean'];
+  changeOnboardingStep: User;
   finishOnboarding: UpdateOnboardingResponse;
 };
 
@@ -111,6 +112,11 @@ export type MutationSignInWithGoogleArgs = {
 
 export type MutationSignInWithFacebookArgs = {
   email: Scalars['String'];
+};
+
+
+export type MutationChangeOnboardingStepArgs = {
+  step: Scalars['Float'];
 };
 
 
@@ -186,6 +192,19 @@ export type RegularUserResponseFragment = (
     { __typename?: 'User' }
     & RegularUserFragment
   )> }
+);
+
+export type ChangeOnboardingStepMutationVariables = Exact<{
+  step: Scalars['Float'];
+}>;
+
+
+export type ChangeOnboardingStepMutation = (
+  { __typename?: 'Mutation' }
+  & { changeOnboardingStep: (
+    { __typename?: 'User' }
+    & RegularUserFragment
+  ) }
 );
 
 export type ChangePasswordMutationVariables = Exact<{
@@ -394,6 +413,38 @@ export const RegularUserResponseFragmentDoc = gql`
 }
     ${RegularErrorFragmentDoc}
 ${RegularUserFragmentDoc}`;
+export const ChangeOnboardingStepDocument = gql`
+    mutation ChangeOnboardingStep($step: Float!) {
+  changeOnboardingStep(step: $step) {
+    ...RegularUser
+  }
+}
+    ${RegularUserFragmentDoc}`;
+export type ChangeOnboardingStepMutationFn = Apollo.MutationFunction<ChangeOnboardingStepMutation, ChangeOnboardingStepMutationVariables>;
+
+/**
+ * __useChangeOnboardingStepMutation__
+ *
+ * To run a mutation, you first call `useChangeOnboardingStepMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangeOnboardingStepMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changeOnboardingStepMutation, { data, loading, error }] = useChangeOnboardingStepMutation({
+ *   variables: {
+ *      step: // value for 'step'
+ *   },
+ * });
+ */
+export function useChangeOnboardingStepMutation(baseOptions?: Apollo.MutationHookOptions<ChangeOnboardingStepMutation, ChangeOnboardingStepMutationVariables>) {
+        return Apollo.useMutation<ChangeOnboardingStepMutation, ChangeOnboardingStepMutationVariables>(ChangeOnboardingStepDocument, baseOptions);
+      }
+export type ChangeOnboardingStepMutationHookResult = ReturnType<typeof useChangeOnboardingStepMutation>;
+export type ChangeOnboardingStepMutationResult = Apollo.MutationResult<ChangeOnboardingStepMutation>;
+export type ChangeOnboardingStepMutationOptions = Apollo.BaseMutationOptions<ChangeOnboardingStepMutation, ChangeOnboardingStepMutationVariables>;
 export const ChangePasswordDocument = gql`
     mutation ChangePassword($password: String!, $token: String!) {
   changePassword(password: $password, token: $token) {
