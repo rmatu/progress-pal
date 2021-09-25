@@ -7,6 +7,7 @@ App is not ready yet
 ## Description
 
 - [Technology Stack](#Frontend)
+- [ERD Diagram](#ERD)
 - [Screenshots](#Screenshots)
 - [Features](#Features)
 
@@ -46,6 +47,10 @@ App is not ready yet
 - Password recovery
 
 # Every Page is Fully Responsive
+
+## ERD
+
+<img src="media/dekstop/ERD Diagram.png"/>
 
 ## Screenshots
 
