@@ -13,6 +13,7 @@ export const Wrapper = styled.div<WrapperProps>`
 interface ButtonProps {
   disabled?: boolean;
   padding?: string;
+  fontSize?: string;
 }
 
 export const StyledButton = styled.button<ButtonProps>`
@@ -23,6 +24,7 @@ export const StyledButton = styled.button<ButtonProps>`
   padding: ${({ padding }) => (padding ? padding : "0.9em 4.6em")};
   border-radius: 2em;
   font-size: 1.2rem;
+  font-size: ${({ fontSize }) => fontSize};
   font-weight: 500;
   background-color: ${({ theme }) => theme.colors.orange};
   border: 3px solid ${({ theme }) => theme.colors.orange};

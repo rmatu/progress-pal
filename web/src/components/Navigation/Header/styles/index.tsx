@@ -1,7 +1,7 @@
 import styled from "styled-components/macro";
 
 export const FixedWrapper = styled.div`
-  background-color: ${({ theme }) => theme.colors.background};
+  background-color: ${({ theme }) => theme.colors.backgroundDarkerGray};
   padding: 0em 2em;
   width: 100%;
   height: 6em;

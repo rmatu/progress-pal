@@ -6,16 +6,30 @@ interface ButtonProps {
   marginTop?: string;
   disabled?: boolean;
   padding?: string;
+  fontSize?: string;
   // For future loader
   loading?: any;
 }
 
 const Button: React.FC<
   ButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>
-> = ({ children, marginTop, disabled, padding, loading, ...rest }) => {
+> = ({
+  children,
+  marginTop,
+  disabled,
+  padding,
+  fontSize,
+  loading,
+  ...rest
+}) => {
   return (
     <Wrapper marginTop={marginTop}>
-      <StyledButton padding={padding} disabled={disabled} {...rest}>
+      <StyledButton
+        padding={padding}
+        disabled={disabled}
+        fontSize={fontSize}
+        {...rest}
+      >
         {loading ? loading : children}
       </StyledButton>
     </Wrapper>
