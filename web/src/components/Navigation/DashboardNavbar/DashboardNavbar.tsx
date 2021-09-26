@@ -1,21 +1,34 @@
 import { useApolloClient } from "@apollo/client";
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
 import { MeQuery, useLogoutMutation } from "../../../generated/graphql";
+import { AppState } from "../../../redux/rootReducer";
 import { FlexWrapperDiv, FlexWrapperUl } from "../../FlexElements";
 import { Button, Logo } from "../../UI";
 import { Avatar, Category, Name, NavListItem, Wrapper } from "./styles";
+import * as navActions from "../../../redux/dashboardNavbar/dashboardNavbarActions";
 
 interface DashboardNavbarProps {
   user: MeQuery["me"] | undefined;
 }
 
 const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user }) => {
+  const { selectedItem } = useSelector(
+    (state: AppState) => state.dashboardNavbar,
+  );
   const client = useApolloClient();
   const [logout] = useLogoutMutation();
+  const history = useHistory();
+  const dispatch = useDispatch();
 
   const handleLogout = async () => {
     await logout();
     await client.resetStore();
+  };
+
+  const handleClick = (name: string) => {
+    dispatch(navActions.changeItem(name));
   };
 
   return (
@@ -36,8 +49,18 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user }) => {
         margin="1em 0 0 0"
       >
         <Category>Actions</Category>
-        <NavListItem>Add Workout</NavListItem>
-        <NavListItem>Add Exercise</NavListItem>
+        <NavListItem
+          selected={selectedItem === "addWorkout"}
+          onClick={() => handleClick("addWorkout")}
+        >
+          Add Workout
+        </NavListItem>
+        <NavListItem
+          selected={selectedItem === "addExercise"}
+          onClick={() => handleClick("addExercise")}
+        >
+          Add Exercise
+        </NavListItem>
       </FlexWrapperUl>
       <FlexWrapperUl
         flexDirection="column"
@@ -46,10 +69,30 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user }) => {
         margin="1em 0 0 0"
       >
         <Category>Visuals</Category>
-        <NavListItem selected>Dashboard</NavListItem>
-        <NavListItem>Daily Activities</NavListItem>
-        <NavListItem>Workouts</NavListItem>
-        <NavListItem>Donate</NavListItem>
+        <NavListItem
+          selected={selectedItem === "dashboard"}
+          onClick={() => handleClick("dashboard")}
+        >
+          Dashboard
+        </NavListItem>
+        <NavListItem
+          selected={selectedItem === "dailyActivities"}
+          onClick={() => handleClick("dailyActivities")}
+        >
+          Daily Activities
+        </NavListItem>
+        <NavListItem
+          selected={selectedItem === "workouts"}
+          onClick={() => handleClick("workouts")}
+        >
+          Workouts
+        </NavListItem>
+        <NavListItem
+          selected={selectedItem === "donate"}
+          onClick={() => handleClick("donate")}
+        >
+          Donate
+        </NavListItem>
       </FlexWrapperUl>
       <FlexWrapperUl
         flexDirection="column"
@@ -58,7 +101,12 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user }) => {
         margin="1em 0 0 0"
       >
         <Category>Settings</Category>
-        <NavListItem>Account</NavListItem>
+        <NavListItem
+          selected={selectedItem === "account"}
+          onClick={() => handleClick("account")}
+        >
+          Account
+        </NavListItem>
         <NavListItem>
           <Button padding="0.5em 2em" fontSize="12px" onClick={handleLogout}>
             Logout

@@ -46,11 +46,11 @@ export const NavListItem = styled.li<{ selected?: boolean }>`
   }
 
   :first-of-type {
-    padding-top: 1em;
+    margin-top: 1em;
   }
 
   :last-of-type {
-    padding-bottom: 1em;
+    margin-bottom: 1em;
   }
 
   ${({ selected }) =>
