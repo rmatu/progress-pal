@@ -7,6 +7,7 @@ const theme = {
     gray: "#757575",
     orange: "#fe5000",
     grayText: "#DCDDDE",
+    graySeparator: "#3f3f3f",
     backgroundDarkerGray: "#212121",
     errorTextColor: "#ff5757",
     successTextColor: "#70a514",

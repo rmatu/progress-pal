@@ -26,6 +26,7 @@ export const RightContent = styled.div`
   display: flex;
   flex-direction: column;
   width: 85%;
+  margin: 1em 0 1em 1em;
 `;
 
 export const Row = styled.div`
@@ -71,3 +72,5 @@ export const NavListItem = styled.li<{ selected?: boolean }>`
     background-color: ${({ theme }) => theme.colors.backgroundGray};
   }
 `;
+
+export const RightContentWrapper = styled.div``;

@@ -8,6 +8,7 @@ import { FlexWrapperDiv, FlexWrapperUl } from "../../FlexElements";
 import { Button, Logo } from "../../UI";
 import { Avatar, Category, Name, NavListItem, Wrapper } from "./styles";
 import * as navActions from "../../../redux/dashboardNavbar/dashboardNavbarActions";
+import { ReactComponent as PlusCircle } from "../../../assets/svg/plusCircle.svg";
 
 interface DashboardNavbarProps {
   user: MeQuery["me"] | undefined;
@@ -54,12 +55,14 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user }) => {
           onClick={() => handleClick("addWorkout")}
         >
           Add Workout
+          <PlusCircle id="add-circle" />
         </NavListItem>
         <NavListItem
           selected={selectedItem === "addExercise"}
           onClick={() => handleClick("addExercise")}
         >
           Add Exercise
+          <PlusCircle id="add-circle" />
         </NavListItem>
       </FlexWrapperUl>
       <FlexWrapperUl
@@ -107,8 +110,13 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user }) => {
         >
           Account
         </NavListItem>
-        <NavListItem>
-          <Button padding="0.5em 2em" fontSize="12px" onClick={handleLogout}>
+        <NavListItem button>
+          <Button
+            marginTop="1em"
+            padding="0.2em 2em"
+            fontSize="12px"
+            onClick={handleLogout}
+          >
             Logout
           </Button>
         </NavListItem>

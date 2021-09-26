@@ -9,27 +9,28 @@ interface ModalProps {
   opened: boolean;
   close: () => void;
   children: React.ReactNode | React.ReactNode[];
+  maxWidth?: string;
 }
 
 //This will be rerender only if the props changes
 const Modal = React.memo<ModalProps>(
-  ({ opened, children, close }) => {
+  ({ opened, maxWidth, children, close }) => {
     return ReactDOM.createPortal(
       <>
         <Backdrop opened={opened} close={close} />
-        <WrappedModal opened={opened}>
+        <WrappedModal opened={opened} maxWidth={maxWidth}>
           <CancelIcon className="cancel" onClick={close} />
           {children}
         </WrappedModal>
       </>,
       //@ts-ignore
-      document.getElementById("root-modal")
+      document.getElementById("root-modal"),
     );
   },
   (prevProps, nextProps) => {
     //if this returns false it will update
     return prevProps.opened === nextProps.opened;
-  }
+  },
 );
 
 export default Modal;

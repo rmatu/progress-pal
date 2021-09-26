@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DashboardNavbar from "../../../components/Navigation/DashboardNavbar/DashboardNavbar";
+import YearlyCalendarHeatmap from "../../../components/UI/YearlyCalendarHeatmap/YearlyCalendarHeatmap";
 import { MeQuery } from "../../../generated/graphql";
 import { AppState } from "../../../redux/rootReducer";
 import { setDashboardItem } from "../../../utils/setDashboardItem";
@@ -24,7 +25,17 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   return (
     <Wrapper>
       <DashboardNavbar user={user} />
-      <RightContent></RightContent>
+      <RightContent>
+        <YearlyCalendarHeatmap
+          startDate="2021-01-01"
+          endDate="2021-12-31"
+          values={[
+            { date: "2021-01-02", amount: 12 },
+            { date: "2021-01-22", amount: 122 },
+            { date: "2021-01-30", amount: 38 },
+          ]}
+        />
+      </RightContent>
     </Wrapper>
   );
 };

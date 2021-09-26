@@ -7,7 +7,7 @@ export const Wrapper = styled.nav`
   max-width: ${convertPxToRem(200)};
   max-height: calc(100vh);
   overflow-y: auto;
-  border-right: 1px solid ${({ theme }) => theme.colors.gray};
+  border-right: 1px solid #3f3f3f;
 
   ::-webkit-scrollbar {
     width: 0; /* Remove scrollbar space */
@@ -33,7 +33,10 @@ export const Category = styled.h4`
   margin-bottom: 0.5em;
 `;
 
-export const NavListItem = styled.li<{ selected?: boolean }>`
+export const NavListItem = styled.li<{ selected?: boolean; button?: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 0.5em 0.5em;
   transition: all 0.1s ease-in-out;
   opacity: 0.5;
@@ -52,6 +55,17 @@ export const NavListItem = styled.li<{ selected?: boolean }>`
   :last-of-type {
     margin-bottom: 1em;
   }
+
+  #add-circle {
+    height: 100%;
+    width: 20px;
+  }
+
+  ${({ button }) =>
+    button &&
+    css`
+      justify-content: center;
+    `}
 
   ${({ selected }) =>
     selected &&
