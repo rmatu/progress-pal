@@ -25,6 +25,10 @@ export class UserMetrics extends BaseEntity {
 
   @Field(() => String, { nullable: true })
   @Column({ nullable: true })
+  weightGoalValue: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
   activityLevel: string;
 
   @Field(() => Number, { nullable: true })

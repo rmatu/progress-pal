@@ -1,7 +1,7 @@
 import { Field, Formik } from "formik";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { NavLink, useHistory } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { ReactComponent as Balance } from "../../../assets/svg/balance.svg";
 import { ReactComponent as Cancel } from "../../../assets/svg/cancel.svg";
 import { ReactComponent as Decrease } from "../../../assets/svg/decrease.svg";
@@ -65,7 +65,6 @@ type UserChoices = {
 };
 
 const Onboarding: React.FC<OnboardingProps> = ({ refetchUseMeQuery }) => {
-  const history = useHistory();
   const [
     finishOnboarding,
     { loading: onboardingLoading, error: onboardingError },

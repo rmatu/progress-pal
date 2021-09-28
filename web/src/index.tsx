@@ -12,6 +12,7 @@ import { client } from "./utils/client";
 import { BrowserRouter } from "react-router-dom";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
+import "react-calendar-heatmap/dist/styles.css";
 
 ReactDOM.render(
   <ApolloProvider client={client}>

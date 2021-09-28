@@ -8,6 +8,7 @@ declare module "styled-components" {
       gray: string;
       orange: string;
       grayText: string;
+      graySeparator: string;
       backgroundGray: string;
       backgroundDarkerGray: string;
       errorTextColor: string;
@@ -18,6 +19,7 @@ declare module "styled-components" {
     mediaQueries: {
       phones: string;
       tablets: string;
+      smallScreens: string;
     };
   }
 }

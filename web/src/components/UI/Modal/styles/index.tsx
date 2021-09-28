@@ -2,6 +2,7 @@ import styled from "styled-components/macro";
 
 interface WrappedModalProps {
   opened: boolean;
+  maxWidth?: string;
 }
 
 export const WrappedModal = styled.div<WrappedModalProps>`
@@ -13,6 +14,7 @@ export const WrappedModal = styled.div<WrappedModalProps>`
   z-index: 1500;
   width: 90%;
   max-width: 36em;
+  max-width: ${({ maxWidth }) => maxWidth};
   display: flex;
   opacity: ${({ opened }) => (opened ? "1" : "0")};
   visibility: ${({ opened }) => (opened ? "visible" : "hidden")};

@@ -2,6 +2,7 @@ import styled from "styled-components/macro";
 
 interface BurgerProps {
   open: boolean;
+  dashboardHeader?: boolean;
 }
 
 export const StyledBurger = styled.button<BurgerProps>`
@@ -14,7 +15,8 @@ export const StyledBurger = styled.button<BurgerProps>`
   border: none;
   cursor: pointer;
   padding: 0;
-  z-index: 999;
+  z-index: 1001;
+
   span {
     width: 2em;
     height: 0.25em;
@@ -41,7 +43,12 @@ export const StyledBurger = styled.button<BurgerProps>`
       transform: ${({ open }) => (open ? "rotate(-45deg)" : "rotate(0)")};
     }
   }
-  @media (max-width: 764px) {
+
+  @media screen and (max-width: 1024px) {
+    display: ${({ dashboardHeader }) => dashboardHeader && "flex"};
+  }
+
+  @media screen and (max-width: 764px) {
     display: flex;
   }
 `;

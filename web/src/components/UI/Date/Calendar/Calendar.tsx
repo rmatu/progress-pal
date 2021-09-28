@@ -7,7 +7,7 @@ import { enGB } from "date-fns/locale";
 
 interface CalendarProps {
   position?: string;
-  selectedDate: Date;
+  selectedDate?: Date;
   changeDate: (currDate: Date) => void;
   handleClose: () => void;
   setFieldValue?: (
