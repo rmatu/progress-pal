@@ -1,24 +1,30 @@
-export const TOGGLE_NAVBAR = "TOGGLE_NAVBAR";
-export const CLEAN_UP_NAVBAR = "CLEAN_UP_NAVBAR";
-export const SET_NAV_ITEM_NAME = "SET_NAV_ITEM_NAME";
-export const SET_VISIBILITY = "SET_VISIBILITY";
+export const DASH_TOGGLE_NAVBAR = "DASH_TOGGLE_NAVBAR";
+export const DASH_CLEAN_UP_NAVBAR = "DASH_CLEAN_UP_NAVBAR";
+export const DASH_SET_NAV_ITEM_NAME = "DASH_SET_NAV_ITEM_NAME";
+export const DASH_SET_VISIBILITY = "DASH_SET_VISIBILITY";
+export const DASH_SET_OPEN = "DASH_SET_OPEN";
 
-export interface SetVisibility {
-  type: typeof SET_VISIBILITY;
+export interface DashSetVisibility {
+  type: typeof DASH_SET_VISIBILITY;
   payload: boolean;
 }
 
-export interface SetNavItemNameAction {
-  type: typeof SET_NAV_ITEM_NAME;
+export interface DashSetOpen {
+  type: typeof DASH_SET_OPEN;
+  payload: boolean;
+}
+
+export interface DashSetNavItemNameAction {
+  type: typeof DASH_SET_NAV_ITEM_NAME;
   payload: string;
 }
 
-export interface ToggleNavbarAction {
-  type: typeof TOGGLE_NAVBAR;
+export interface DashToggleNavbarAction {
+  type: typeof DASH_TOGGLE_NAVBAR;
 }
 
-export interface CleanUpNavbarAction {
-  type: typeof CLEAN_UP_NAVBAR;
+export interface DashCleanUpNavbarAction {
+  type: typeof DASH_CLEAN_UP_NAVBAR;
 }
 
 export interface DashboardNavbarState {
@@ -35,7 +41,8 @@ export interface DashboardNavbarState {
 }
 
 export type DashboardNavbarActionTypes =
-  | SetNavItemNameAction
-  | ToggleNavbarAction
-  | CleanUpNavbarAction
-  | SetVisibility;
+  | DashSetOpen
+  | DashSetNavItemNameAction
+  | DashToggleNavbarAction
+  | DashCleanUpNavbarAction
+  | DashSetVisibility;

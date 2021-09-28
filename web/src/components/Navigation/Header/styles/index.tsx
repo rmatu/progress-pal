@@ -1,6 +1,6 @@
 import styled from "styled-components/macro";
 
-export const FixedWrapper = styled.div`
+export const FixedWrapper = styled.div<{ dashboardHeader?: boolean }>`
   background-color: ${({ theme }) => theme.colors.backgroundDarkerGray};
   padding: 0em 2em;
   width: 100%;
@@ -11,6 +11,11 @@ export const FixedWrapper = styled.div`
   -webkit-box-shadow: 0px 3px 19px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0px 3px 19px 0px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 3px 19px 0px rgba(0, 0, 0, 0.75);
+
+  @media screen and (min-width: 1024px) {
+    display: ${({ dashboardHeader }) => dashboardHeader && "none"};
+    top: 0;
+  }
 
   @media (max-width: 420px) {
     padding: 0 2em 0 1em;

@@ -1,18 +1,19 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import DashboardNavbar from "../../../components/Navigation/DashboardNavbar/DashboardNavbar";
 import YearlyCalendarHeatmap from "../../../components/UI/YearlyCalendarHeatmap/YearlyCalendarHeatmap";
 import { MeQuery } from "../../../generated/graphql";
+import DashbordLayoutHOC from "../../../hoc/DashbordLayoutHOC";
 import { AppState } from "../../../redux/rootReducer";
 import { setDashboardItem } from "../../../utils/setDashboardItem";
-import { RightContent, Wrapper } from "./styles";
+
+import { RightContent } from "./styles";
 
 interface DashboardProps {
   user: MeQuery["me"] | undefined;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ user }) => {
-  const { selectedItem } = useSelector(
+  const { selectedItem, open } = useSelector(
     (state: AppState) => state.dashboardNavbar,
   );
 
@@ -23,9 +24,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   }, [dispatch, selectedItem]);
 
   return (
-    <Wrapper>
-      <DashboardNavbar user={user} />
-      <RightContent>
+    <DashbordLayoutHOC user={user}>
+      <RightContent open={open}>
         <YearlyCalendarHeatmap
           startDate="2021-01-01"
           endDate="2021-12-31"
@@ -36,7 +36,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           ]}
         />
       </RightContent>
-    </Wrapper>
+    </DashbordLayoutHOC>
   );
 };
 

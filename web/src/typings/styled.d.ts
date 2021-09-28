@@ -19,6 +19,7 @@ declare module "styled-components" {
     mediaQueries: {
       phones: string;
       tablets: string;
+      smallScreens: string;
     };
   }
 }

@@ -16,6 +16,7 @@ const theme = {
   mediaQueries: {
     phones: `screen and (max-width: 480px)`,
     tablets: `screen and (max-width: 768px)`,
+    smallScreens: `screen and (max-width: 1024px)`,
   },
 };
 

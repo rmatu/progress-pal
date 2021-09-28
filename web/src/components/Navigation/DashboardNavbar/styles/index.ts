@@ -1,17 +1,42 @@
 import styled, { css } from "styled-components/macro";
 import { convertPxToRem } from "../../../../utils/cssHelpers";
 
-export const Wrapper = styled.nav`
+export const Wrapper = styled.nav<{ open?: boolean }>`
   padding-right: 1em;
   min-width: ${convertPxToRem(200)};
   max-width: ${convertPxToRem(200)};
   max-height: calc(100vh);
   overflow-y: auto;
   border-right: 1px solid #3f3f3f;
+  position: relative;
 
   ::-webkit-scrollbar {
     width: 0; /* Remove scrollbar space */
     background: transparent; /* Optional: just make scrollbar invisible */
+  }
+
+  @media screen and (max-width: 1024px) {
+    transform: translateX(-100%);
+    transition: 0.75s all ease-in-out;
+    background-color: ${({ theme }) => theme.colors.backgroundDarkerGray};
+    min-width: ${convertPxToRem(250)};
+    max-width: ${convertPxToRem(250)};
+    display: block;
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    padding-left: 1em;
+    ${({ open }) =>
+      open &&
+      css`
+        transform: translateX(0px);
+      `}
+  }
+  @media screen and (max-width: 480px) {
+    min-width: 100vw;
+    max-width: 100vw;
   }
 `;
 
@@ -73,4 +98,23 @@ export const NavListItem = styled.li<{ selected?: boolean; button?: boolean }>`
       background-color: ${({ theme }) => theme.colors.backgroundGray};
       opacity: 1;
     `}
+`;
+
+export const CancelWrapper = styled.div`
+  display: none;
+  position: absolute;
+  top: 2em;
+  right: 2em;
+  height: 16px;
+  width: 16px;
+  cursor: pointer;
+
+  svg {
+    fill: #fff;
+    color: #fff;
+  }
+
+  @media screen and (max-width: 474px) {
+    display: block;
+  }
 `;

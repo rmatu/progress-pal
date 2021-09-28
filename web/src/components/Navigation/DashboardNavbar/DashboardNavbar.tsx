@@ -6,16 +6,24 @@ import { MeQuery, useLogoutMutation } from "../../../generated/graphql";
 import { AppState } from "../../../redux/rootReducer";
 import { FlexWrapperDiv, FlexWrapperUl } from "../../FlexElements";
 import { Button, Logo } from "../../UI";
-import { Avatar, Category, Name, NavListItem, Wrapper } from "./styles";
+import {
+  Avatar,
+  Category,
+  CancelWrapper,
+  Name,
+  NavListItem,
+  Wrapper,
+} from "./styles";
 import * as navActions from "../../../redux/dashboardNavbar/dashboardNavbarActions";
 import { ReactComponent as PlusCircle } from "../../../assets/svg/plusCircle.svg";
+import { ReactComponent as Cancel } from "../../../assets/svg/cancel.svg";
 
 interface DashboardNavbarProps {
   user: MeQuery["me"] | undefined;
 }
 
 const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user }) => {
-  const { selectedItem } = useSelector(
+  const { selectedItem, open } = useSelector(
     (state: AppState) => state.dashboardNavbar,
   );
   const client = useApolloClient();
@@ -33,7 +41,7 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user }) => {
   };
 
   return (
-    <Wrapper>
+    <Wrapper open={open}>
       <Logo width="95%" margin="0 .5em 0 0" />
       <FlexWrapperDiv
         justifyContent="center"
@@ -121,6 +129,9 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user }) => {
           </Button>
         </NavListItem>
       </FlexWrapperUl>
+      <CancelWrapper onClick={() => dispatch(navActions.setOpen(false))}>
+        <Cancel />
+      </CancelWrapper>
     </Wrapper>
   );
 };
