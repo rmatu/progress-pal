@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import moment from "moment";
 import CalendarHeatmap from "react-calendar-heatmap";
 import { ReactComponent as CalendarIcon } from "../../../assets/svg/calendar.svg";
@@ -8,14 +8,18 @@ import {
   CalendarWrapper,
   Wrapper,
   TrainingAmount,
+  PickYear,
   Year,
+  Years,
 } from "./styles";
-import DateRangePicker from "../Date/DateRangePicker/DateRangePicker";
+import Modal from "../Modal/Modal";
 
 interface YearlyCalendarHeatmapProps {
   values: { date: string; amount: number }[];
   startDate: string;
   endDate: string;
+  setStartDate: (value: React.SetStateAction<string>) => void;
+  setEndDate: (value: React.SetStateAction<string>) => void;
 }
 
 const WEEKDAY_LABELS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -24,8 +28,29 @@ const YearlyCalendarHeatmap: React.FC<YearlyCalendarHeatmapProps> = ({
   startDate,
   endDate,
   values,
+  setStartDate,
+  setEndDate,
 }) => {
-  const [showCalendar, setShowCalendar] = useState(false);
+  const [showYearsModal, setShowYearsModal] = useState(false);
+  const [years, setYears] = useState<number[]>([]);
+
+  const handleClick = (year: number) => {
+    setShowYearsModal(false);
+    setStartDate(startDate =>
+      moment(startDate).set("year", year).format("YYYY-MM-DD"),
+    );
+    setEndDate(endDate =>
+      moment(endDate).set("year", year).format("YYYY-MM-DD"),
+    );
+  };
+
+  useEffect(() => {
+    const newYears = [];
+    for (let i = 0; i < 10; i++) {
+      newYears.push(Number(moment(endDate).get("y")) - i);
+    }
+    setYears(newYears);
+  }, []);
 
   return (
     <Wrapper>
@@ -47,13 +72,17 @@ const YearlyCalendarHeatmap: React.FC<YearlyCalendarHeatmapProps> = ({
       </TrainingAmount>
       <CalendarWrapper>
         <Year>{moment(startDate).get("y")}</Year>
-        <CalendarIcon onClick={() => setShowCalendar(true)} />
+        <CalendarIcon onClick={() => setShowYearsModal(true)} />
       </CalendarWrapper>
-      <DateRangePicker
-        modal
-        showCalendar={showCalendar}
-        setShowCalendar={setShowCalendar}
-      />
+      <Modal opened={showYearsModal} close={() => setShowYearsModal(false)}>
+        <Years>
+          {years.map(el => (
+            <PickYear key={el} onClick={() => handleClick(el)}>
+              {el}
+            </PickYear>
+          ))}
+        </Years>
+      </Modal>
     </Wrapper>
   );
 };

@@ -2,9 +2,9 @@ import styled, { css } from "styled-components/macro";
 import { convertPxToRem } from "../../../../utils/cssHelpers";
 
 export const Wrapper = styled.nav<{ open?: boolean }>`
-  padding-right: 1em;
-  min-width: ${convertPxToRem(200)};
-  max-width: ${convertPxToRem(200)};
+  padding: 0 1em;
+  min-width: ${convertPxToRem(220)};
+  max-width: ${convertPxToRem(220)};
   max-height: calc(100vh);
   overflow-y: auto;
   border-right: 1px solid #3f3f3f;

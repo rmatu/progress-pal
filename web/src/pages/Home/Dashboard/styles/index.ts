@@ -30,6 +30,12 @@ export const RightContent = styled.div<{ open?: boolean }>`
 
   transition: all 0.75s ease-in-out;
   filter: ${({ open }) => open && "blur(4px)"};
+
+  @media screen and (max-width: 1024px) {
+    width: 100%;
+    margin: 0;
+    padding: 1em;
+  }
 `;
 
 export const Row = styled.div`

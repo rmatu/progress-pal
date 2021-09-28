@@ -7,7 +7,7 @@ export const Wrapper = styled.div`
   justify-content: center;
   background-color: ${({ theme }) => theme.colors.backgroundGray};
   border-radius: 0.5em;
-  padding: 0.5em;
+  padding: 0.5em 1em 0.5em 0.5em;
   max-width: ${convertPxToRem(800)};
   height: ${convertPxToRem(150)};
 `;
@@ -54,4 +54,24 @@ export const CalendarWrapper = styled.div`
 
 export const Year = styled.p`
   margin-right: 0.6em;
+`;
+
+export const Years = styled.ul`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 60vh;
+  overflow-y: auto;
+  width: 100%;
+`;
+
+export const PickYear = styled.li`
+  padding: 1em;
+  cursor: pointer;
+  font-size: 1.25rem;
+  opacity: 0.5;
+
+  :hover {
+    opacity: 1;
+  }
 `;
