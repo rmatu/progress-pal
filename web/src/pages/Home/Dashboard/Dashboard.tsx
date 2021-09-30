@@ -20,8 +20,6 @@ interface DashboardProps {
   user: MeQuery["me"] | undefined;
 }
 
-// TODO: GIVE ABILITY TO USER TO CHECK 1st OR 2nd half of the year
-
 const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const [startDate, setStartDate] = useState(
     moment("2021-01-01").format("YYYY-MM-DD"),
@@ -43,8 +41,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   useEffect(() => {
     if (width < 600) {
       setStartDate(moment(startDate).set("month", 6).format("YYYY-MM-DD"));
+      setEndDate(moment(startDate).set("month", 11).format("YYYY-MM-DD"));
     } else {
       setStartDate(moment(startDate).set("month", 0).format("YYYY-MM-DD"));
+      setEndDate(moment(startDate).set("month", 11).format("YYYY-MM-DD"));
     }
   }, [width]);
 
