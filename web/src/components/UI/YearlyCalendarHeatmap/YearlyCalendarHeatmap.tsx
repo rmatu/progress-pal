@@ -50,12 +50,12 @@ const YearlyCalendarHeatmap: React.FC<YearlyCalendarHeatmapProps> = ({
   const changeYearHalf = (yearHalf: string) => {
     if (yearHalf === "1") {
       setSelectedHalf("1");
-      setStartDate(moment(startDate).set("month", 1).format("YYYY-MM-DD"));
+      setStartDate(moment(startDate).set("month", 0).format("YYYY-MM-DD"));
       setEndDate(moment(startDate).set("month", 6).format("YYYY-MM-DD"));
     } else if (yearHalf === "2") {
       setSelectedHalf("2");
       setStartDate(moment(startDate).set("month", 6).format("YYYY-MM-DD"));
-      setEndDate(moment(startDate).set("month", 11).format("YYYY-MM-DD"));
+      setEndDate(moment(startDate).set("month", 12).format("YYYY-MM-DD"));
     }
   };
 

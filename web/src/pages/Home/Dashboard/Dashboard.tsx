@@ -13,7 +13,7 @@ import { RightContent } from "./styles";
 const values = [
   { date: "2021-01-02", amount: 12 },
   { date: "2021-01-22", amount: 122 },
-  { date: "2021-12-31", amount: 38 },
+  { date: "2021-12-15", amount: 38 },
 ];
 
 interface DashboardProps {
@@ -41,10 +41,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   useEffect(() => {
     if (width < 600) {
       setStartDate(moment(startDate).set("month", 6).format("YYYY-MM-DD"));
-      setEndDate(moment(startDate).set("month", 11).format("YYYY-MM-DD"));
+      setEndDate(moment(startDate).set("month", 12).format("YYYY-MM-DD"));
     } else {
       setStartDate(moment(startDate).set("month", 0).format("YYYY-MM-DD"));
-      setEndDate(moment(startDate).set("month", 11).format("YYYY-MM-DD"));
+      setEndDate(moment(startDate).set("month", 12).format("YYYY-MM-DD"));
     }
   }, [width]);
 
