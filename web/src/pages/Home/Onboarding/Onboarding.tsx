@@ -427,6 +427,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ refetchUseMeQuery }) => {
                       birthDate: values.birthDate,
                       height: Number(values.height),
                       weight: Number(values.weight),
+                      weightGoalValue: Number(values.weightGoalValue),
                       gender: userChoices.gender!,
                       weightGoal: userChoices.weightGoal!,
                       activityLevel: userChoices.activityLevel!,
@@ -465,7 +466,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ refetchUseMeQuery }) => {
                       </Row>
                       <Row>
                         <Heading size="h4" marginB="0.5em">
-                          Wieght
+                          Weight
                         </Heading>
                         <Field
                           type="number"
@@ -478,31 +479,47 @@ const Onboarding: React.FC<OnboardingProps> = ({ refetchUseMeQuery }) => {
                         />
                       </Row>
                     </Flex>
-                    <Row>
-                      <Heading size="h4" marginB="0.5em" textAlign="left">
-                        Birth Date
-                      </Heading>
-                      <Field
-                        type="text"
-                        name="birthDate"
-                        placeholder="dd/mm/yyyy"
-                        width="15em"
-                        maxLength={10}
-                        component={Input}
-                        onChange={(e: React.ChangeEvent<any>) => {
-                          handleChange(
-                            e,
-                            "birthDate",
-                            values.birthDate,
-                            setFieldValue,
-                          );
-                        }}
-                      >
-                        <CalendarIcon
-                          onClick={() => setShowCalendar(prev => !prev)}
+                    <Flex flexDirection="row">
+                      <Row>
+                        <Heading size="h4" marginB="0.5em" textAlign="left">
+                          Weight Goal
+                        </Heading>
+                        <Field
+                          type="number"
+                          name="weightGoalValue"
+                          placeholder="in kg"
+                          width="15em"
+                          min={25}
+                          max={635}
+                          component={Input}
                         />
-                      </Field>
-                    </Row>
+                      </Row>
+                      <Row>
+                        <Heading size="h4" marginB="0.5em" textAlign="left">
+                          Birth Date
+                        </Heading>
+                        <Field
+                          type="text"
+                          name="birthDate"
+                          placeholder="dd/mm/yyyy"
+                          width="15em"
+                          maxLength={10}
+                          component={Input}
+                          onChange={(e: React.ChangeEvent<any>) => {
+                            handleChange(
+                              e,
+                              "birthDate",
+                              values.birthDate,
+                              setFieldValue,
+                            );
+                          }}
+                        >
+                          <CalendarIcon
+                            onClick={() => setShowCalendar(prev => !prev)}
+                          />
+                        </Field>
+                      </Row>
+                    </Flex>
                     {showCalendar && (
                       <Calendar
                         position={"absolute"}

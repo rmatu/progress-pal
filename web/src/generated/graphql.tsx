@@ -38,6 +38,7 @@ export type UserMetrics = {
   __typename?: 'UserMetrics';
   id: Scalars['Int'];
   weightGoal?: Maybe<Scalars['String']>;
+  weightGoalValue?: Maybe<Scalars['Float']>;
   activityLevel?: Maybe<Scalars['String']>;
   height?: Maybe<Scalars['Float']>;
   weight?: Maybe<Scalars['Float']>;
@@ -154,6 +155,7 @@ export type CreateUserMetricsInput = {
   activityLevel: Scalars['String'];
   height: Scalars['Float'];
   weight: Scalars['Float'];
+  weightGoalValue: Scalars['Float'];
   birthDate: Scalars['String'];
 };
 

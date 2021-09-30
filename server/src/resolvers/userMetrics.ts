@@ -27,6 +27,8 @@ class CreateUserMetricsInput {
   @Field()
   weight: number;
   @Field()
+  weightGoalValue: number;
+  @Field()
   birthDate: string;
 }
 
@@ -82,6 +84,7 @@ export class UserMetricsResolver {
       activityLevel: input.activityLevel,
       height: input.height,
       weight: input.weight,
+      weightGoalValue: input.weightGoalValue,
       user: req.session.userId,
     }).save();
 

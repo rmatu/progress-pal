@@ -111,10 +111,15 @@ export const GeneralInfoSchema = Yup.object().shape({
     .min(25, "Min wieght is 25")
     .max(635, "Max height is 635")
     .required("Weight is required"),
+  weightGoalValue: Yup.number()
+    .min(25, "Min wieght is 25")
+    .max(635, "Max height is 635")
+    .required("Goal is required"),
 });
 
 export const GeneralInfoInitialValues = {
   birthDate: "",
   height: "",
   weight: "",
+  weightGoalValue: "",
 };
