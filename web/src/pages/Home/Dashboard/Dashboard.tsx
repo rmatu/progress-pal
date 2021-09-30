@@ -32,6 +32,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     (state: AppState) => state.dashboardNavbar,
   );
 
+  console.log({ startDate, endDate });
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -41,10 +43,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   useEffect(() => {
     if (width < 600) {
       setStartDate(moment(startDate).set("month", 6).format("YYYY-MM-DD"));
-      setEndDate(moment(startDate).set("month", 12).format("YYYY-MM-DD"));
     } else {
       setStartDate(moment(startDate).set("month", 0).format("YYYY-MM-DD"));
-      setEndDate(moment(startDate).set("month", 12).format("YYYY-MM-DD"));
     }
   }, [width]);
 
