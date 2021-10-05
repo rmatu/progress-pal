@@ -17,6 +17,9 @@ import { redis } from "./redis";
 //Entities
 import { User } from "./entities/User";
 import { UserMetrics } from "./entities/UserMetrics";
+import { Muscle } from "./entities/Muscle";
+import { Exercise } from "./entities/Exercise";
+import { Workout } from "./entities/Workout";
 
 //Resolvers
 import { UserResolver } from "./resolvers/user";
@@ -34,7 +37,7 @@ const main = async () => {
     logging: true,
     synchronize: true,
     migrations: [path.join(__dirname, "./migrations/*")],
-    entities: [User, UserMetrics],
+    entities: [User, UserMetrics, Workout, Exercise, Muscle],
   });
 
   // await conn.runMigrations();
@@ -66,7 +69,7 @@ const main = async () => {
         disableTouch: true,
       }),
       cookie: {
-        maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
+        maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
         httpOnly: true,
         sameSite: "lax", // csrf
         secure: __prod__, // cookie only works in https

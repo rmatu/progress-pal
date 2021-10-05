@@ -32,8 +32,6 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     (state: AppState) => state.dashboardNavbar,
   );
 
-  console.log({ startDate, endDate });
-
   const dispatch = useDispatch();
 
   useEffect(() => {
