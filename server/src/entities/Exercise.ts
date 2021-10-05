@@ -28,11 +28,11 @@ export class Exercise extends BaseEntity {
   workout: Workout;
 
   @OneToMany(() => Muscle, (muscle: Muscle) => muscle.exercise)
-  muscle: Muscle;
+  muscle: Muscle[];
 
   @OneToMany(
     () => ExerciseSet,
     (exerciseSet: ExerciseSet) => exerciseSet.exercise,
   )
-  exerciseSet: ExerciseSet;
+  exerciseSet: ExerciseSet[];
 }

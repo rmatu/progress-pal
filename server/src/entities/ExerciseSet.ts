@@ -26,9 +26,9 @@ export class ExerciseSet extends BaseEntity {
 
   @Field(() => Number)
   @Column()
-  rep: number;
+  reps: number;
 
   // Relations
   @ManyToOne(() => Exercise, (exercise: Exercise) => exercise.exerciseSet)
-  exercise: Exercise;
+  exercise: Exercise[];
 }

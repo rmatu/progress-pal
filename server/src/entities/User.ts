@@ -79,5 +79,5 @@ export class User extends BaseEntity {
       onDelete: "CASCADE",
     },
   )
-  userMetrics: UserMetrics;
+  userMetrics: UserMetrics[];
 }

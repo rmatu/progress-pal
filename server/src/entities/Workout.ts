@@ -32,5 +32,5 @@ export class Workout extends BaseEntity {
   user: User;
 
   @OneToMany(() => Exercise, (exercise: Exercise) => exercise.workout)
-  exercise: Exercise;
+  exercise: Exercise[];
 }
