@@ -19,11 +19,13 @@ import { User } from "./entities/User";
 import { UserMetrics } from "./entities/UserMetrics";
 import { Muscle } from "./entities/Muscle";
 import { Exercise } from "./entities/Exercise";
+import { ExerciseSet } from "./entities/ExerciseSet";
 import { Workout } from "./entities/Workout";
 
 //Resolvers
 import { UserResolver } from "./resolvers/user";
 import { UserMetricsResolver } from "./resolvers/userMetrics";
+import { WorkoutResolver } from "./resolvers/workout";
 
 const main = async () => {
   oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
@@ -37,7 +39,7 @@ const main = async () => {
     logging: true,
     synchronize: true,
     migrations: [path.join(__dirname, "./migrations/*")],
-    entities: [User, UserMetrics, Workout, Exercise, Muscle],
+    entities: [User, UserMetrics, Workout, Exercise, ExerciseSet, Muscle],
   });
 
   // await conn.runMigrations();
@@ -82,7 +84,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver, UserMetricsResolver],
+      resolvers: [UserResolver, UserMetricsResolver, WorkoutResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({

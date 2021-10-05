@@ -7,6 +7,7 @@ import {
   ManyToOne,
   OneToMany,
 } from "typeorm";
+import { ExerciseSet } from "./ExerciseSet";
 import { Muscle } from "./Muscle";
 import { Workout } from "./Workout";
 
@@ -18,14 +19,6 @@ export class Exercise extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Field(() => Number)
-  @Column()
-  set: number;
-
-  @Field(() => Number)
-  @Column()
-  weight: number;
-
   @Field(() => String)
   @Column()
   name: string;
@@ -36,4 +29,10 @@ export class Exercise extends BaseEntity {
 
   @OneToMany(() => Muscle, (muscle: Muscle) => muscle.exercise)
   muscle: Muscle;
+
+  @OneToMany(
+    () => ExerciseSet,
+    (exerciseSet: ExerciseSet) => exerciseSet.exercise,
+  )
+  exerciseSet: ExerciseSet;
 }

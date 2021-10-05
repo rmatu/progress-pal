@@ -3,7 +3,7 @@ workout: {
   exercises: [
     {
       name: string,
-      set: [
+      sets: [
         {
           weight: number
           reps: number
