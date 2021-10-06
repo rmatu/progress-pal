@@ -21,6 +21,7 @@ export class Muscle extends BaseEntity {
   name: string;
 
   // Relations
+  @Field(() => Exercise)
   @ManyToOne(() => Exercise, (exercise: Exercise) => exercise.muscle)
   exercise: Exercise;
 }

@@ -48,6 +48,7 @@ export class UserMetrics extends BaseEntity {
   createdAt: Date;
 
   // Relations
+  @Field(() => User)
   @ManyToOne(() => User, (user: User) => user.userMetrics)
   user: User;
 }

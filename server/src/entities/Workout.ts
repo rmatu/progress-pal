@@ -28,9 +28,11 @@ export class Workout extends BaseEntity {
   createdAt: Date;
 
   // Relations
+  @Field(() => User)
   @ManyToOne(() => User, (user: User) => user.userMetrics)
   user: User;
 
+  @Field(() => [Exercise])
   @OneToMany(() => Exercise, (exercise: Exercise) => exercise.workout)
   exercise: Exercise[];
 }

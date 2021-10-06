@@ -24,12 +24,15 @@ export class Exercise extends BaseEntity {
   name: string;
 
   // Relations
+  @Field(() => Workout)
   @ManyToOne(() => Workout, (workout: Workout) => workout.exercise)
   workout: Workout;
 
+  @Field(() => [Muscle])
   @OneToMany(() => Muscle, (muscle: Muscle) => muscle.exercise)
   muscle: Muscle[];
 
+  @Field(() => [ExerciseSet])
   @OneToMany(
     () => ExerciseSet,
     (exerciseSet: ExerciseSet) => exerciseSet.exercise,

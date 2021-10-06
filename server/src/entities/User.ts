@@ -72,6 +72,7 @@ export class User extends BaseEntity {
   createdAt: Date;
 
   // Relations;
+  @Field(() => [UserMetrics])
   @OneToMany(
     () => UserMetrics,
     (userMetrics: UserMetrics) => userMetrics.user,

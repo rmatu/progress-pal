@@ -17,7 +17,7 @@ import { Workout } from "../entities/Workout";
 import { Exercise } from "../entities/Exercise";
 import { ExerciseSet } from "../entities/ExerciseSet";
 import { Muscle } from "../entities/Muscle";
-import { getConnection } from "typeorm";
+import { getConnection, getRepository } from "typeorm";
 
 @ObjectType()
 class CreateWorkoutResponse {
@@ -69,29 +69,43 @@ export class WorkoutResolver {
 
   @Query(() => [Workout], { nullable: true })
   @UseMiddleware(isAuthenticated)
-  async getUserWorkouts(@Ctx() { req }: MyContext) {
-    const { userId } = req.session;
+  async getAllUserWorkouts(@Ctx() { req }: MyContext) {
+    const workoutRepo = await getRepository(Workout);
 
-    const workouts = await Workout.find({
-      where: { user: userId },
-      relations: ["exercise"],
+    const workout = await workoutRepo.find({
+      relations: ["exercise", "exercise.muscle", "exercise.exerciseSet"],
     });
 
-    if (!workouts) {
+    if (!workout) {
       return null;
     }
 
-    return workouts;
+    return workout;
+  }
+
+  @Query(() => Workout, { nullable: true })
+  @UseMiddleware(isAuthenticated)
+  async getUserWorkout(
+    @Arg("workoutId") workoutId: number,
+    @Ctx() { req }: MyContext,
+  ) {
+    const workoutRepo = await getRepository(Workout);
+
+    const workout = await workoutRepo.findOne({
+      relations: ["exercise", "exercise.muscle", "exercise.exerciseSet"],
+      where: { id: workoutId },
+    });
+
+    if (!workout) {
+      return null;
+    }
+
+    return workout;
   }
 
   // ===========================
   // ======= MUTATIONS =========
   // ===========================
-
-  // workout -> exercises -> muscles
-
-  //! THIS SHOULD RUN IN ONE QUERY!!
-  //! IT'S SUPER SLOW NOW
   @Mutation(() => CreateWorkoutResponse, { nullable: true })
   @UseMiddleware(isAuthenticated)
   async createWorkout(
