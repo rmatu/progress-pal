@@ -1,43 +1,23 @@
 import { Field, Int, ObjectType } from "type-graphql";
 import {
-  Column,
   Entity,
   BaseEntity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   CreateDateColumn,
   ManyToOne,
+  OneToMany,
 } from "typeorm";
+import { Exercise } from "./Exercise";
 import { User } from "./User";
 
 @ObjectType()
 @Entity()
-export class UserMetrics extends BaseEntity {
+export class Workout extends BaseEntity {
   // SQL
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id!: number;
-
-  // Fields
-  @Field(() => String, { nullable: true })
-  @Column({ nullable: true })
-  weightGoal: string;
-
-  @Field(() => Number, { nullable: true })
-  @Column({ nullable: true })
-  weightGoalValue: number;
-
-  @Field(() => String, { nullable: true })
-  @Column({ nullable: true })
-  activityLevel: string;
-
-  @Field(() => Number, { nullable: true })
-  @Column({ nullable: true })
-  height: number; // in cm
-
-  @Field(() => Number, { nullable: true })
-  @Column({ nullable: true })
-  weight: number; // in grams
 
   @Field(() => String)
   @UpdateDateColumn({ type: "timestamp with time zone" })
@@ -51,4 +31,8 @@ export class UserMetrics extends BaseEntity {
   @Field(() => User)
   @ManyToOne(() => User, (user: User) => user.userMetrics)
   user: User;
+
+  @Field(() => [Exercise])
+  @OneToMany(() => Exercise, (exercise: Exercise) => exercise.workout)
+  exercise: Exercise[];
 }

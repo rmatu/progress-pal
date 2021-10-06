@@ -1,4 +1,4 @@
-import { isAuth } from "./../middleware/isAuth";
+import { isAuthenticated } from "../middleware/isAuthenticated";
 import {
   Resolver,
   Mutation,
@@ -506,7 +506,7 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  @UseMiddleware(isAuth)
+  @UseMiddleware(isAuthenticated)
   async changeOnboardingStep(
     @Ctx() { req }: MyContext,
     @Arg("step") step: number,

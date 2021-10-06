@@ -1,4 +1,4 @@
-import { isAuth } from "./../middleware/isAuth";
+import { isAuthenticated } from "../middleware/isAuthenticated";
 import { UserMetrics } from "../entities/UserMetrics";
 import {
   Arg,
@@ -26,6 +26,8 @@ class CreateUserMetricsInput {
   height: number;
   @Field()
   weight: number;
+  @Field()
+  weightGoalValue: number;
   @Field()
   birthDate: string;
 }
@@ -58,9 +60,8 @@ export class UserMetricsResolver {
     const { userId } = req.session;
 
     const userMetrics = await UserMetrics.find({ where: { user: userId } });
-    console.log(userMetrics);
 
-    if (!UserMetrics) {
+    if (!userMetrics) {
       return null;
     }
 
@@ -72,7 +73,7 @@ export class UserMetricsResolver {
   // ===========================
 
   @Mutation(() => UpdateOnboardingResponse)
-  @UseMiddleware(isAuth)
+  @UseMiddleware(isAuthenticated)
   async finishOnboarding(
     @Arg("input") input: CreateUserMetricsInput,
     @Ctx() { req }: MyContext,
@@ -82,6 +83,7 @@ export class UserMetricsResolver {
       activityLevel: input.activityLevel,
       height: input.height,
       weight: input.weight,
+      weightGoalValue: input.weightGoalValue,
       user: req.session.userId,
     }).save();
 

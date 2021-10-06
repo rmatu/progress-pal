@@ -75,3 +75,29 @@ export const PickYear = styled.li`
     opacity: 1;
   }
 `;
+
+export const HalfYearPicker = styled.div`
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  bottom: 0.3em;
+  font-size: 1.25rem;
+  opacity: 1;
+
+  @media screen and (min-width: 592px) {
+    display: none;
+  }
+`;
+
+export const HalfYear = styled.div<{ selected?: boolean }>`
+  opacity: ${({ selected }) => (selected ? "1" : "0.5")};
+  cursor: pointer;
+
+  :first-of-type {
+    margin-right: 0.5em;
+  }
+
+  :last-of-type {
+    margin-left: 0.5em;
+  }
+`;

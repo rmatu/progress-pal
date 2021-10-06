@@ -17,10 +17,15 @@ import { redis } from "./redis";
 //Entities
 import { User } from "./entities/User";
 import { UserMetrics } from "./entities/UserMetrics";
+import { Muscle } from "./entities/Muscle";
+import { Exercise } from "./entities/Exercise";
+import { ExerciseSet } from "./entities/ExerciseSet";
+import { Workout } from "./entities/Workout";
 
 //Resolvers
 import { UserResolver } from "./resolvers/user";
 import { UserMetricsResolver } from "./resolvers/userMetrics";
+import { WorkoutResolver } from "./resolvers/workout";
 
 const main = async () => {
   oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
@@ -34,7 +39,7 @@ const main = async () => {
     logging: true,
     synchronize: true,
     migrations: [path.join(__dirname, "./migrations/*")],
-    entities: [User, UserMetrics],
+    entities: [User, UserMetrics, Workout, Exercise, ExerciseSet, Muscle],
   });
 
   // await conn.runMigrations();
@@ -66,7 +71,7 @@ const main = async () => {
         disableTouch: true,
       }),
       cookie: {
-        maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
+        maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
         httpOnly: true,
         sameSite: "lax", // csrf
         secure: __prod__, // cookie only works in https
@@ -79,7 +84,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver, UserMetricsResolver],
+      resolvers: [UserResolver, UserMetricsResolver, WorkoutResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({

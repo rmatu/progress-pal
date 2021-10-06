@@ -13,14 +13,12 @@ import { RightContent } from "./styles";
 const values = [
   { date: "2021-01-02", amount: 12 },
   { date: "2021-01-22", amount: 122 },
-  { date: "2021-12-31", amount: 38 },
+  { date: "2021-12-15", amount: 38 },
 ];
 
 interface DashboardProps {
   user: MeQuery["me"] | undefined;
 }
-
-// TODO: GIVE ABILITY TO USER TO CHECK 1st OR 2nd half of the year
 
 const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const [startDate, setStartDate] = useState(

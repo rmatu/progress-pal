@@ -11,6 +11,8 @@ import {
   PickYear,
   Year,
   Years,
+  HalfYearPicker,
+  HalfYear,
 } from "./styles";
 import Modal from "../Modal/Modal";
 
@@ -33,6 +35,7 @@ const YearlyCalendarHeatmap: React.FC<YearlyCalendarHeatmapProps> = ({
 }) => {
   const [showYearsModal, setShowYearsModal] = useState(false);
   const [years, setYears] = useState<number[]>([]);
+  const [selectedHalf, setSelectedHalf] = useState("2");
 
   const handleClick = (year: number) => {
     setShowYearsModal(false);
@@ -42,6 +45,18 @@ const YearlyCalendarHeatmap: React.FC<YearlyCalendarHeatmapProps> = ({
     setEndDate(endDate =>
       moment(endDate).set("year", year).format("YYYY-MM-DD"),
     );
+  };
+
+  const changeYearHalf = (yearHalf: string) => {
+    if (yearHalf === "1") {
+      setSelectedHalf("1");
+      setStartDate(moment(startDate).set("month", 0).format("YYYY-MM-DD"));
+      setEndDate(moment(endDate).set("month", 6).format("YYYY-MM-DD"));
+    } else if (yearHalf === "2") {
+      setSelectedHalf("2");
+      setStartDate(moment(startDate).set("month", 6).format("YYYY-MM-DD"));
+      setEndDate(moment(endDate).set("month", 11).format("YYYY-MM-DD"));
+    }
   };
 
   useEffect(() => {
@@ -70,6 +85,21 @@ const YearlyCalendarHeatmap: React.FC<YearlyCalendarHeatmapProps> = ({
         <AmountText>Amount of trainings: </AmountText>
         <Amount> {values.length}</Amount>
       </TrainingAmount>
+      <HalfYearPicker>
+        <HalfYear
+          selected={selectedHalf === "1"}
+          onClick={() => changeYearHalf("1")}
+        >
+          1
+        </HalfYear>
+        /
+        <HalfYear
+          selected={selectedHalf === "2"}
+          onClick={() => changeYearHalf("2")}
+        >
+          2
+        </HalfYear>
+      </HalfYearPicker>
       <CalendarWrapper>
         <Year>{moment(startDate).get("y")}</Year>
         <CalendarIcon onClick={() => setShowYearsModal(true)} />

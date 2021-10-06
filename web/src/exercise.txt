@@ -1,0 +1,15 @@
+workout: {
+  date: Date,
+  exercises: [
+    {
+      name: string,
+      sets: [
+        {
+          weight: number
+          reps: number
+        },
+      ]
+      muscles: string[]
+    }
+  ]
+}
