@@ -123,3 +123,11 @@ export const GeneralInfoInitialValues = {
   weight: "",
   weightGoalValue: "",
 };
+
+/**
+ * * Add Workout
+ */
+
+export const AddWorkoutSchema = Yup.object().shape({
+  birthDate: Yup.string(),
+});

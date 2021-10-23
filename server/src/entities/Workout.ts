@@ -1,3 +1,4 @@
+import moment from "moment";
 import { Field, Int, ObjectType } from "type-graphql";
 import {
   Entity,
@@ -7,6 +8,7 @@ import {
   CreateDateColumn,
   ManyToOne,
   OneToMany,
+  Column,
 } from "typeorm";
 import { Exercise } from "./Exercise";
 import { User } from "./User";
@@ -18,6 +20,10 @@ export class Workout extends BaseEntity {
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id!: number;
+
+  @Field(() => String)
+  @Column({ default: moment().format(`[Workout] DD-MM-YYYY`) })
+  name: string;
 
   @Field(() => String)
   @UpdateDateColumn({ type: "timestamp with time zone" })

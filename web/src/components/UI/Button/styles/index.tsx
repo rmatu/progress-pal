@@ -14,6 +14,7 @@ interface ButtonProps {
   disabled?: boolean;
   padding?: string;
   fontSize?: string;
+  bColor?: string;
 }
 
 export const StyledButton = styled.button<ButtonProps>`
@@ -28,6 +29,8 @@ export const StyledButton = styled.button<ButtonProps>`
   font-weight: 500;
   background-color: ${({ theme }) => theme.colors.orange};
   border: 3px solid ${({ theme }) => theme.colors.orange};
+  background-color: ${({ bColor }) => bColor};
+  border: ${({ bColor }) => bColor && `3px solid ${bColor}`};
   cursor: pointer;
   opacity: 90%;
 
