@@ -129,5 +129,11 @@ export const GeneralInfoInitialValues = {
  */
 
 export const AddWorkoutSchema = Yup.object().shape({
-  birthDate: Yup.string(),
+  exerciseName: Yup.string()
+    .max(40, "Maximum of 40 characters")
+    .required("Exercise name is required"),
+});
+
+export const SearchSchema = Yup.object().shape({
+  search: Yup.string(),
 });

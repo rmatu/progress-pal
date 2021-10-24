@@ -65,6 +65,7 @@ const ModalScroll: React.FC<ModalProps> = ({
   return (
     <ModalWrap noClose={noClose} noTop={noTop} show={show}>
       <ModalMain
+        className="modalMain"
         autoScroll={autoScroll}
         border={border}
         height={height}
@@ -98,6 +99,7 @@ const ModalWrap = styled.div`
 `;
 
 const StyledSection = styled.section`
+  overflow-y: auto;
   max-height: ${({ maxSectionHeight }) =>
     maxSectionHeight ? maxSectionHeight : ""};
 `;
@@ -107,7 +109,7 @@ const ModalMain = styled.div`
   top: 50%;
   left: 50%;
   flex-direction: column;
-  width: ${({ width }) => (width ? width : convertPxToRem(460))};
+  width: ${({ width }) => (width ? width : convertPxToRem(600))};
   height: ${({ height }) => height && height};
   max-height: ${({ height, maxHeight, scrollY }) =>
     maxHeight
@@ -120,20 +122,19 @@ const ModalMain = styled.div`
   margin-top: ${({ noClose, noTop }) =>
     noClose && !noTop ? convertPxToRem(-64) : 0};
   padding: ${({ noPadding }) => (noPadding ? 0 : convertPxToRem(25, 45))};
-  overflow-y: ${({ autoScroll }) => autoScroll && "auto"};
   transform: translate(-50%, -50%);
   border: ${({ border }) => border && border};
   outline: none;
   background: ${({ theme }) => theme.colors.backgroundDarkerGray};
-  overflow-y: auto;
+  overflow-y: ${({ autoScroll }) => (autoScroll ? "auto" : "visible")};
   border-radius: 1em;
 
   .cancel {
     position: -webkit-sticky;
     position: sticky;
     height: 1em;
-    width: 1em;
     top: 0.2em;
+    right: 1em;
     fill: #fff;
 
     :hover {
@@ -152,8 +153,13 @@ const ModalMain = styled.div`
     border-radius: 0 8px 8px 8px;
   }
   box-shadow: var(--lightest-shade) ${convertPxToRem(0, 5, 5)};
-  @media (max-width: 1000px) {
+
+  @media screen and (max-width: 1000px) {
     width: 75vw;
+  }
+
+  @media screen and (max-width: 476px) {
+    padding: ${convertPxToRem(18, 16)};
   }
 `;
 

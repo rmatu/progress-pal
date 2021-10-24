@@ -10990,6 +10990,11 @@ react-app-polyfill@^2.0.0:
     regenerator-runtime "^0.13.7"
     whatwg-fetch "^3.4.1"
 
+react-body-highlighter@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/react-body-highlighter/-/react-body-highlighter-2.0.5.tgz#abb7e317afa273352f9268e3ae594b0b351459f1"
+  integrity sha512-yt37177vKIc+8TGxQw//G/3ah2aw/3E0g1oDt4N+46fMLVZ9BSelhc9S7kiwEkJRvYc3RyUSr9453uMJnvtxRg==
+
 react-calendar-heatmap@^1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/react-calendar-heatmap/-/react-calendar-heatmap-1.8.1.tgz#8370151f6cf7477d49cb3459596d6d046bdfc704"
