@@ -112,6 +112,7 @@ html{
   --graySeparator: ${props => props.theme.colors.graySeparator}
   --backgroundGray: ${props => props.theme.colors.backgroundGray}
   --backgroundDarkerGray: ${props => props.theme.colors.backgroundDarkerGray}
+  --backgroundGrayDimmer: ${props => props.theme.colors.backgroundGrayDimmer}
   --errorTextColor: ${props => props.theme.colors.errorTextColor}
   --successTextColor: ${props => props.theme.colors.successTextColor}
   --modalBackground: ${props => props.theme.colors.modalBackground}

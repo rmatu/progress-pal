@@ -2,7 +2,7 @@
 export const Muscle = {
   anyBodyCategory: "Any Body Category",
   abdominals: "Abdominals",       // miesnie brzucha
-  abductors: "Abductors",         // mięsień odwodzący
+  adductors: "Adductors",         // mięsień odwodzący
   biceps: "Biceps",               // biceps
   calves: "Calves",               // calves
   chest: "Chest",                 // klatka piersiowa

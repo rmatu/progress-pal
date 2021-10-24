@@ -3,6 +3,7 @@ const theme = {
     background: "#000",
     black: "#000",
     backgroundGray: "#2F3136",
+    backgroundGrayDimmer: "#2d2e32",
     modalBackground: "#161616",
     gray: "#757575",
     orange: "#fe5000",

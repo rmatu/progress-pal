@@ -1,4 +1,5 @@
-import styled from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
+import { convertPxToRem } from "../../../../utils/cssHelpers";
 import ModalScroll from "../../ModalScroll/ModalScroll";
 
 export const TopSearchWrapper = styled.div`
@@ -44,18 +45,46 @@ export const AlphabetLetter = styled.div`
   padding-bottom: 0.25em;
 `;
 
-export const Exercise = styled.div`
+export const Exercise = styled.div<{ selected: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
   margin-bottom: 1em;
   transition: all 0.1s ease-in-out;
   border-radius: 0.5em;
+  margin-right: 2em;
+  position: relative;
 
   :hover {
+    opacity: 0.8;
     cursor: pointer;
     background-color: ${({ theme }) => theme.colors.backgroundGray};
   }
+
+  #checkmark {
+    display: none;
+    position: absolute;
+    top: 0.5em;
+    right: 0.5em;
+    height: ${convertPxToRem(20)};
+    width: ${convertPxToRem(20)};
+  }
+
+  ${({ selected }) =>
+    selected &&
+    css`
+      background-color: ${({ theme }) => theme.colors.backgroundGray};
+      opacity: 1;
+
+      #checkmark {
+        display: block;
+      }
+
+      :hover {
+        opacity: 0.8;
+        background-color: ${({ theme }) => theme.colors.backgroundGray};
+      }
+    `}
 `;
 
 export const ExerciseSVG = styled.div`

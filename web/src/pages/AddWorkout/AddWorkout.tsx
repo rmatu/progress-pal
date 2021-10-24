@@ -22,6 +22,9 @@ import AddWorkoutModal from "../../components/UI/AddWorkoutModal/AddWorkoutModal
 const AddWorkout = () => {
   const { data: user } = useMeQuery();
   const [showAddExercisesModal, setShowAddExercisesModal] = useState(true);
+  const [selectedExercises, setSelectedExercises] = useState<[]>([]);
+
+  console.log(selectedExercises);
 
   const { selectedItem, open } = useSelector(
     (state: AppState) => state.dashboardNavbar,
@@ -37,6 +40,24 @@ const AddWorkout = () => {
     validationSchema: AddWorkoutSchema,
     onSubmit: () => {},
   });
+
+  const handleSelectedItem = (exercise: any) => {
+    const elementExist = selectedExercises?.find(
+      // @ts-ignore
+      el => el.name === exercise.name,
+    );
+
+    if (elementExist) {
+      // @ts-ignore
+      setSelectedExercises(prev =>
+        // @ts-ignore
+        prev.filter(el => el.name !== exercise.name),
+      );
+    } else {
+      // @ts-ignore
+      setSelectedExercises(prev => [...prev, exercise]);
+    }
+  };
 
   const handleExerciseFormikOnChange = (e: any) => {
     exerciseFormik.handleChange(e);
@@ -94,6 +115,8 @@ const AddWorkout = () => {
         <AddWorkoutModal
           show={showAddExercisesModal}
           handleClose={() => setShowAddExercisesModal(false)}
+          handleSelectedItem={handleSelectedItem}
+          selectedExercises={selectedExercises}
         />
       )}
     </DashbordLayoutHOC>

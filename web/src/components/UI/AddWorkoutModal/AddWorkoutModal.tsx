@@ -1,6 +1,7 @@
-import { useFormik } from "formik";
+import { Formik, useFormik } from "formik";
 import React, { useState } from "react";
 import { ReactComponent as SearchIcon } from "../../../assets/svg/search.svg";
+import { ReactComponent as GreenCheckmark } from "../../../assets/svg/green-checkmark.svg";
 import {
   IExercise,
   MockedExercises,
@@ -8,7 +9,10 @@ import {
 } from "../../../constants/exercises";
 import { convertMuscleDBToNPMPackage } from "../../../utils/converters";
 import { SearchSchema } from "../../../utils/formSchemas";
-import { capitalizeFirstLetter } from "../../../utils/stringUtils";
+import {
+  capitalizeFirstLetter,
+  lowerCaseFirstLetter,
+} from "../../../utils/stringUtils";
 import InputWithIcon from "../InputWithIcon/InputWithIcon";
 import Model from "react-body-highlighter";
 import Select from "../Select/Select";
@@ -26,12 +30,16 @@ import {
 } from "./styles";
 
 interface AddWorkoutModalProps {
+  handleSelectedItem: (exercise: any) => void;
   handleClose: () => void;
   show: boolean;
+  selectedExercises: [];
 }
 
 const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
+  handleSelectedItem,
   show,
+  selectedExercises,
   handleClose,
 }) => {
   const [mockedExercises, setMockedExercises] = useState(MockedExercises);
@@ -44,6 +52,8 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
     validationSchema: SearchSchema,
     onSubmit: () => {},
   });
+
+  console.log(searchFormik.values);
 
   const displayFirtLetter = (exercise: IExercise, currIdx: number) => {
     const currFirstChar = exercise.name.charAt(0);
@@ -61,6 +71,37 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
     return;
   };
 
+  const handleSelectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const bodyCategory = e.target.value;
+    if (bodyCategory === "Any Body Category") {
+      setMockedExercises(MockedExercises);
+    } else {
+      const filteredExercises = MockedExercises.filter(el =>
+        el.primaryMuscles.find(
+          name => name === lowerCaseFirstLetter(bodyCategory),
+        ),
+      );
+      setMockedExercises(filteredExercises);
+    }
+
+    searchFormik.handleChange(e);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const userInput = e.target.value;
+
+    if (!userInput) {
+      setMockedExercises(MockedExercises);
+    } else {
+      const filteredExercises = MockedExercises.filter(el =>
+        el.name.toLowerCase().includes(userInput.toLowerCase()),
+      );
+      setMockedExercises(filteredExercises);
+    }
+
+    searchFormik.handleChange(e);
+  };
+
   return (
     <Modal show={show} handleClose={handleClose}>
       <Form onSubmit={searchFormik.handleSubmit}>
@@ -70,7 +111,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
             error={searchFormik.errors.search}
             iconComp={<SearchIcon />}
             name="search"
-            onChange={searchFormik.handleChange}
+            onChange={handleSearchChange}
             placeholder="Search"
             type="text"
             value={searchFormik.values.search}
@@ -80,15 +121,22 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
           <Select
             options={[...Object.values(Muscle)]}
             formik={searchFormik}
+            handleSelectChange={handleSelectChange}
             name="bodyCategory"
           />
         </TopSearchWrapper>
         <ExercisesWrapper>
           {mockedExercises.map((exercise, idx) => (
-            <>
+            <React.Fragment key={exercise.name}>
               {/* @ts-ignore */}
               {displayFirtLetter(exercise, idx)}
-              <Exercise>
+              <Exercise
+                onClick={() => handleSelectedItem(exercise)}
+                selected={
+                  //@ts-ignore
+                  !!selectedExercises.find(el => el.name === exercise.name)
+                }
+              >
                 <ExerciseSVG>
                   <Model
                     data={convertMuscleDBToNPMPackage(exercise.primaryMuscles)}
@@ -108,8 +156,9 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
                     {capitalizeFirstLetter(exercise.primaryMuscles[0])}
                   </ExercisePrimaryMuscle>
                 </ExerciseInfo>
+                <GreenCheckmark id="checkmark" />
               </Exercise>
-            </>
+            </React.Fragment>
           ))}
         </ExercisesWrapper>
       </Form>

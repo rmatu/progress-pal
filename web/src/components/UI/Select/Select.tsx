@@ -9,11 +9,13 @@ interface SelectProps {
   options: string[];
   formik: any;
   name: string;
+  handleSelectChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Select: React.FC<SelectProps> = ({
   borderRadius = "0.5em",
   padding = "0.7em 0.7em",
+  handleSelectChange,
   bColor = theme.colors.backgroundGray,
   options,
   formik,
@@ -25,7 +27,7 @@ const Select: React.FC<SelectProps> = ({
         borderRadius={borderRadius}
         padding={padding}
         bColor={bColor}
-        onChange={formik.handleChange}
+        onChange={handleSelectChange || formik.handleChange}
         value={formik.values.bodyCategory}
         name={name}
       >
