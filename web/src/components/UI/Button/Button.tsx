@@ -8,6 +8,7 @@ interface ButtonProps {
   padding?: string;
   bColor?: string;
   fontSize?: string;
+  borderRadius?: string;
   // For future loader
   loading?: any;
 }
@@ -17,6 +18,7 @@ const Button: React.FC<
 > = ({
   children,
   bColor,
+  borderRadius,
   marginTop,
   disabled,
   padding,
@@ -31,6 +33,7 @@ const Button: React.FC<
         disabled={disabled}
         fontSize={fontSize}
         bColor={bColor}
+        borderRadius={borderRadius}
         {...rest}
       >
         {loading ? loading : children}

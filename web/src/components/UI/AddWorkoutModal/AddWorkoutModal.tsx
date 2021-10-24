@@ -1,4 +1,4 @@
-import { Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 import React, { useState } from "react";
 import { ReactComponent as SearchIcon } from "../../../assets/svg/search.svg";
 import { ReactComponent as GreenCheckmark } from "../../../assets/svg/green-checkmark.svg";
@@ -28,6 +28,7 @@ import {
   Modal,
   TopSearchWrapper,
 } from "./styles";
+import { Button } from "..";
 
 interface AddWorkoutModalProps {
   handleSelectedItem: (exercise: any) => void;
@@ -52,8 +53,6 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
     validationSchema: SearchSchema,
     onSubmit: () => {},
   });
-
-  console.log(searchFormik.values);
 
   const displayFirtLetter = (exercise: IExercise, currIdx: number) => {
     const currFirstChar = exercise.name.charAt(0);
@@ -124,6 +123,15 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
             handleSelectChange={handleSelectChange}
             name="bodyCategory"
           />
+          <Button
+            padding="0.2em 1.5em"
+            fontSize="1.125rem"
+            type="button"
+            borderRadius="0.5em"
+            onClick={handleClose}
+          >
+            Add
+          </Button>
         </TopSearchWrapper>
         <ExercisesWrapper>
           {mockedExercises.map((exercise, idx) => (

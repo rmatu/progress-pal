@@ -24,8 +24,6 @@ const AddWorkout = () => {
   const [showAddExercisesModal, setShowAddExercisesModal] = useState(true);
   const [selectedExercises, setSelectedExercises] = useState<[]>([]);
 
-  console.log(selectedExercises);
-
   const { selectedItem, open } = useSelector(
     (state: AppState) => state.dashboardNavbar,
   );

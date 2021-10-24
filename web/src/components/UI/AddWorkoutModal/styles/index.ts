@@ -8,9 +8,24 @@ export const TopSearchWrapper = styled.div`
   align-items: center;
   margin-bottom: 1em;
 
+  button {
+    margin-left: 1em;
+  }
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    button {
+      margin-top: 1em;
+      margin-left: 0;
+    }
+  }
+
   @media screen and (max-width: 476px) {
     #searchInput {
-      width: 100px;
+      /* width: 100px; */
     }
   }
 `;
@@ -33,13 +48,17 @@ export const ExercisesWrapper = styled.div`
     background: #525861;
     border-radius: 8px 8px 8px 8px;
   }
+
+  @media screen and (max-width: 768px) {
+    max-height: 60vh;
+  }
 `;
 
 export const Form = styled.form``;
 
 export const AlphabetLetter = styled.div`
   color: ${({ theme }) => theme.colors.gray};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray};
+  border-bottom: 1px solid #3f3f3f;
   margin-bottom: 0.5em;
   margin-right: 2em;
   padding-bottom: 0.25em;
