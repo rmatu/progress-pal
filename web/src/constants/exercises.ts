@@ -105,7 +105,7 @@ export const MockedExercises = [
     level: "intermediate",
     mechanic: "isolation",
     equipment: "foam roll",
-    primaryMuscles: ["adductors"],
+    primaryMuscles: ["adductors", "chest"],
     secondaryMuscles: [],
     instructions: [
       "Lie face down with one leg on a foam roll.",

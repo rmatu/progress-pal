@@ -14,6 +14,11 @@ textarea, select, input[type="date"], input[type="datetime"], input[type="dateti
   outline:0;
 }
 
+input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+
 input:-webkit-autofill,
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus,

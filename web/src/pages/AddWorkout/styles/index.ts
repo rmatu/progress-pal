@@ -16,3 +16,10 @@ export const ButtonWrapper = styled.div`
     margin-right: 0;
   }
 `;
+
+export const ExercisesList = styled.div`
+  margin-top: 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;

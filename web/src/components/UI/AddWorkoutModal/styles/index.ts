@@ -1,6 +1,5 @@
 import styled, { css } from "styled-components/macro";
 import { convertPxToRem } from "../../../../utils/cssHelpers";
-import ModalScroll from "../../ModalScroll/ModalScroll";
 
 export const TopSearchWrapper = styled.div`
   display: flex;
@@ -29,8 +28,6 @@ export const TopSearchWrapper = styled.div`
     }
   }
 `;
-
-export const Modal = styled(ModalScroll)``;
 
 export const ExercisesWrapper = styled.div`
   max-height: 80vh;
@@ -132,4 +129,26 @@ export const ExerciseName = styled.h3`
 
 export const ExercisePrimaryMuscle = styled.p`
   color: ${({ theme }) => theme.colors.gray};
+`;
+
+export const ExercisesAmmount = styled.p`
+  color: ${({ theme }) => theme.colors.gray};
+  margin-bottom: 1em;
+`;
+
+export const NoExercises = styled.p`
+  display: flex;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  justify-content: center;
+  align-items: center;
+  height: 6em;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: auto;
+
+  @media screen and (max-width: 476px) {
+    font-size: 1.6rem;
+    flex-direction: column;
+  }
 `;

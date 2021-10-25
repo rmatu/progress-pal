@@ -12,6 +12,7 @@ interface ModalProps {
   handleClose: () => void;
   height?: string;
   maxHeight?: string;
+  minHeight?: string;
   maxSectionHeight?: string;
   noClose?: boolean;
   noPadding?: boolean;
@@ -27,6 +28,7 @@ const ModalScroll: React.FC<ModalProps> = ({
   children,
   handleClose,
   height,
+  minHeight,
   maxHeight,
   maxSectionHeight,
   noClose,
@@ -69,6 +71,7 @@ const ModalScroll: React.FC<ModalProps> = ({
         autoScroll={autoScroll}
         border={border}
         height={height}
+        minHeight={minHeight}
         maxHeight={maxHeight}
         noClose={noClose}
         noPadding={noPadding}
@@ -111,6 +114,7 @@ const ModalMain = styled.div`
   flex-direction: column;
   width: ${({ width }) => (width ? width : convertPxToRem(600))};
   height: ${({ height }) => height && height};
+  min-height: ${({ minHeight }) => minHeight};
   max-height: ${({ height, maxHeight, scrollY }) =>
     maxHeight
       ? maxHeight

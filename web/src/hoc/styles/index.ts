@@ -24,7 +24,7 @@ export const RightContent = styled.div<{ open?: boolean }>`
   flex-direction: column;
   width: 85%;
   margin: 1em 0 1em 1em;
-  max-width: ${convertPxToRem(1900)};
+  max-width: ${convertPxToRem(1600)};
 
   transition: all 0.75s ease-in-out;
   filter: ${({ open }) => open && "blur(4px)"};

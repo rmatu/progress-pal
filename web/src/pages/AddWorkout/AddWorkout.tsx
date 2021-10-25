@@ -2,22 +2,22 @@ import { useFormik } from "formik";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
+import { ReactComponent as PencilIcon } from "../../assets/svg/pencil.svg";
+import ExerciseSets from "../../components/ExerciseSets/ExerciseSets";
 import { FlexWrapperDiv } from "../../components/FlexElements";
 import { Button, Heading } from "../../components/UI";
+import AddWorkoutModal from "../../components/UI/AddWorkoutModal/AddWorkoutModal";
+import InputWithIcon from "../../components/UI/InputWithIcon/InputWithIcon";
+import { MAIN_PAGE } from "../../constants/routes";
 import { useMeQuery } from "../../generated/graphql";
 import DashbordLayoutHOC from "../../hoc/DashbordLayoutHOC";
 import { RightContent } from "../../hoc/styles";
 import { AppState } from "../../redux/rootReducer";
+import theme from "../../theme/theme";
 import { AddWorkoutSchema } from "../../utils/formSchemas";
 import { setDashboardItem } from "../../utils/setDashboardItem";
-import { ReactComponent as PencilIcon } from "../../assets/svg/pencil.svg";
-
-import { ButtonWrapper, WorkoutForm } from "./styles";
-import theme from "../../theme/theme";
-import { useHistory } from "react-router";
-import { MAIN_PAGE } from "../../constants/routes";
-import InputWithIcon from "../../components/UI/InputWithIcon/InputWithIcon";
-import AddWorkoutModal from "../../components/UI/AddWorkoutModal/AddWorkoutModal";
+import { ButtonWrapper, ExercisesList, WorkoutForm } from "./styles";
 
 const AddWorkout = () => {
   const { data: user } = useMeQuery();
@@ -106,12 +106,23 @@ const AddWorkout = () => {
               Cancel Workout
             </Button>
           </ButtonWrapper>
+          <ExercisesList>
+            {selectedExercises.map(exercise => (
+              <ExerciseSets
+                //@ts-ignore
+                key={exercise.name}
+                exercise={exercise}
+                handleDeleteExercise={handleSelectedItem}
+              />
+            ))}
+          </ExercisesList>
         </WorkoutForm>
       </RightContent>
       {/* @ts-ignore */}
       {showAddExercisesModal && (
         <AddWorkoutModal
           show={showAddExercisesModal}
+          minHeight="40vh"
           handleClose={() => setShowAddExercisesModal(false)}
           handleSelectedItem={handleSelectedItem}
           selectedExercises={selectedExercises}

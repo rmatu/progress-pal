@@ -22,26 +22,30 @@ import {
   ExerciseInfo,
   ExerciseName,
   ExercisePrimaryMuscle,
+  ExercisesAmmount,
   ExerciseSVG,
   ExercisesWrapper,
   Form,
-  Modal,
+  NoExercises,
   TopSearchWrapper,
 } from "./styles";
 import { Button } from "..";
+import ModalScroll from "../ModalScroll/ModalScroll";
 
 interface AddWorkoutModalProps {
-  handleSelectedItem: (exercise: any) => void;
   handleClose: () => void;
-  show: boolean;
+  handleSelectedItem: (exercise: any) => void;
+  minHeight?: string;
   selectedExercises: [];
+  show: boolean;
 }
 
 const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
-  handleSelectedItem,
-  show,
-  selectedExercises,
   handleClose,
+  handleSelectedItem,
+  minHeight,
+  selectedExercises,
+  show,
 }) => {
   const [mockedExercises, setMockedExercises] = useState(MockedExercises);
 
@@ -102,7 +106,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
   };
 
   return (
-    <Modal show={show} handleClose={handleClose}>
+    <ModalScroll show={show} handleClose={handleClose} minHeight={minHeight}>
       <Form onSubmit={searchFormik.handleSubmit}>
         <TopSearchWrapper>
           <InputWithIcon
@@ -133,6 +137,14 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
             Add
           </Button>
         </TopSearchWrapper>
+        <ExercisesAmmount>
+          Found {mockedExercises.length} exercises
+        </ExercisesAmmount>
+        {!mockedExercises.length && (
+          <NoExercises>
+            No exercises for {searchFormik.values.search}
+          </NoExercises>
+        )}
         <ExercisesWrapper>
           {mockedExercises.map((exercise, idx) => (
             <React.Fragment key={exercise.name}>
@@ -170,7 +182,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
           ))}
         </ExercisesWrapper>
       </Form>
-    </Modal>
+    </ModalScroll>
   );
 };
 export default AddWorkoutModal;
