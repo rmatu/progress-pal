@@ -3,6 +3,7 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { ReactComponent as Balance } from "../../../assets/svg/balance.svg";
+import { ReactComponent as CalendarIcon } from "../../../assets/svg/calendar.svg";
 import { ReactComponent as Cancel } from "../../../assets/svg/cancel.svg";
 import { ReactComponent as Decrease } from "../../../assets/svg/decrease.svg";
 import { ReactComponent as FemaleAvatar } from "../../../assets/svg/female.svg";
@@ -11,10 +12,14 @@ import { ReactComponent as Increase } from "../../../assets/svg/increase.svg";
 import { ReactComponent as Logo } from "../../../assets/svg/logo.svg";
 import { ReactComponent as MaleAvatar } from "../../../assets/svg/male.svg";
 import { ReactComponent as QuestionMark } from "../../../assets/svg/question-mark.svg";
-import { ReactComponent as CalendarIcon } from "../../../assets/svg/calendar.svg";
 import { Heading, Input, Popup } from "../../../components/UI";
 import Calendar from "../../../components/UI/Date/Calendar/Calendar";
+import { onboardingSteps } from "../../../constants/onboarding";
 import * as ROUTES from "../../../constants/routes";
+import {
+  useChangeOnboardingStepMutation,
+  useFinishOnboardingMutation,
+} from "../../../generated/graphql";
 import {
   GeneralInfoInitialValues,
   GeneralInfoSchema,
@@ -25,25 +30,20 @@ import {
   CardContent,
   CardWrapper,
   ChooseOption,
-  StyledForm,
+  Flex,
   GoBack,
   LogoContainer,
   NavWrapper,
   NextButton,
-  Flex,
   Option,
   PrevButton,
   Progress,
   ProgressBar,
+  Row,
+  StyledForm,
   Text,
   Wrapper,
-  Row,
 } from "./styles";
-import {
-  useChangeOnboardingStepMutation,
-  useFinishOnboardingMutation,
-} from "../../../generated/graphql";
-import { onboardingSteps } from "../../../constants/onboarding";
 
 interface OnboardingProps {
   refetchUseMeQuery: () => void;
