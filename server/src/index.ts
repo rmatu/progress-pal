@@ -15,17 +15,19 @@ import { oAuth2Client } from "./OAuth2Client";
 import { redis } from "./redis";
 
 //Entities
-import { User } from "./entities/User";
-import { UserMetrics } from "./entities/UserMetrics";
-import { Muscle } from "./entities/Muscle";
+import { CommonExercise } from "./entities/CommonExercise";
 import { Exercise } from "./entities/Exercise";
 import { ExerciseSet } from "./entities/ExerciseSet";
+import { Muscle } from "./entities/Muscle";
+import { User } from "./entities/User";
+import { UserMetrics } from "./entities/UserMetrics";
 import { Workout } from "./entities/Workout";
 
 //Resolvers
 import { UserResolver } from "./resolvers/user";
 import { UserMetricsResolver } from "./resolvers/userMetrics";
 import { WorkoutResolver } from "./resolvers/workout";
+import { CommonExerciseResolver } from "./resolvers/commonExercise";
 
 const main = async () => {
   oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
@@ -39,7 +41,15 @@ const main = async () => {
     logging: true,
     synchronize: true,
     migrations: [path.join(__dirname, "./migrations/*")],
-    entities: [User, UserMetrics, Workout, Exercise, ExerciseSet, Muscle],
+    entities: [
+      CommonExercise,
+      Exercise,
+      ExerciseSet,
+      Muscle,
+      User,
+      UserMetrics,
+      Workout,
+    ],
   });
 
   // await conn.runMigrations();
@@ -84,7 +94,12 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver, UserMetricsResolver, WorkoutResolver],
+      resolvers: [
+        CommonExerciseResolver,
+        UserMetricsResolver,
+        UserResolver,
+        WorkoutResolver,
+      ],
       validate: false,
     }),
     context: ({ req, res }) => ({
