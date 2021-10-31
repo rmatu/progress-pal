@@ -6,7 +6,9 @@ interface ButtonProps {
   marginTop?: string;
   disabled?: boolean;
   padding?: string;
+  bColor?: string;
   fontSize?: string;
+  borderRadius?: string;
   // For future loader
   loading?: any;
 }
@@ -15,6 +17,8 @@ const Button: React.FC<
   ButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>
 > = ({
   children,
+  bColor,
+  borderRadius,
   marginTop,
   disabled,
   padding,
@@ -28,6 +32,8 @@ const Button: React.FC<
         padding={padding}
         disabled={disabled}
         fontSize={fontSize}
+        bColor={bColor}
+        borderRadius={borderRadius}
         {...rest}
       >
         {loading ? loading : children}

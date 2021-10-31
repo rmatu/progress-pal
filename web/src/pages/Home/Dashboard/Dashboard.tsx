@@ -4,11 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import YearlyCalendarHeatmap from "../../../components/UI/YearlyCalendarHeatmap/YearlyCalendarHeatmap";
 import { MeQuery } from "../../../generated/graphql";
 import DashbordLayoutHOC from "../../../hoc/DashbordLayoutHOC";
+import { RightContent } from "../../../hoc/styles";
 import { useWindowResize } from "../../../hooks/useWindowResize";
 import { AppState } from "../../../redux/rootReducer";
 import { setDashboardItem } from "../../../utils/setDashboardItem";
-
-import { RightContent } from "./styles";
 
 const values = [
   { date: "2021-01-02", amount: 12 },

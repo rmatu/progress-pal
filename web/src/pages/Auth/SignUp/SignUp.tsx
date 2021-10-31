@@ -90,8 +90,6 @@ const SignUp: React.FC<SignUpProps> = () => {
   };
 
   const responseFacebook = async (response: any) => {
-    console.log(response);
-
     const { email } = response;
     try {
       const res = await signUpWithFacebook({

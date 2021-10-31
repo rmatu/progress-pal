@@ -22,22 +22,6 @@ export const LeftNavbar = styled.nav`
   }
 `;
 
-export const RightContent = styled.div<{ open?: boolean }>`
-  display: flex;
-  flex-direction: column;
-  width: 85%;
-  margin: 1em 0 1em 1em;
-
-  transition: all 0.75s ease-in-out;
-  filter: ${({ open }) => open && "blur(4px)"};
-
-  @media screen and (max-width: 1024px) {
-    width: 100%;
-    margin: 0;
-    padding: 1em;
-  }
-`;
-
 export const Row = styled.div`
   width: 100%;
 `;

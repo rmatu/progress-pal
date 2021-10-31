@@ -1,4 +1,4 @@
-import styled from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
 
 interface FlexWrapperProps {
   flexDirection?: string;
@@ -9,6 +9,7 @@ interface FlexWrapperProps {
   margin?: string;
   padding?: string;
   backgroundColor?: string;
+  borderRadius?: string;
 }
 
 export const FlexWrapperDiv = styled.div<FlexWrapperProps>`
@@ -20,6 +21,7 @@ export const FlexWrapperDiv = styled.div<FlexWrapperProps>`
   height: ${({ height }) => height};
   margin: ${({ margin }) => margin};
   padding: ${({ padding }) => padding};
+  border-radius: ${({ borderRadius }) => borderRadius};
   background-color: ${({ backgroundColor }) => backgroundColor};
 `;
 
@@ -32,5 +34,6 @@ export const FlexWrapperUl = styled.ul<FlexWrapperProps>`
   height: ${({ height }) => height};
   margin: ${({ margin }) => margin};
   padding: ${({ padding }) => padding};
+  border-radius: ${({ borderRadius }) => borderRadius};
   background-color: ${({ backgroundColor }) => backgroundColor};
 `;

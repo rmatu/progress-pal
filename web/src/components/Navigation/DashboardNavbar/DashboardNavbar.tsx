@@ -17,6 +17,7 @@ import {
 import * as navActions from "../../../redux/dashboardNavbar/dashboardNavbarActions";
 import { ReactComponent as PlusCircle } from "../../../assets/svg/plusCircle.svg";
 import { ReactComponent as Cancel } from "../../../assets/svg/cancel.svg";
+import * as ROUTES from "../../../constants/routes";
 
 interface DashboardNavbarProps {
   user: MeQuery["me"] | undefined;
@@ -38,6 +39,7 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user }) => {
 
   const handleClick = (name: string) => {
     dispatch(navActions.changeItem(name));
+    history.push(name);
   };
 
   return (
@@ -59,15 +61,15 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user }) => {
       >
         <Category>Actions</Category>
         <NavListItem
-          selected={selectedItem === "addWorkout"}
-          onClick={() => handleClick("addWorkout")}
+          selected={selectedItem === ROUTES.ADD_WORKOUT}
+          onClick={() => handleClick(ROUTES.ADD_WORKOUT)}
         >
           Add Workout
           <PlusCircle id="add-circle" />
         </NavListItem>
         <NavListItem
-          selected={selectedItem === "addExercise"}
-          onClick={() => handleClick("addExercise")}
+          selected={selectedItem === ROUTES.ADD_EXERCISE}
+          onClick={() => handleClick(ROUTES.ADD_EXERCISE)}
         >
           Add Exercise
           <PlusCircle id="add-circle" />
@@ -81,20 +83,20 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user }) => {
       >
         <Category>Visuals</Category>
         <NavListItem
-          selected={selectedItem === "dashboard"}
-          onClick={() => handleClick("dashboard")}
+          selected={selectedItem === ROUTES.MAIN_PAGE}
+          onClick={() => handleClick(ROUTES.MAIN_PAGE)}
         >
           Dashboard
         </NavListItem>
         <NavListItem
-          selected={selectedItem === "dailyActivities"}
-          onClick={() => handleClick("dailyActivities")}
+          selected={selectedItem === "daily-activities"}
+          onClick={() => handleClick("daily-activities")}
         >
           Daily Activities
         </NavListItem>
         <NavListItem
-          selected={selectedItem === "workouts"}
-          onClick={() => handleClick("workouts")}
+          selected={selectedItem === ROUTES.WORKOUTS}
+          onClick={() => handleClick(ROUTES.WORKOUTS)}
         >
           Workouts
         </NavListItem>
@@ -113,8 +115,8 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user }) => {
       >
         <Category>Settings</Category>
         <NavListItem
-          selected={selectedItem === "account"}
-          onClick={() => handleClick("account")}
+          selected={selectedItem === ROUTES.ACCOUNT}
+          onClick={() => handleClick(ROUTES.ACCOUNT)}
         >
           Account
         </NavListItem>

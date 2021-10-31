@@ -1,3 +1,4 @@
+import moment from "moment";
 import { isAuthenticated } from "../middleware/isAuthenticated";
 import { UserMetrics } from "../entities/UserMetrics";
 import {
@@ -53,6 +54,9 @@ class ExercisesInput {
 class CreateWorkoutInput {
   @Field(() => Date)
   date: Date;
+
+  @Field(() => String)
+  name: string;
 
   @Field(() => [ExercisesInput])
   exercises: ExercisesInput[];
@@ -127,6 +131,7 @@ export class WorkoutResolver {
     try {
       const workout = new Workout();
       workout.user = userId;
+      workout.name = input.name || moment().format(`[Workout] DD-MM-YYYY`);
 
       // await queryRunner.manager.save(workout);
       const savedWorkout = await queryRunner.manager.save(workout);

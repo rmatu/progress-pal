@@ -30,10 +30,10 @@ export interface DashCleanUpNavbarAction {
 export interface DashboardNavbarState {
   open: boolean;
   selectedItem:
-    | "addWorkout"
-    | "addExercise"
+    | "add-workout"
+    | "add-exercise"
     | "dashboard"
-    | "dailyActivities"
+    | "daily-activities"
     | "workouts"
     | "donate"
     | "account";

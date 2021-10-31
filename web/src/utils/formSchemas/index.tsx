@@ -123,3 +123,17 @@ export const GeneralInfoInitialValues = {
   weight: "",
   weightGoalValue: "",
 };
+
+/**
+ * * Add Workout
+ */
+
+export const AddWorkoutSchema = Yup.object().shape({
+  exerciseName: Yup.string()
+    .max(40, "Maximum of 40 characters")
+    .required("Exercise name is required"),
+});
+
+export const SearchSchema = Yup.object().shape({
+  search: Yup.string(),
+});

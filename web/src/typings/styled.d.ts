@@ -10,6 +10,7 @@ declare module "styled-components" {
       grayText: string;
       graySeparator: string;
       backgroundGray: string;
+      backgroundGrayDimmer: string;
       backgroundDarkerGray: string;
       errorTextColor: string;
       successTextColor: string;
