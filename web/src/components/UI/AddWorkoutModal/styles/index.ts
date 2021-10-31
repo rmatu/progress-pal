@@ -152,3 +152,10 @@ export const NoExercises = styled.p`
     flex-direction: column;
   }
 `;
+
+export const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20em;
+`;

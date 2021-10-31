@@ -1,4 +1,4 @@
-import { Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,13 +29,15 @@ const AddWorkout = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [showAddExercisesModal, setShowAddExercisesModal] = useState(true);
+  const [showAddExercisesModal, setShowAddExercisesModal] = useState(false);
   const [selectedExercises, setSelectedExercises] = useState<[]>([]);
   const [exerciseWithSets, setExerciseWithSets] = useState<IExportedExercise[]>(
     [],
   );
   const [workout, setWorkout] = useState<IWorkout>();
   const [blockSubmit, setBlockSubmit] = useState<boolean>(false);
+
+  console.log(workout);
 
   const { selectedItem, open } = useSelector(
     (state: AppState) => state.dashboardNavbar,
@@ -76,9 +78,6 @@ const AddWorkout = () => {
   const handleCancelWorkout = () => {
     history.push(MAIN_PAGE);
   };
-
-  console.log({ blockSubmit });
-  console.log({ workout });
 
   useEffect(() => {
     setWorkout({
