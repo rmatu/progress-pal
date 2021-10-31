@@ -217,7 +217,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
                   !!selectedExercises.find(el => el.name === exercise.name)
                 }
               >
-                <ExerciseSVG>
+                <ExerciseSVG muscles={exercise.primaryMuscles}>
                   <HumanFrontSVG />
                   <HumanBackSVG />
                 </ExerciseSVG>

@@ -103,7 +103,7 @@ export const Exercise = styled.div<{ selected: boolean }>`
     `}
 `;
 
-export const ExerciseSVG = styled.div`
+export const ExerciseSVG = styled.div<{ muscles: string[] }>`
   display: flex;
   flex-direction: row;
   padding: 0.5em 0;
@@ -113,9 +113,63 @@ export const ExerciseSVG = styled.div`
     height: 90px;
   }
 
-  > div :last-child {
+  > svg:last-child {
     margin-right: 2em;
   }
+
+  ${({ muscles }) => {
+    if (!muscles) return;
+    if (muscles.includes("trapezius")) {
+      return css``;
+    } else if (muscles.includes("upper-back")) {
+      return css``;
+    } else if (muscles.includes("lower-back")) {
+      return css``;
+    } else if (muscles.includes("chest")) {
+      return css`
+      polygon {
+            &#chestLeft {
+              fill: #db2f2f !important;
+            }
+
+            &#chestRight {
+              fill: #db2f2f !important;
+            }
+          }
+        } 
+      `;
+    } else if (muscles.includes("biceps")) {
+      return css``;
+    } else if (muscles.includes("triceps")) {
+      return css``;
+    } else if (muscles.includes("forearm")) {
+      return css``;
+    } else if (muscles.includes("back-deltoids")) {
+      return css``;
+    } else if (muscles.includes("front-deltoids")) {
+      return css``;
+    } else if (muscles.includes("abs")) {
+      return css``;
+    } else if (muscles.includes("obliques")) {
+      return css``;
+    } else if (muscles.includes("adductor")) {
+      return css``;
+    } else if (muscles.includes("hamstring")) {
+      return css``;
+    } else if (muscles.includes("quadriceps")) {
+      return css``;
+    } else if (muscles.includes("abductors")) {
+      return css``;
+    } else if (muscles.includes("calves")) {
+      return css``;
+    } else if (muscles.includes("gluteal")) {
+      return css``;
+    } else if (muscles.includes("head")) {
+      return css``;
+    } else if (muscles.includes("neck")) {
+      return css``;
+    }
+  }}
 `;
 
 export const ExerciseInfo = styled.div`
