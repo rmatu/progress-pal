@@ -1,4 +1,4 @@
-import { useFormik } from "formik";
+import { Formik, useFormik } from "formik";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,25 +15,35 @@ import DashbordLayoutHOC from "../../hoc/DashbordLayoutHOC";
 import { RightContent } from "../../hoc/styles";
 import { AppState } from "../../redux/rootReducer";
 import theme from "../../theme/theme";
-import { AddWorkoutSchema } from "../../utils/formSchemas";
+import { AddWorkoutSchema, IExportedExercise } from "../../utils/formSchemas";
 import { setDashboardItem } from "../../utils/setDashboardItem";
 import { ButtonWrapper, ExercisesList, WorkoutForm } from "./styles";
 
+export interface IWorkout {
+  workoutName: string;
+  exercises: IExportedExercise[];
+}
+
 const AddWorkout = () => {
   const { data: user } = useMeQuery();
+  const history = useHistory();
+  const dispatch = useDispatch();
+
   const [showAddExercisesModal, setShowAddExercisesModal] = useState(true);
   const [selectedExercises, setSelectedExercises] = useState<[]>([]);
+  const [exerciseWithSets, setExerciseWithSets] = useState<IExportedExercise[]>(
+    [],
+  );
+  const [workout, setWorkout] = useState<IWorkout>();
+  const [blockSubmit, setBlockSubmit] = useState<boolean>(false);
 
   const { selectedItem, open } = useSelector(
     (state: AppState) => state.dashboardNavbar,
   );
 
-  const history = useHistory();
-  const dispatch = useDispatch();
-
-  const exerciseFormik = useFormik({
+  const workoutFormik = useFormik({
     initialValues: {
-      exerciseName: moment().format(`[Workout] DD-MM-YYYY`),
+      workoutName: moment().format(`[Workout] DD-MM-YYYY`),
     },
     validationSchema: AddWorkoutSchema,
     onSubmit: () => {},
@@ -57,13 +67,43 @@ const AddWorkout = () => {
     }
   };
 
+  const handleFinishWorkout = () => {};
+
   const handleExerciseFormikOnChange = (e: any) => {
-    exerciseFormik.handleChange(e);
+    workoutFormik.handleChange(e);
   };
 
   const handleCancelWorkout = () => {
     history.push(MAIN_PAGE);
   };
+
+  console.log({ blockSubmit });
+  console.log({ workout });
+
+  useEffect(() => {
+    setWorkout({
+      workoutName: workoutFormik.values.workoutName,
+      exercises: exerciseWithSets,
+    });
+
+    for (let i = 0; i < exerciseWithSets.length; i++) {
+      const error = exerciseWithSets[i].sets.some(el => {
+        return el.kg === null ||
+          el.kg === 0 ||
+          el.reps === null ||
+          el.reps === 0
+          ? true
+          : false;
+      });
+
+      if (error) {
+        setBlockSubmit(true);
+        break;
+      } else {
+        setBlockSubmit(false);
+      }
+    }
+  }, [exerciseWithSets]);
 
   useEffect(() => {
     setDashboardItem(selectedItem, "add-workout", dispatch);
@@ -72,17 +112,17 @@ const AddWorkout = () => {
   return (
     <DashbordLayoutHOC user={user?.me}>
       <RightContent open={open}>
-        <WorkoutForm onSubmit={exerciseFormik.handleSubmit}>
+        <WorkoutForm onSubmit={workoutFormik.handleSubmit}>
           <Heading size="h2">Add Workout</Heading>
           <FlexWrapperDiv justifyContent="center">
             <InputWithIcon
-              name="exerciseName"
-              value={exerciseFormik.values.exerciseName}
+              name="workoutName"
+              value={workoutFormik.values.workoutName}
               type="text"
               onChange={handleExerciseFormikOnChange}
               iconComp={<PencilIcon />}
               width="13em"
-              error={exerciseFormik.errors.exerciseName}
+              error={workoutFormik.errors.workoutName}
             />
           </FlexWrapperDiv>
           <ButtonWrapper>
@@ -106,6 +146,19 @@ const AddWorkout = () => {
               Cancel Workout
             </Button>
           </ButtonWrapper>
+          {selectedExercises.length > 0 && (
+            <Button
+              marginTop="2em"
+              padding="0.2em 2em"
+              fontSize="1.125rem"
+              bColor="#3cdfff"
+              onClick={handleFinishWorkout}
+              type="button"
+              disabled={blockSubmit}
+            >
+              Finish Workout
+            </Button>
+          )}
           <ExercisesList>
             {selectedExercises.map(exercise => (
               <ExerciseSets
@@ -113,6 +166,8 @@ const AddWorkout = () => {
                 key={exercise.name}
                 exercise={exercise}
                 handleDeleteExercise={handleSelectedItem}
+                setExerciseWithSets={setExerciseWithSets}
+                exerciseWithSets={exerciseWithSets}
               />
             ))}
           </ExercisesList>

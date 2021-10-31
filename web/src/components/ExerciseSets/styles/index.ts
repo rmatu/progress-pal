@@ -1,4 +1,4 @@
-import styled from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
 import { convertPxToRem } from "../../../utils/cssHelpers";
 
 export const Wrapper = styled.div`
@@ -66,7 +66,7 @@ export const SetNumber = styled.div`
   width: ${convertPxToRem(30)};
 `;
 
-export const Input = styled.input`
+export const Input = styled.input<{ error?: boolean }>`
   outline: none;
   border: none;
   color: white;
@@ -75,10 +75,16 @@ export const Input = styled.input`
   justify-content: center;
   border-radius: 0.5em;
   padding: 0.2em 1em;
+  border: 1px solid ${({ theme }) => theme.colors.backgroundGray};
   background-color: ${({ theme }) => theme.colors.backgroundGray};
   width: ${convertPxToRem(75)};
-
   text-align: right;
+
+  ${({ error }) =>
+    error &&
+    css`
+      border: 1px solid ${({ theme }) => theme.colors.errorTextColor};
+    `}
 `;
 
 export const TrashIcon = styled.div`

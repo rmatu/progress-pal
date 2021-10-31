@@ -30,7 +30,7 @@ export const TopSearchWrapper = styled.div`
 `;
 
 export const ExercisesWrapper = styled.div`
-  max-height: 80vh;
+  max-height: 70vh;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -47,7 +47,7 @@ export const ExercisesWrapper = styled.div`
   }
 
   @media screen and (max-width: 768px) {
-    max-height: 60vh;
+    max-height: 50vh;
   }
 `;
 

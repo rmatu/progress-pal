@@ -128,10 +128,34 @@ export const GeneralInfoInitialValues = {
  * * Add Workout
  */
 
+export interface ISet {
+  id: number;
+  kg: number | null;
+  reps: number | null;
+}
+
+export interface IExportedExercise {
+  exerciseName: string;
+  sets: ISet[];
+}
+
+const digitsOnly = (value: string) =>
+  /^\d*[\.{1}\d*]\d*$/.test(value) || value.length === 0;
+
 export const AddWorkoutSchema = Yup.object().shape({
-  exerciseName: Yup.string()
+  workoutName: Yup.string()
     .max(40, "Maximum of 40 characters")
     .required("Exercise name is required"),
+  exercises: Yup.object().shape({
+    exerciseName: Yup.string(),
+    sets: Yup.array().of(
+      Yup.object().shape({
+        id: Yup.number(),
+        kg: Yup.number(),
+        reps: Yup.number(),
+      }),
+    ),
+  }),
 });
 
 export const SearchSchema = Yup.object().shape({
