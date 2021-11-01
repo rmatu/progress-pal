@@ -119,7 +119,7 @@ export class CommonExercise extends BaseEntity {
   })
   secondaryMuscles: AppMuscle[];
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ type: "enum", enum: Force, nullable: true })
   force: Force;
 

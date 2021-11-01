@@ -103,73 +103,402 @@ export const Exercise = styled.div<{ selected: boolean }>`
     `}
 `;
 
-export const ExerciseSVG = styled.div<{ muscles: string[] }>`
+function createCSS(muscles: string[], color: string) {
+  let styles = "";
+
+  for (let i = 0; i < muscles.length; i += 1) {
+    styles += `
+        polygon {
+          &.${muscles[i]} {
+            fill: ${color} !important;
+          }
+        }
+     `;
+  }
+
+  return css`
+    ${styles}
+  `;
+}
+
+export const ExerciseSVG = styled.div<{
+  muscles: string[];
+  secondaryMuscles: string[];
+}>`
   display: flex;
   flex-direction: row;
   padding: 0.5em 0;
 
   svg {
     margin-right: 1em;
-    height: 90px;
+    height: 120px;
   }
 
   > svg:last-child {
     margin-right: 2em;
   }
 
+  /* ! ALL ELEMENTS BUT SLOW */
+
+  ${({ secondaryMuscles }) => {
+    if (!secondaryMuscles || secondaryMuscles.length === 0) return;
+    return createCSS(secondaryMuscles, "#d69b47");
+  }}
+
   ${({ muscles }) => {
-    if (!muscles) return;
+    if (!muscles || muscles.length === 0) return;
+    return createCSS(muscles, "#db2f2f");
+  }} /* ${({ secondaryMuscles }) => {
+    if (!secondaryMuscles || secondaryMuscles.length === 0) return;
+    if (secondaryMuscles.includes("trapezius")) {
+      return css`
+      polygon {
+            &.trapezius {
+              fill: #d69b47 !important;
+            }
+          }
+        } 
+      `;
+    } else if (secondaryMuscles.includes("upper-back")) {
+      return css`
+      polygon {
+            &.upper-back {
+              fill: #d69b47 !important;
+            }
+          }
+        } 
+      `;
+    } else if (secondaryMuscles.includes("lower-back")) {
+      return css`
+      polygon {
+            &.lower-back {
+              fill: #d69b47 !important;
+            }
+          }
+        } 
+      `;
+    } else if (secondaryMuscles.includes("chest")) {
+      return css`
+      polygon {
+            &.chest {
+              fill: #d69b47 !important;
+            }
+          }
+        } 
+      `;
+    } else if (secondaryMuscles.includes("biceps")) {
+      return css`
+      polygon {
+            &.biceps {
+              fill: #d69b47 !important;
+            }
+          }
+        } 
+      `;
+    } else if (secondaryMuscles.includes("triceps")) {
+      return css`
+      polygon {
+            &.triceps {
+              fill: #d69b47 !important;
+            }
+          }
+        } 
+      `;
+    } else if (secondaryMuscles.includes("forearm")) {
+      return css`
+      polygon {
+            &.forearm {
+              fill: #d69b47 !important;
+            }
+          }
+        } 
+      `;
+    } else if (secondaryMuscles.includes("back-deltoids")) {
+      return css`
+      polygon {
+            &.back-deltoids {
+              fill: #d69b47 !important;
+            }
+          }
+        } 
+      `;
+    } else if (secondaryMuscles.includes("front-deltoids")) {
+      return css`
+      polygon {
+            &.front-deltoids {
+              fill: #d69b47 !important;
+            }
+          }
+        } 
+      `;
+    } else if (secondaryMuscles.includes("abs")) {
+      return css`
+      polygon {
+            &.abs {
+              fill: #d69b47 !important;
+            }
+          }
+        } 
+      `;
+    } else if (secondaryMuscles.includes("obliques")) {
+      return css`
+      polygon {
+            &.obliques {
+              fill: #d69b47 !important;
+            }
+          }
+        } 
+      `;
+    } else if (secondaryMuscles.includes("adductor")) {
+      return css`
+      polygon {
+            &.adductor {
+              fill: #d69b47!important;
+            }
+          }
+        } 
+      `;
+    } else if (secondaryMuscles.includes("hamstring")) {
+      return css`
+      polygon {
+            &.hamstring {
+              fill: #d69b47 !important;
+            }
+          }
+        } 
+      `;
+    } else if (secondaryMuscles.includes("quadriceps")) {
+      return css`
+      polygon {
+            &.quadriceps {
+              fill: #d69b47 !important;
+            }
+          }
+        } 
+      `;
+    } else if (secondaryMuscles.includes("abductors")) {
+      return css`
+      polygon {
+            &.abductors {
+              fill: #d69b47 !important;
+            }
+          }
+        } 
+      `;
+    } else if (secondaryMuscles.includes("calves")) {
+      return css`
+      polygon {
+            &.calves {
+              fill: #d69b47 !important;
+            }
+          }
+        } 
+      `;
+    } else if (secondaryMuscles.includes("gluteal")) {
+      return css`
+      polygon {
+            &.gluteal {
+              fill: #d69b47 !important;
+            }
+          }
+        } 
+      `;
+    } else if (secondaryMuscles.includes("head")) {
+      return css`
+      polygon {
+            &.head {
+              fill: #d69b47 !important;
+            }
+          }
+        } 
+      `;
+    } else if (secondaryMuscles.includes("neck")) {
+      return css`
+      polygon {
+            &.neck {
+              fill: #d69b47 !important;
+            }
+          }
+        } 
+      `;
+    }
+  }}
+
+  ${({ muscles }) => {
+    if (!muscles || muscles.length === 0) return;
     if (muscles.includes("trapezius")) {
-      return css``;
+      return css`
+      polygon {
+            &.trapezius {
+              fill: #db2f2f !important;
+            }
+          }
+        } 
+      `;
     } else if (muscles.includes("upper-back")) {
-      return css``;
+      return css`
+      polygon {
+            &.upper-back {
+              fill: #db2f2f !important;
+            }
+          }
+        } 
+      `;
     } else if (muscles.includes("lower-back")) {
-      return css``;
+      return css`
+      polygon {
+            &.lower-back {
+              fill: #db2f2f !important;
+            }
+          }
+        } 
+      `;
     } else if (muscles.includes("chest")) {
       return css`
       polygon {
-            &#chestLeft {
-              fill: #db2f2f !important;
-            }
-
-            &#chestRight {
+            &.chest {
               fill: #db2f2f !important;
             }
           }
         } 
       `;
     } else if (muscles.includes("biceps")) {
-      return css``;
+      return css`
+      polygon {
+            &.biceps {
+              fill: #db2f2f !important;
+            }
+          }
+        } 
+      `;
     } else if (muscles.includes("triceps")) {
-      return css``;
+      return css`
+      polygon {
+            &.triceps {
+              fill: #db2f2f !important;
+            }
+          }
+        } 
+      `;
     } else if (muscles.includes("forearm")) {
-      return css``;
+      return css`
+      polygon {
+            &.forearm {
+              fill: #db2f2f !important;
+            }
+          }
+        } 
+      `;
     } else if (muscles.includes("back-deltoids")) {
-      return css``;
+      return css`
+      polygon {
+            &.back-deltoids {
+              fill: #db2f2f !important;
+            }
+          }
+        } 
+      `;
     } else if (muscles.includes("front-deltoids")) {
-      return css``;
+      return css`
+      polygon {
+            &.front-deltoids {
+              fill: #db2f2f !important;
+            }
+          }
+        } 
+      `;
     } else if (muscles.includes("abs")) {
-      return css``;
+      return css`
+      polygon {
+            &.abs {
+              fill: #db2f2f !important;
+            }
+          }
+        } 
+      `;
     } else if (muscles.includes("obliques")) {
-      return css``;
+      return css`
+      polygon {
+            &.obliques {
+              fill: #db2f2f !important;
+            }
+          }
+        } 
+      `;
     } else if (muscles.includes("adductor")) {
-      return css``;
+      return css`
+      polygon {
+            &.adductor {
+              fill: #db2f2f !important;
+            }
+          }
+        } 
+      `;
     } else if (muscles.includes("hamstring")) {
-      return css``;
+      return css`
+      polygon {
+            &.hamstring {
+              fill: #db2f2f !important;
+            }
+          }
+        } 
+      `;
     } else if (muscles.includes("quadriceps")) {
-      return css``;
+      return css`
+      polygon {
+            &.quadriceps {
+              fill: #db2f2f !important;
+            }
+          }
+        } 
+      `;
     } else if (muscles.includes("abductors")) {
-      return css``;
+      return css`
+      polygon {
+            &.abductors {
+              fill: #db2f2f !important;
+            }
+          }
+        } 
+      `;
     } else if (muscles.includes("calves")) {
-      return css``;
+      return css`
+      polygon {
+            &.calves {
+              fill: #db2f2f !important;
+            }
+          }
+        } 
+      `;
     } else if (muscles.includes("gluteal")) {
-      return css``;
+      return css`
+      polygon {
+            &.gluteal {
+              fill: #db2f2f !important;
+            }
+          }
+        } 
+      `;
     } else if (muscles.includes("head")) {
-      return css``;
+      return css`
+      polygon {
+            &.head {
+              fill: #db2f2f !important;
+            }
+          }
+        } 
+      `;
     } else if (muscles.includes("neck")) {
-      return css``;
+      return css`
+      polygon {
+            &.neck {
+              fill: #db2f2f !important;
+            }
+          }
+        } 
+      `;
     }
-  }}
+  }} */
 `;
 
 export const ExerciseInfo = styled.div`
@@ -187,7 +516,6 @@ export const ExercisePrimaryMuscle = styled.p`
 
 export const ExercisesAmmount = styled.p`
   color: ${({ theme }) => theme.colors.gray};
-  margin-bottom: 1em;
 `;
 
 export const NoExercises = styled.p`
@@ -212,4 +540,24 @@ export const LoaderWrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 20em;
+`;
+
+export const Circle = styled.div<{ color: string }>`
+  width: ${convertPxToRem(10)};
+  height: ${convertPxToRem(10)};
+
+  background-color: ${({ color }) => color};
+
+  border-radius: 50%;
+`;
+
+export const Legend = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 1em;
+`;
+
+export const LegendText = styled.p`
+  margin: 0 0.5em;
 `;

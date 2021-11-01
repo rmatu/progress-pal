@@ -10,8 +10,8 @@ export const Muscle = {
   glutes: "Glutes",               // pośladki
   hamstrings: "Hamstrings",       // uda
   lats: "Lats",                   // motyle
-  lowerBack: "Lower back",        // dolna część pleców
-  middleBack: "Middle back",      // środek pleców
+  lowerBack: "Lower Back",        // dolna część pleców
+  middleBack: "Middle Back",      // środek pleców
   neck: "Neck",                   // szyja
   quadriceps: "Quadriceps",       // mięsień czworogłowy
   shoulders: "Shoulders",         // barki
