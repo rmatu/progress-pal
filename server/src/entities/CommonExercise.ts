@@ -4,9 +4,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { ExerciseSet } from "./ExerciseSet";
+import { Workout } from "./Workout";
+import { WorkoutExercise } from "./WorkoutExercise";
 
 export enum AppMuscle {
   abdominals = "abdominals",
@@ -162,4 +168,11 @@ export class CommonExercise extends BaseEntity {
   @Field(() => String)
   @CreateDateColumn({ type: "timestamp with time zone" })
   createdAt: Date;
+
+  @Field(() => WorkoutExercise)
+  @OneToOne(
+    () => WorkoutExercise,
+    (workoutExercise: WorkoutExercise) => workoutExercise.commonExercise,
+  )
+  workoutExercise: WorkoutExercise;
 }

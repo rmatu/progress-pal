@@ -1,5 +1,7 @@
 # ProgressPal
 
+[![wakatime](https://wakatime.com/badge/user/2206cb68-690c-48b9-8697-7dd3cfe9706c/project/f60cdead-68c3-44d3-819d-d9b4817fcf9e.svg)](https://wakatime.com/badge/user/2206cb68-690c-48b9-8697-7dd3cfe9706c/project/f60cdead-68c3-44d3-819d-d9b4817fcf9e)
+
 # Disclaimer
 
 App is not ready yet

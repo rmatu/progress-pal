@@ -1,17 +1,17 @@
 import moment from "moment";
 import { Field, Int, ObjectType } from "type-graphql";
 import {
-  Entity,
   BaseEntity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
+  Column,
   CreateDateColumn,
+  Entity,
   ManyToOne,
   OneToMany,
-  Column,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
-import { Exercise } from "./Exercise";
 import { User } from "./User";
+import { WorkoutExercise } from "./WorkoutExercise";
 
 @ObjectType()
 @Entity()
@@ -35,10 +35,13 @@ export class Workout extends BaseEntity {
 
   // Relations
   @Field(() => User)
-  @ManyToOne(() => User, (user: User) => user.userMetrics)
+  @ManyToOne(() => User, (user: User) => user.workout)
   user: User;
 
-  @Field(() => [Exercise])
-  @OneToMany(() => Exercise, (exercise: Exercise) => exercise.workout)
-  exercise: Exercise[];
+  @Field(() => WorkoutExercise)
+  @OneToMany(
+    () => WorkoutExercise,
+    (workoutExercise: WorkoutExercise) => workoutExercise.workout,
+  )
+  workoutExercise: WorkoutExercise;
 }

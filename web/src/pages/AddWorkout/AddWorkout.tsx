@@ -49,6 +49,8 @@ const AddWorkout = () => {
     onSubmit: () => {},
   });
 
+  console.log({ blockSubmit });
+
   const handleSelectedItem = (exercise: any) => {
     const elementExist = selectedExercises?.find(
       // @ts-ignore
@@ -67,7 +69,11 @@ const AddWorkout = () => {
     }
   };
 
-  const handleFinishWorkout = () => {};
+  const handleFinishWorkout = () => {
+    if (blockSubmit) return;
+
+    console.log({ workout });
+  };
 
   const handleExerciseFormikOnChange = (e: any) => {
     workoutFormik.handleChange(e);
