@@ -1,0 +1,14 @@
+fragment RegularCommonExercise on CommonExercise {
+  id
+  name
+  primaryMuscles
+  secondaryMuscles
+  force
+  level
+  mechanic
+  equipment
+  category
+  instructions
+  updatedAt
+  createdAt
+}

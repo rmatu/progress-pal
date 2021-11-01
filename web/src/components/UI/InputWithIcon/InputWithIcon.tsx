@@ -5,10 +5,11 @@ import { Error, Input, InputWrapper, SVGWrapper, Wrapper } from "./styles";
 interface InputWithIconProps {
   bColor?: string;
   borderRadius?: string;
+  disabled?: boolean;
   error?: string | undefined;
   iconComp: React.ReactNode;
-  margin?: string;
   id?: string;
+  margin?: string;
   name: string;
   onChange: (e: any) => void;
   padding?: string;
@@ -22,6 +23,7 @@ interface InputWithIconProps {
 const InputWithIcon: React.FC<InputWithIconProps> = ({
   bColor = theme.colors.backgroundGray,
   borderRadius = "0.5em",
+  disabled,
   error,
   iconComp,
   id,
@@ -55,6 +57,7 @@ const InputWithIcon: React.FC<InputWithIconProps> = ({
         wrapperWidth={wrapperWidth}
       >
         <Input
+          disabled={disabled}
           id={id}
           name={name}
           value={value}

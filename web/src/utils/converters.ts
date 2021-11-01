@@ -18,7 +18,47 @@ import { IExerciseData } from "react-body-highlighter";
 // traps: "Traps",                 // górna część pleców, pod szyją
 // triceps: "Triceps",             // triceps
 
-const convertMuscleNames = (muscleName: string) => {
+export const convertMusclesToSVGNames = (muscleNames: string[]) => {
+  const newArr = [];
+
+  if (muscleNames.includes("abdominals")) newArr.push("abs");
+  if (muscleNames.includes("adductors")) newArr.push("adductor");
+  if (muscleNames.includes("calves")) newArr.push("calves");
+  if (muscleNames.includes("chest")) newArr.push("chest");
+  if (muscleNames.includes("biceps")) newArr.push("biceps");
+  if (muscleNames.includes("forearms")) newArr.push("forearm");
+  if (muscleNames.includes("hamstrings")) newArr.push("hamstring");
+  if (muscleNames.includes("lats")) newArr.push("upper-back");
+  if (muscleNames.includes("lower back")) newArr.push("lower-back");
+  if (muscleNames.includes(`"lower back"`)) newArr.push("lower-back");
+  if (muscleNames.includes("middleBack")) newArr.push("upper-back");
+  if (muscleNames.includes(`"middle back"`)) newArr.push("upper-back");
+  if (muscleNames.includes("neck")) newArr.push("trapezius");
+  if (muscleNames.includes("quadriceps")) newArr.push("quadriceps");
+  if (muscleNames.includes("shoulders"))
+    newArr.push("front-deltoids", "back-deltoids");
+  if (muscleNames.includes("traps")) newArr.push("trapezius");
+  if (muscleNames.includes("triceps")) newArr.push("triceps");
+  if (muscleNames.includes("glutes")) newArr.push("gluteal");
+
+  return newArr;
+};
+
+export const sanitazeMuscleNameFromDB = (muscleNames: string[]) => {
+  if (muscleNames.includes(`"middle back"`)) return "Middle Back";
+  if (muscleNames.includes(`"lower back"`)) return "Lower Back";
+
+  return muscleNames[0];
+};
+
+export const unsanitazeMuscleNameFromDB = (muscleNames: string[]) => {
+  if (muscleNames.includes("Middle Back")) return `"middle back"`;
+  if (muscleNames.includes("Lower Back")) return `"lower back"`;
+
+  return muscleNames[0];
+};
+
+export const convertMuscleNames = (muscleName: string) => {
   switch (muscleName) {
     case "abdominals":
       return ["abs"];

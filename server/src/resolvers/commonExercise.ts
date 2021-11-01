@@ -19,7 +19,7 @@ export class CommonExerciseResolver {
   async getAllCommonExercises(@Ctx() { req }: MyContext) {
     const exerciseRepo = await getRepository(CommonExercise);
 
-    const workout = await exerciseRepo.find({ take: 10 });
+    const workout = await exerciseRepo.find();
 
     if (!workout) {
       return null;

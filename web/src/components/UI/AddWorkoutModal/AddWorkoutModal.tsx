@@ -1,23 +1,29 @@
 import { useFormik } from "formik";
-import React, { useState } from "react";
-import { ReactComponent as SearchIcon } from "../../../assets/svg/search.svg";
+import React, { useEffect, useState } from "react";
+import { Button } from "..";
 import { ReactComponent as GreenCheckmark } from "../../../assets/svg/green-checkmark.svg";
+import { ReactComponent as HumanBackSVG } from "../../../assets/svg/humanBack.svg";
+import { ReactComponent as HumanFrontSVG } from "../../../assets/svg/humanFront.svg";
+import { ReactComponent as SearchIcon } from "../../../assets/svg/search.svg";
+import { IExercise, Muscle } from "../../../constants/exercises";
+import { useGetAllCommonExercisesQuery } from "../../../generated/graphql";
 import {
-  IExercise,
-  MockedExercises,
-  Muscle,
-} from "../../../constants/exercises";
-import { convertMuscleDBToNPMPackage } from "../../../utils/converters";
+  convertMusclesToSVGNames,
+  sanitazeMuscleNameFromDB,
+  unsanitazeMuscleNameFromDB,
+} from "../../../utils/converters";
 import { SearchSchema } from "../../../utils/formSchemas";
 import {
   capitalizeFirstLetter,
   lowerCaseFirstLetter,
 } from "../../../utils/stringUtils";
 import InputWithIcon from "../InputWithIcon/InputWithIcon";
-import Model from "react-body-highlighter";
+import Loader from "../Loader/Loader";
+import ModalScroll from "../ModalScroll/ModalScroll";
 import Select from "../Select/Select";
 import {
   AlphabetLetter,
+  Circle,
   Exercise,
   ExerciseInfo,
   ExerciseName,
@@ -26,11 +32,11 @@ import {
   ExerciseSVG,
   ExercisesWrapper,
   Form,
-  NoExercises,
+  Legend,
+  LegendText,
+  LoaderWrapper,
   TopSearchWrapper,
 } from "./styles";
-import { Button } from "..";
-import ModalScroll from "../ModalScroll/ModalScroll";
 
 interface AddWorkoutModalProps {
   handleClose: () => void;
@@ -40,6 +46,8 @@ interface AddWorkoutModalProps {
   show: boolean;
 }
 
+const AMOUNT_TO_ADD = 25;
+
 const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
   handleClose,
   handleSelectedItem,
@@ -47,7 +55,12 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
   selectedExercises,
   show,
 }) => {
-  const [mockedExercises, setMockedExercises] = useState(MockedExercises);
+  const { data: exercises, loading } = useGetAllCommonExercisesQuery();
+
+  const [fetchedExercises, setFetchedExercises] = useState<any[]>([]);
+  const [finishedLoadingData, setFinishedLoadingData] = useState(false);
+  const [startSlice, setStartSlice] = useState(0);
+  const [endSlice, setEndSlice] = useState(AMOUNT_TO_ADD);
 
   const searchFormik = useFormik({
     initialValues: {
@@ -58,14 +71,27 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
     onSubmit: () => {},
   });
 
+  const handleScroll = (e: any) => {
+    const top = e.target.scrollTop === 0;
+
+    const bottom =
+      e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+
+    if (bottom) {
+      setEndSlice(prev => prev + AMOUNT_TO_ADD);
+    }
+  };
+
   const displayFirtLetter = (exercise: IExercise, currIdx: number) => {
+    if (!exercise) return;
+
     const currFirstChar = exercise.name.charAt(0);
 
     if (currIdx === 0) {
       return <AlphabetLetter>{currFirstChar}</AlphabetLetter>;
     }
 
-    const prevFirstChar = mockedExercises[currIdx - 1].name.charAt(0);
+    const prevFirstChar = fetchedExercises[currIdx - 1].name.charAt(0);
 
     if (currFirstChar !== prevFirstChar) {
       return <AlphabetLetter>{currFirstChar}</AlphabetLetter>;
@@ -75,35 +101,104 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
   };
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!exercises || !exercises.getAllCommonExercises) return;
+
+    setEndSlice(AMOUNT_TO_ADD);
     const bodyCategory = e.target.value;
     if (bodyCategory === "Any Body Category") {
-      setMockedExercises(MockedExercises);
+      setFetchedExercises(exercises.getAllCommonExercises);
     } else {
-      const filteredExercises = MockedExercises.filter(el =>
+      const filteredExercises = exercises.getAllCommonExercises.filter(el =>
         el.primaryMuscles.find(
-          name => name === lowerCaseFirstLetter(bodyCategory),
+          name =>
+            name ===
+            lowerCaseFirstLetter(unsanitazeMuscleNameFromDB([bodyCategory])),
         ),
       );
-      setMockedExercises(filteredExercises);
+      setFetchedExercises(filteredExercises);
     }
 
     searchFormik.handleChange(e);
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!exercises || !exercises.getAllCommonExercises) return;
+
+    setEndSlice(AMOUNT_TO_ADD);
+    setFinishedLoadingData(false);
+    if (!exercises || !exercises.getAllCommonExercises) return;
+
     const userInput = e.target.value;
 
     if (!userInput) {
-      setMockedExercises(MockedExercises);
+      setFetchedExercises(exercises.getAllCommonExercises);
     } else {
-      const filteredExercises = MockedExercises.filter(el =>
+      const filteredExercises = exercises.getAllCommonExercises.filter(el =>
         el.name.toLowerCase().includes(userInput.toLowerCase()),
       );
-      setMockedExercises(filteredExercises);
+      setFetchedExercises(filteredExercises);
     }
+
+    setFinishedLoadingData(true);
 
     searchFormik.handleChange(e);
   };
+
+  useEffect(() => {
+    if (exercises && exercises.getAllCommonExercises && !loading) {
+      setFetchedExercises(exercises.getAllCommonExercises);
+      setFinishedLoadingData(true);
+    }
+  }, [exercises, loading]);
+
+  if ((loading || fetchedExercises.length === 0) && !finishedLoadingData) {
+    return (
+      <ModalScroll show={show} handleClose={handleClose} minHeight={minHeight}>
+        <Form onSubmit={searchFormik.handleSubmit}>
+          <TopSearchWrapper>
+            <InputWithIcon
+              id="searchInput"
+              error={searchFormik.errors.search}
+              iconComp={<SearchIcon />}
+              name="search"
+              onChange={handleSearchChange}
+              placeholder="Search"
+              type="text"
+              value={searchFormik.values.search}
+              width="fit-content"
+              margin="1em 1em 0 0"
+            />
+            <Select
+              options={[...Object.values(Muscle)]}
+              formik={searchFormik}
+              handleSelectChange={handleSelectChange}
+              name="bodyCategory"
+              disabled={true}
+            />
+            <Button
+              padding="0.2em 1.5em"
+              fontSize="1.125rem"
+              type="button"
+              borderRadius="0.5em"
+              disabled={true}
+              onClick={handleClose}
+            >
+              Add
+            </Button>
+          </TopSearchWrapper>
+          <Legend>
+            <Circle color="#db2f2f" />
+            <LegendText>Primary Muscles</LegendText>
+            <Circle color="#d69b47" />
+            <LegendText>Secondary Muscles</LegendText>
+          </Legend>
+          <LoaderWrapper>
+            <Loader />
+          </LoaderWrapper>
+        </Form>
+      </ModalScroll>
+    );
+  }
 
   return (
     <ModalScroll show={show} handleClose={handleClose} minHeight={minHeight}>
@@ -137,43 +232,45 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
             Add
           </Button>
         </TopSearchWrapper>
+        <Legend>
+          <Circle color="#db2f2f" />
+          <LegendText>Primary Muscles</LegendText>
+          <Circle color="#d69b47" />
+          <LegendText>Secondary Muscles</LegendText>
+        </Legend>
         <ExercisesAmmount>
-          Found {mockedExercises.length} exercises
+          Found {fetchedExercises.length} exercises
         </ExercisesAmmount>
-        {!mockedExercises.length && (
-          <NoExercises>
-            No exercises for {searchFormik.values.search}
-          </NoExercises>
-        )}
-        <ExercisesWrapper>
-          {mockedExercises.map((exercise, idx) => (
+
+        <ExercisesWrapper onScroll={handleScroll}>
+          {fetchedExercises.slice(startSlice, endSlice).map((exercise, idx) => (
             <React.Fragment key={exercise.name}>
-              {/* @ts-ignore */}
               {displayFirtLetter(exercise, idx)}
               <Exercise
                 onClick={() => handleSelectedItem(exercise)}
                 selected={
-                  //@ts-ignore
-                  !!selectedExercises.find(el => el.name === exercise.name)
+                  !!selectedExercises.find(
+                    (el: any) => el.name === exercise.name,
+                  )
                 }
               >
-                <ExerciseSVG>
-                  <Model
-                    data={convertMuscleDBToNPMPackage(exercise.primaryMuscles)}
-                    highlightedColors={["#db2f2f"]}
-                  />
-                  <Model
-                    type="posterior"
-                    data={convertMuscleDBToNPMPackage(exercise.primaryMuscles)}
-                    highlightedColors={["#db2f2f"]}
-                  />
+                <ExerciseSVG
+                  muscles={convertMusclesToSVGNames(exercise.primaryMuscles)}
+                  secondaryMuscles={convertMusclesToSVGNames(
+                    exercise.secondaryMuscles,
+                  )}
+                >
+                  <HumanFrontSVG />
+                  <HumanBackSVG />
                 </ExerciseSVG>
                 <ExerciseInfo>
                   <ExerciseName>
                     {capitalizeFirstLetter(exercise.name)}
                   </ExerciseName>
                   <ExercisePrimaryMuscle>
-                    {capitalizeFirstLetter(exercise.primaryMuscles[0])}
+                    {capitalizeFirstLetter(
+                      sanitazeMuscleNameFromDB(exercise.primaryMuscles),
+                    )}
                   </ExercisePrimaryMuscle>
                 </ExerciseInfo>
                 <GreenCheckmark id="checkmark" />

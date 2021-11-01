@@ -1,0 +1,5 @@
+query GetAllCommonExercises {
+  getAllCommonExercises {
+    ...RegularCommonExercise
+  }
+}

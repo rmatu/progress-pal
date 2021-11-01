@@ -9,12 +9,22 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
+  DateTime: any;
 };
 
 export type Query = {
   __typename?: 'Query';
   me?: Maybe<User>;
   getUserMetrics?: Maybe<Array<UserMetrics>>;
+  getAllUserWorkouts?: Maybe<Array<Workout>>;
+  getUserWorkout?: Maybe<Workout>;
+  getAllCommonExercises?: Maybe<Array<CommonExercise>>;
+};
+
+
+export type QueryGetUserWorkoutArgs = {
+  workoutId: Scalars['Float'];
 };
 
 export type User = {
@@ -32,6 +42,7 @@ export type User = {
   onboardingStep: Scalars['Int'];
   updatedAt: Scalars['String'];
   createdAt: Scalars['String'];
+  userMetrics: Array<UserMetrics>;
 };
 
 export type UserMetrics = {
@@ -42,6 +53,58 @@ export type UserMetrics = {
   activityLevel?: Maybe<Scalars['String']>;
   height?: Maybe<Scalars['Float']>;
   weight?: Maybe<Scalars['Float']>;
+  updatedAt: Scalars['String'];
+  createdAt: Scalars['String'];
+  user: User;
+};
+
+export type Workout = {
+  __typename?: 'Workout';
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  updatedAt: Scalars['String'];
+  createdAt: Scalars['String'];
+  user: User;
+  exercise: Array<Exercise>;
+};
+
+export type Exercise = {
+  __typename?: 'Exercise';
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  workout: Workout;
+  muscle: Array<Muscle>;
+  exerciseSet: Array<ExerciseSet>;
+};
+
+export type Muscle = {
+  __typename?: 'Muscle';
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  exercise: Exercise;
+};
+
+export type ExerciseSet = {
+  __typename?: 'ExerciseSet';
+  id: Scalars['Int'];
+  set: Scalars['Float'];
+  weight: Scalars['Float'];
+  reps: Scalars['Float'];
+  exercise: Exercise;
+};
+
+export type CommonExercise = {
+  __typename?: 'CommonExercise';
+  id: Scalars['String'];
+  name: Scalars['String'];
+  primaryMuscles: Array<Scalars['String']>;
+  secondaryMuscles: Array<Scalars['String']>;
+  force?: Maybe<Scalars['String']>;
+  level: Scalars['String'];
+  mechanic?: Maybe<Scalars['String']>;
+  equipment?: Maybe<Scalars['String']>;
+  category: Scalars['String'];
+  instructions: Array<Scalars['String']>;
   updatedAt: Scalars['String'];
   createdAt: Scalars['String'];
 };
@@ -61,6 +124,7 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   changeOnboardingStep: User;
   finishOnboarding: UpdateOnboardingResponse;
+  createWorkout?: Maybe<CreateWorkoutResponse>;
 };
 
 
@@ -125,6 +189,11 @@ export type MutationFinishOnboardingArgs = {
   input: CreateUserMetricsInput;
 };
 
+
+export type MutationCreateWorkoutArgs = {
+  input: CreateWorkoutInput;
+};
+
 export type UserResponse = {
   __typename?: 'UserResponse';
   errors?: Maybe<Array<FieldError>>;
@@ -158,6 +227,35 @@ export type CreateUserMetricsInput = {
   weightGoalValue: Scalars['Float'];
   birthDate: Scalars['String'];
 };
+
+export type CreateWorkoutResponse = {
+  __typename?: 'CreateWorkoutResponse';
+  workout?: Maybe<Workout>;
+};
+
+export type CreateWorkoutInput = {
+  date: Scalars['DateTime'];
+  name: Scalars['String'];
+  exercises: Array<ExercisesInput>;
+};
+
+
+export type ExercisesInput = {
+  name: Scalars['String'];
+  muscles: Array<Scalars['String']>;
+  sets: Array<SetInput>;
+};
+
+export type SetInput = {
+  set: Scalars['Float'];
+  weight: Scalars['Float'];
+  reps: Scalars['Float'];
+};
+
+export type RegularCommonExerciseFragment = (
+  { __typename?: 'CommonExercise' }
+  & Pick<CommonExercise, 'id' | 'name' | 'primaryMuscles' | 'secondaryMuscles' | 'force' | 'level' | 'mechanic' | 'equipment' | 'category' | 'instructions' | 'updatedAt' | 'createdAt'>
+);
 
 export type RegularErrorFragment = (
   { __typename?: 'FieldError' }
@@ -356,6 +454,17 @@ export type SignUpWithGoogleMutation = (
   ) }
 );
 
+export type GetAllCommonExercisesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllCommonExercisesQuery = (
+  { __typename?: 'Query' }
+  & { getAllCommonExercises?: Maybe<Array<(
+    { __typename?: 'CommonExercise' }
+    & RegularCommonExerciseFragment
+  )>> }
+);
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -367,6 +476,22 @@ export type MeQuery = (
   )> }
 );
 
+export const RegularCommonExerciseFragmentDoc = gql`
+    fragment RegularCommonExercise on CommonExercise {
+  id
+  name
+  primaryMuscles
+  secondaryMuscles
+  force
+  level
+  mechanic
+  equipment
+  category
+  instructions
+  updatedAt
+  createdAt
+}
+    `;
 export const RegularUserMetricsFragmentDoc = gql`
     fragment RegularUserMetrics on UserMetrics {
   id
@@ -826,6 +951,38 @@ export function useSignUpWithGoogleMutation(baseOptions?: Apollo.MutationHookOpt
 export type SignUpWithGoogleMutationHookResult = ReturnType<typeof useSignUpWithGoogleMutation>;
 export type SignUpWithGoogleMutationResult = Apollo.MutationResult<SignUpWithGoogleMutation>;
 export type SignUpWithGoogleMutationOptions = Apollo.BaseMutationOptions<SignUpWithGoogleMutation, SignUpWithGoogleMutationVariables>;
+export const GetAllCommonExercisesDocument = gql`
+    query GetAllCommonExercises {
+  getAllCommonExercises {
+    ...RegularCommonExercise
+  }
+}
+    ${RegularCommonExerciseFragmentDoc}`;
+
+/**
+ * __useGetAllCommonExercisesQuery__
+ *
+ * To run a query within a React component, call `useGetAllCommonExercisesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllCommonExercisesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllCommonExercisesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllCommonExercisesQuery(baseOptions?: Apollo.QueryHookOptions<GetAllCommonExercisesQuery, GetAllCommonExercisesQueryVariables>) {
+        return Apollo.useQuery<GetAllCommonExercisesQuery, GetAllCommonExercisesQueryVariables>(GetAllCommonExercisesDocument, baseOptions);
+      }
+export function useGetAllCommonExercisesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllCommonExercisesQuery, GetAllCommonExercisesQueryVariables>) {
+          return Apollo.useLazyQuery<GetAllCommonExercisesQuery, GetAllCommonExercisesQueryVariables>(GetAllCommonExercisesDocument, baseOptions);
+        }
+export type GetAllCommonExercisesQueryHookResult = ReturnType<typeof useGetAllCommonExercisesQuery>;
+export type GetAllCommonExercisesLazyQueryHookResult = ReturnType<typeof useGetAllCommonExercisesLazyQuery>;
+export type GetAllCommonExercisesQueryResult = Apollo.QueryResult<GetAllCommonExercisesQuery, GetAllCommonExercisesQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {
