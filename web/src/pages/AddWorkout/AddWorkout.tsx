@@ -37,8 +37,6 @@ const AddWorkout = () => {
   const [workout, setWorkout] = useState<IWorkout>();
   const [blockSubmit, setBlockSubmit] = useState<boolean>(false);
 
-  console.log(workout);
-
   const { selectedItem, open } = useSelector(
     (state: AppState) => state.dashboardNavbar,
   );

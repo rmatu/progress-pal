@@ -138,8 +138,6 @@ export const ExerciseSVG = styled.div<{
     margin-right: 2em;
   }
 
-  /* ! ALL ELEMENTS BUT SLOW */
-
   ${({ secondaryMuscles }) => {
     if (!secondaryMuscles || secondaryMuscles.length === 0) return;
     return createCSS(secondaryMuscles, "#d69b47");

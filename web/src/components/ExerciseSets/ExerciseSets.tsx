@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ReactComponent as CancelIcon } from "../../assets/svg/bolderClose.svg";
 import { ReactComponent as TrashIconSVG } from "../../assets/svg/trash.svg";
 import { IExercise } from "../../constants/exercises";
+import { sanitazeMuscleNameFromDB } from "../../utils/converters";
 import { IExportedExercise, ISet } from "../../utils/formSchemas";
 import { capitalizeFirstLetter } from "../../utils/stringUtils";
 import { Button } from "../UI";
@@ -138,7 +139,7 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
       <PrimaryMuscles>
         {exercise?.primaryMuscles?.map((name, idx) => (
           <PrimaryMuscle key={name}>
-            {capitalizeFirstLetter(name)}
+            {capitalizeFirstLetter(sanitazeMuscleNameFromDB([name]))}
             {idx !== exercise?.primaryMuscles?.length - 1 && ","}
           </PrimaryMuscle>
         ))}
@@ -192,7 +193,14 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
       </Button>
       <CancelIcon
         id="cancelIcon"
-        onClick={() => handleDeleteExercise(exercise)}
+        onClick={() => {
+          handleDeleteExercise(exercise);
+          if (setExerciseWithSets) {
+            setExerciseWithSets(prev =>
+              prev.filter(el => el.exerciseName !== exercise.name),
+            );
+          }
+        }}
       />
     </Wrapper>
   );

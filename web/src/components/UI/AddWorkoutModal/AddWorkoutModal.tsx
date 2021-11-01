@@ -103,6 +103,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
   const handleSelectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!exercises || !exercises.getAllCommonExercises) return;
 
+    setEndSlice(AMOUNT_TO_ADD);
     const bodyCategory = e.target.value;
     if (bodyCategory === "Any Body Category") {
       setFetchedExercises(exercises.getAllCommonExercises);
@@ -123,6 +124,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!exercises || !exercises.getAllCommonExercises) return;
 
+    setEndSlice(AMOUNT_TO_ADD);
     setFinishedLoadingData(false);
     if (!exercises || !exercises.getAllCommonExercises) return;
 
