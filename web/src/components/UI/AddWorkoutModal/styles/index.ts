@@ -514,6 +514,7 @@ export const ExercisePrimaryMuscle = styled.p`
 
 export const ExercisesAmmount = styled.p`
   color: ${({ theme }) => theme.colors.gray};
+  margin-bottom: 0.5em;
 `;
 
 export const NoExercises = styled.p`
@@ -553,7 +554,7 @@ export const Legend = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
 `;
 
 export const LegendText = styled.p`
