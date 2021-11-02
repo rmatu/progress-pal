@@ -135,7 +135,9 @@ export interface ISet {
 }
 
 export interface IExportedExercise {
+  id: string;
   exerciseName: string;
+  isCommonExercise: boolean;
   sets: ISet[];
 }
 

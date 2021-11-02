@@ -12,9 +12,9 @@ import { WorkoutExercise } from "./WorkoutExercise";
 @Entity()
 export class ExerciseSet extends BaseEntity {
   // SQL
-  @Field(() => Int)
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @Field()
+  @PrimaryGeneratedColumn("uuid")
+  id!: string;
 
   @Field(() => Number)
   @Column()

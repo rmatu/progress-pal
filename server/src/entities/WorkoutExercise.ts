@@ -5,7 +5,6 @@ import {
   Entity,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -42,15 +41,15 @@ export class WorkoutExercise extends BaseEntity {
   )
   exerciseSet: ExerciseSet;
 
-  @Field(() => UserExercise)
-  @OneToOne(
+  @Field(() => UserExercise, { nullable: true })
+  @ManyToOne(
     () => UserExercise,
     (userExercise: UserExercise) => userExercise.workoutExercise,
   )
   userExercise: UserExercise;
 
-  @Field(() => CommonExercise)
-  @OneToOne(
+  @Field(() => CommonExercise, { nullable: true })
+  @ManyToOne(
     () => CommonExercise,
     (commonExercise: CommonExercise) => commonExercise.workoutExercise,
   )

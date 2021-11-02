@@ -13,12 +13,10 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { MyContext } from "src/types";
-import { User } from "../entities/User";
 import { Workout } from "../entities/Workout";
-import { Exercise } from "../entities/Exercise";
 import { ExerciseSet } from "../entities/ExerciseSet";
-import { Muscle } from "../entities/Muscle";
 import { getConnection, getRepository } from "typeorm";
+import { WorkoutExercise } from "../entities/WorkoutExercise";
 
 @ObjectType()
 class CreateWorkoutResponse {
@@ -41,10 +39,13 @@ class SetInput {
 @InputType()
 class ExercisesInput {
   @Field(() => String)
-  name: string;
+  id: string;
 
-  @Field(() => [String])
-  muscles: string[];
+  @Field(() => Boolean)
+  isCommonExercise: boolean;
+
+  @Field(() => String)
+  name: string;
 
   @Field(() => [SetInput])
   sets: SetInput[];
@@ -52,8 +53,8 @@ class ExercisesInput {
 
 @InputType()
 class CreateWorkoutInput {
-  @Field(() => Date)
-  date: Date;
+  @Field(() => String)
+  date: string;
 
   @Field(() => String)
   name: string;
@@ -76,8 +77,16 @@ export class WorkoutResolver {
   async getAllUserWorkouts(@Ctx() { req }: MyContext) {
     const workoutRepo = await getRepository(Workout);
 
+    const { userId } = req.session;
+
     const workout = await workoutRepo.find({
-      relations: ["exercise", "exercise.muscle", "exercise.exerciseSet"],
+      relations: [
+        "workoutExercise",
+        "workoutExercise.commonExercise",
+        "workoutExercise.userExercise",
+        "workoutExercise.exerciseSet",
+      ],
+      where: { user: userId },
     });
 
     if (!workout) {
@@ -89,14 +98,16 @@ export class WorkoutResolver {
 
   @Query(() => Workout, { nullable: true })
   @UseMiddleware(isAuthenticated)
-  async getUserWorkout(
-    @Arg("workoutId") workoutId: number,
-    @Ctx() { req }: MyContext,
-  ) {
+  async getUserWorkout(@Arg("workoutId") workoutId: number) {
     const workoutRepo = await getRepository(Workout);
 
     const workout = await workoutRepo.findOne({
-      relations: ["exercise", "exercise.muscle", "exercise.exerciseSet"],
+      relations: [
+        "workoutExercise",
+        "workoutExercise.commonExercise",
+        "workoutExercise.userExercise",
+        "workoutExercise.exerciseSet",
+      ],
       where: { id: workoutId },
     });
 
@@ -110,6 +121,7 @@ export class WorkoutResolver {
   // ===========================
   // ======= MUTATIONS =========
   // ===========================
+
   @Mutation(() => CreateWorkoutResponse, { nullable: true })
   @UseMiddleware(isAuthenticated)
   async createWorkout(
@@ -128,20 +140,28 @@ export class WorkoutResolver {
     // lets now open a new transaction:
     await queryRunner.startTransaction();
 
+    const workout = new Workout();
+
     try {
-      const workout = new Workout();
       workout.user = userId;
       workout.name = input.name || moment().format(`[Workout] DD-MM-YYYY`);
 
-      // await queryRunner.manager.save(workout);
       const savedWorkout = await queryRunner.manager.save(workout);
 
       for (const inputExercise of input.exercises) {
-        const exercise = new Exercise();
-        exercise.name = inputExercise.name;
-        //@ts-ignore
-        exercise.workout = savedWorkout.id;
-        const savedExercise = await queryRunner.manager.save(exercise);
+        const workoutExercise = new WorkoutExercise();
+
+        if (inputExercise.isCommonExercise) {
+          // @ts-ignore
+          workoutExercise.commonExercise = inputExercise.id;
+        } else {
+          // @ts-ignore
+          workoutExercise.userExercise = inputExercise.id;
+        }
+
+        // @ts-ignore
+        workoutExercise.workout = savedWorkout.id;
+        const savedExercise = await queryRunner.manager.save(workoutExercise);
 
         inputExercise.sets.forEach(async inputSet => {
           const set = new ExerciseSet();
@@ -149,18 +169,9 @@ export class WorkoutResolver {
           set.weight = inputSet.weight;
           set.reps = inputSet.reps;
           //@ts-ignore
-          set.exercise = savedExercise.id;
+          set.workoutExercise = savedExercise.id;
 
           await queryRunner.manager.save(set);
-        });
-
-        inputExercise.muscles.forEach(async name => {
-          const muscle = new Muscle();
-          muscle.name = name;
-          //@ts-ignore
-          muscle.exercise = savedExercise.id;
-
-          await queryRunner.manager.save(muscle);
         });
       }
 
@@ -169,10 +180,11 @@ export class WorkoutResolver {
     } catch (err) {
       // since we have errors let's rollback changes we made
       await queryRunner.rollbackTransaction();
+      return null;
     } finally {
       await queryRunner.release();
     }
 
-    return null;
+    return { workout };
   }
 }

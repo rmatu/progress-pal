@@ -6,7 +6,6 @@ import {
   Entity,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -31,6 +30,11 @@ export class UserExercise extends BaseEntity {
   @Field(() => String)
   @PrimaryGeneratedColumn("uuid")
   id!: string;
+
+  @Field(() => Boolean)
+  @Column({ default: false })
+  isCommonExercise: boolean;
+
   // // Fields
   // @Field(() => String)
   // @Column({ type: "text" })
@@ -95,8 +99,8 @@ export class UserExercise extends BaseEntity {
   @ManyToOne(() => User, (user: User) => user.userExercise)
   user: User;
 
-  @Field(() => WorkoutExercise)
-  @OneToOne(
+  @Field(() => [WorkoutExercise])
+  @OneToMany(
     () => WorkoutExercise,
     (workoutExercise: WorkoutExercise) => workoutExercise.userExercise,
   )

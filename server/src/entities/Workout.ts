@@ -17,9 +17,9 @@ import { WorkoutExercise } from "./WorkoutExercise";
 @Entity()
 export class Workout extends BaseEntity {
   // SQL
-  @Field(() => Int)
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @Field()
+  @PrimaryGeneratedColumn("uuid")
+  id!: string;
 
   @Field(() => String)
   @Column({ default: moment().format(`[Workout] DD-MM-YYYY`) })
@@ -38,7 +38,7 @@ export class Workout extends BaseEntity {
   @ManyToOne(() => User, (user: User) => user.workout)
   user: User;
 
-  @Field(() => WorkoutExercise)
+  @Field(() => [WorkoutExercise])
   @OneToMany(
     () => WorkoutExercise,
     (workoutExercise: WorkoutExercise) => workoutExercise.workout,

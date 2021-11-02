@@ -189,7 +189,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
           <Legend>
             <Circle color="#db2f2f" />
             <LegendText>Primary Muscles</LegendText>
-            <Circle color="#d69b47" />
+            <Circle color="#cc9952" />
             <LegendText>Secondary Muscles</LegendText>
           </Legend>
           <LoaderWrapper>

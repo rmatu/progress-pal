@@ -4,9 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -100,6 +98,10 @@ export class CommonExercise extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
+  @Field(() => Boolean)
+  @Column({ default: true })
+  isCommonExercise: boolean;
+
   // Fields
   @Field(() => String)
   @Column({ type: "text" })
@@ -169,8 +171,8 @@ export class CommonExercise extends BaseEntity {
   @CreateDateColumn({ type: "timestamp with time zone" })
   createdAt: Date;
 
-  @Field(() => WorkoutExercise)
-  @OneToOne(
+  @Field(() => [WorkoutExercise])
+  @OneToMany(
     () => WorkoutExercise,
     (workoutExercise: WorkoutExercise) => workoutExercise.commonExercise,
   )

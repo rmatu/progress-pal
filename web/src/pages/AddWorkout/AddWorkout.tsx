@@ -22,6 +22,7 @@ import { ButtonWrapper, ExercisesList, WorkoutForm } from "./styles";
 export interface IWorkout {
   workoutName: string;
   exercises: IExportedExercise[];
+  date: string;
 }
 
 const AddWorkout = () => {
@@ -29,7 +30,7 @@ const AddWorkout = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [showAddExercisesModal, setShowAddExercisesModal] = useState(false);
+  const [showAddExercisesModal, setShowAddExercisesModal] = useState(true);
   const [selectedExercises, setSelectedExercises] = useState<[]>([]);
   const [exerciseWithSets, setExerciseWithSets] = useState<IExportedExercise[]>(
     [],
@@ -49,7 +50,7 @@ const AddWorkout = () => {
     onSubmit: () => {},
   });
 
-  console.log({ blockSubmit });
+  console.log({ selectedExercises });
 
   const handleSelectedItem = (exercise: any) => {
     const elementExist = selectedExercises?.find(
@@ -83,9 +84,12 @@ const AddWorkout = () => {
     history.push(MAIN_PAGE);
   };
 
+  console.log({ workout });
+
   useEffect(() => {
     setWorkout({
       workoutName: workoutFormik.values.workoutName,
+      date: new Date().toISOString(),
       exercises: exerciseWithSets,
     });
 
