@@ -1,20 +1,20 @@
 import { Field, Int, ObjectType } from "type-graphql";
 import {
+  BaseEntity,
   Column,
   Entity,
-  BaseEntity,
-  PrimaryGeneratedColumn,
   ManyToOne,
+  PrimaryGeneratedColumn,
 } from "typeorm";
-import { Exercise } from "./Exercise";
+import { WorkoutExercise } from "./WorkoutExercise";
 
 @ObjectType()
 @Entity()
 export class ExerciseSet extends BaseEntity {
   // SQL
-  @Field(() => Int)
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @Field()
+  @PrimaryGeneratedColumn("uuid")
+  id!: string;
 
   @Field(() => Number)
   @Column()
@@ -28,8 +28,10 @@ export class ExerciseSet extends BaseEntity {
   @Column()
   reps: number;
 
-  // Relations
-  @Field(() => Exercise)
-  @ManyToOne(() => Exercise, (exercise: Exercise) => exercise.exerciseSet)
-  exercise: Exercise[];
+  @Field(() => WorkoutExercise)
+  @ManyToOne(
+    () => WorkoutExercise,
+    (workoutExercise: WorkoutExercise) => workoutExercise.exerciseSet,
+  )
+  workoutExercise: WorkoutExercise;
 }

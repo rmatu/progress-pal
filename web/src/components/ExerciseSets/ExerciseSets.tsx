@@ -34,7 +34,9 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
   setExerciseWithSets,
 }) => {
   const [exportedExercise, setSetsAmount] = useState<IExportedExercise>({
+    id: exercise.id,
     exerciseName: exercise.name,
+    isCommonExercise: exercise.isCommonExercise,
     sets: [
       {
         id: 1,

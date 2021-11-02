@@ -4,13 +4,16 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { ExerciseSet } from "./ExerciseSet";
-import { Workout } from "./Workout";
+import { User } from "./User";
 import { WorkoutExercise } from "./WorkoutExercise";
+
+// ! IF THESE ENUMS ARE IMPORTED FROM ANOTHER FILE IT CAUSES BUGS
+// ! IDK IF THIS CAN BE FIXED, THIS IS TYPEORM BUG
 
 export enum AppMuscle {
   abdominals = "abdominals",
@@ -89,17 +92,16 @@ export interface Exercise {
   instructions: string[];
 }
 
-// ! IDK WHY DEFAULT ENUM NAME DOESN'T WORK, SO I HAD TO STAY WITH GENERIC NAME FOR ENUMS
 @ObjectType()
 @Entity()
-export class CommonExercise extends BaseEntity {
+export class UserExercise extends BaseEntity {
   // SQL
   @Field(() => String)
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
   @Field(() => Boolean)
-  @Column({ default: true })
+  @Column({ default: false })
   isCommonExercise: boolean;
 
   // Fields
@@ -171,10 +173,14 @@ export class CommonExercise extends BaseEntity {
   @CreateDateColumn({ type: "timestamp with time zone" })
   createdAt: Date;
 
+  @Field(() => User)
+  @ManyToOne(() => User, (user: User) => user.userExercise)
+  user: User;
+
   @Field(() => [WorkoutExercise])
   @OneToMany(
     () => WorkoutExercise,
-    (workoutExercise: WorkoutExercise) => workoutExercise.commonExercise,
+    (workoutExercise: WorkoutExercise) => workoutExercise.userExercise,
   )
   workoutExercise: WorkoutExercise;
 }

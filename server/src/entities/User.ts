@@ -8,7 +8,9 @@ import {
   OneToMany,
   CreateDateColumn,
 } from "typeorm";
+import { UserExercise } from "./UserExercise";
 import { UserMetrics } from "./UserMetrics";
+import { Workout } from "./Workout";
 
 @ObjectType()
 @Entity()
@@ -81,4 +83,15 @@ export class User extends BaseEntity {
     },
   )
   userMetrics: UserMetrics[];
+
+  @Field(() => [UserExercise])
+  @OneToMany(
+    () => UserExercise,
+    (userExercise: UserExercise) => userExercise.user,
+  )
+  userExercise: UserExercise;
+
+  @Field(() => [Workout])
+  @OneToMany(() => Workout, (workout: Workout) => workout.user)
+  workout: Workout;
 }

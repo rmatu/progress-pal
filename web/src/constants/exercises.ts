@@ -84,6 +84,7 @@ export enum Category {
 }
 
 export interface IExercise {
+  id: string;
   name: string;
   aliases?: string[];
   primaryMuscles: EMuscle[];
@@ -96,6 +97,7 @@ export interface IExercise {
   instructions: string[];
   description?: string;
   tips?: string[];
+  isCommonExercise: boolean;
 }
 
 export const MockedExercises = [

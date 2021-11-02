@@ -140,7 +140,7 @@ export const ExerciseSVG = styled.div<{
 
   ${({ secondaryMuscles }) => {
     if (!secondaryMuscles || secondaryMuscles.length === 0) return;
-    return createCSS(secondaryMuscles, "#d69b47");
+    return createCSS(secondaryMuscles, "#cc9952");
   }}
 
   ${({ muscles }) => {

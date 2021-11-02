@@ -9,8 +9,6 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
-  DateTime: any;
 };
 
 export type Query = {
@@ -43,6 +41,8 @@ export type User = {
   updatedAt: Scalars['String'];
   createdAt: Scalars['String'];
   userMetrics: Array<UserMetrics>;
+  userExercise: Array<UserExercise>;
+  workout: Array<Workout>;
 };
 
 export type UserMetrics = {
@@ -58,6 +58,26 @@ export type UserMetrics = {
   user: User;
 };
 
+export type UserExercise = {
+  __typename?: 'UserExercise';
+  id: Scalars['String'];
+  isCommonExercise: Scalars['Boolean'];
+  createdAt: Scalars['String'];
+  user: User;
+  workoutExercise: WorkoutExercise;
+};
+
+export type WorkoutExercise = {
+  __typename?: 'WorkoutExercise';
+  id: Scalars['String'];
+  updatedAt: Scalars['String'];
+  createdAt: Scalars['String'];
+  workout: Workout;
+  exerciseSet: Array<ExerciseSet>;
+  userExercise: UserExercise;
+  commonExercise: CommonExercise;
+};
+
 export type Workout = {
   __typename?: 'Workout';
   id: Scalars['Int'];
@@ -65,23 +85,7 @@ export type Workout = {
   updatedAt: Scalars['String'];
   createdAt: Scalars['String'];
   user: User;
-  exercise: Array<Exercise>;
-};
-
-export type Exercise = {
-  __typename?: 'Exercise';
-  id: Scalars['Int'];
-  name: Scalars['String'];
-  workout: Workout;
-  muscle: Array<Muscle>;
-  exerciseSet: Array<ExerciseSet>;
-};
-
-export type Muscle = {
-  __typename?: 'Muscle';
-  id: Scalars['Int'];
-  name: Scalars['String'];
-  exercise: Exercise;
+  workoutExercise: WorkoutExercise;
 };
 
 export type ExerciseSet = {
@@ -90,12 +94,13 @@ export type ExerciseSet = {
   set: Scalars['Float'];
   weight: Scalars['Float'];
   reps: Scalars['Float'];
-  exercise: Exercise;
+  workoutExercise: WorkoutExercise;
 };
 
 export type CommonExercise = {
   __typename?: 'CommonExercise';
   id: Scalars['String'];
+  isCommonExercise: Scalars['Boolean'];
   name: Scalars['String'];
   primaryMuscles: Array<Scalars['String']>;
   secondaryMuscles: Array<Scalars['String']>;
@@ -107,6 +112,7 @@ export type CommonExercise = {
   instructions: Array<Scalars['String']>;
   updatedAt: Scalars['String'];
   createdAt: Scalars['String'];
+  workoutExercise: WorkoutExercise;
 };
 
 export type Mutation = {
@@ -234,13 +240,13 @@ export type CreateWorkoutResponse = {
 };
 
 export type CreateWorkoutInput = {
-  date: Scalars['DateTime'];
+  date: Scalars['String'];
   name: Scalars['String'];
   exercises: Array<ExercisesInput>;
 };
 
-
 export type ExercisesInput = {
+  id: Scalars['String'];
   name: Scalars['String'];
   muscles: Array<Scalars['String']>;
   sets: Array<SetInput>;
@@ -254,7 +260,7 @@ export type SetInput = {
 
 export type RegularCommonExerciseFragment = (
   { __typename?: 'CommonExercise' }
-  & Pick<CommonExercise, 'id' | 'name' | 'primaryMuscles' | 'secondaryMuscles' | 'force' | 'level' | 'mechanic' | 'equipment' | 'category' | 'instructions' | 'updatedAt' | 'createdAt'>
+  & Pick<CommonExercise, 'id' | 'isCommonExercise' | 'name' | 'primaryMuscles' | 'secondaryMuscles' | 'force' | 'level' | 'mechanic' | 'equipment' | 'category' | 'instructions' | 'updatedAt' | 'createdAt'>
 );
 
 export type RegularErrorFragment = (
@@ -479,6 +485,7 @@ export type MeQuery = (
 export const RegularCommonExerciseFragmentDoc = gql`
     fragment RegularCommonExercise on CommonExercise {
   id
+  isCommonExercise
   name
   primaryMuscles
   secondaryMuscles

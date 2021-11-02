@@ -1,5 +1,6 @@
 fragment RegularCommonExercise on CommonExercise {
   id
+  isCommonExercise
   name
   primaryMuscles
   secondaryMuscles

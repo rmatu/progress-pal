@@ -16,12 +16,12 @@ import { redis } from "./redis";
 
 //Entities
 import { CommonExercise } from "./entities/CommonExercise";
-import { Exercise } from "./entities/Exercise";
 import { ExerciseSet } from "./entities/ExerciseSet";
-import { Muscle } from "./entities/Muscle";
 import { User } from "./entities/User";
+import { UserExercise } from "./entities/UserExercise";
 import { UserMetrics } from "./entities/UserMetrics";
 import { Workout } from "./entities/Workout";
+import { WorkoutExercise } from "./entities/WorkoutExercise";
 
 //Resolvers
 import { UserResolver } from "./resolvers/user";
@@ -43,12 +43,12 @@ const main = async () => {
     migrations: [path.join(__dirname, "./migrations/*")],
     entities: [
       CommonExercise,
-      Exercise,
       ExerciseSet,
-      Muscle,
       User,
+      UserExercise,
       UserMetrics,
       Workout,
+      WorkoutExercise,
     ],
   });
 
