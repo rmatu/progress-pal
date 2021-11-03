@@ -3,11 +3,11 @@ import { convertPxToRem } from "../../utils/cssHelpers";
 
 export const Wrapper = styled.div<{ open?: boolean }>`
   min-height: calc(100vh - 6em);
-  min-height: 100vh;
   display: flex;
   flex-direction: row;
 
   @media screen and (min-width: 1024px) {
+    min-height: 0vh;
     top: 0;
   }
 `;

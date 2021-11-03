@@ -15,6 +15,7 @@ export const Wrapper = styled.nav<{ open?: boolean }>`
     background: transparent; /* Optional: just make scrollbar invisible */
   }
 
+  min-height: 100vh;
   @media screen and (max-width: 1024px) {
     transform: translateX(-100%);
     transition: 0.75s all ease-in-out;

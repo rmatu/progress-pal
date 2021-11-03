@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { ReactComponent as PencilIcon } from "../../assets/svg/pencil.svg";
 import { ReactComponent as SuccessfulWorkoutCreationSVG2 } from "../../assets/svg/successfulWorkoutCreation2.svg";
+import { ReactComponent as NoItemsSVG } from "../../assets/svg/noItems.svg";
 import ExerciseSets from "../../components/ExerciseSets/ExerciseSets";
 import { FlexWrapperDiv } from "../../components/FlexElements";
 import { Button, Heading, Popup } from "../../components/UI";
@@ -21,6 +22,7 @@ import { AddWorkoutSchema, IExportedExercise } from "../../utils/formSchemas";
 import {
   ButtonWrapper,
   ExercisesList,
+  NoExercisesText,
   SuccessWorkoutWrapper,
   WorkoutForm,
 } from "./styles";
@@ -63,7 +65,7 @@ const AddWorkout = () => {
   );
   const [workout, setWorkout] = useState<IWorkout>();
   const [showAddExercisesModal, setShowAddExercisesModal] =
-    useState<boolean>(false);
+    useState<boolean>(true);
   const [blockSubmit, setBlockSubmit] = useState<boolean>(false);
   const [successfulWorkoutCreation, setSuccessfulWorkoutCreation] =
     useState(false);
@@ -270,6 +272,12 @@ const AddWorkout = () => {
             >
               Finish Workout
             </Button>
+          )}
+
+          {selectedExercises.length <= 0 && (
+            <NoExercisesText>
+              You need to select some exercises...
+            </NoExercisesText>
           )}
           <ExercisesList>
             {selectedExercises.map(exercise => (

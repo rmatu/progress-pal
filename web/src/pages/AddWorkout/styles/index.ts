@@ -49,3 +49,16 @@ export const SuccessWorkoutWrapper = styled(motion.div)`
     }
   }
 `;
+
+export const NoExercisesText = styled.p`
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+  width: ${convertPxToRem(300)};
+  text-align: center;
+  margin: auto;
+  margin-top: 1.5em;
+  font-size: 2rem;
+  opacity: 0.1;
+`;
