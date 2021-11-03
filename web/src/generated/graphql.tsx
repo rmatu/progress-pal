@@ -62,9 +62,19 @@ export type UserExercise = {
   __typename?: 'UserExercise';
   id: Scalars['String'];
   isCommonExercise: Scalars['Boolean'];
+  name: Scalars['String'];
+  primaryMuscles: Array<Scalars['String']>;
+  secondaryMuscles: Array<Scalars['String']>;
+  force?: Maybe<Scalars['String']>;
+  level: Scalars['String'];
+  mechanic?: Maybe<Scalars['String']>;
+  equipment?: Maybe<Scalars['String']>;
+  category: Scalars['String'];
+  instructions: Array<Scalars['String']>;
+  updatedAt: Scalars['String'];
   createdAt: Scalars['String'];
   user: User;
-  workoutExercise: WorkoutExercise;
+  workoutExercise: Array<WorkoutExercise>;
 };
 
 export type WorkoutExercise = {
@@ -74,23 +84,23 @@ export type WorkoutExercise = {
   createdAt: Scalars['String'];
   workout: Workout;
   exerciseSet: Array<ExerciseSet>;
-  userExercise: UserExercise;
-  commonExercise: CommonExercise;
+  userExercise?: Maybe<UserExercise>;
+  commonExercise?: Maybe<CommonExercise>;
 };
 
 export type Workout = {
   __typename?: 'Workout';
-  id: Scalars['Int'];
+  id: Scalars['String'];
   name: Scalars['String'];
   updatedAt: Scalars['String'];
   createdAt: Scalars['String'];
   user: User;
-  workoutExercise: WorkoutExercise;
+  workoutExercise: Array<WorkoutExercise>;
 };
 
 export type ExerciseSet = {
   __typename?: 'ExerciseSet';
-  id: Scalars['Int'];
+  id: Scalars['String'];
   set: Scalars['Float'];
   weight: Scalars['Float'];
   reps: Scalars['Float'];
@@ -112,7 +122,7 @@ export type CommonExercise = {
   instructions: Array<Scalars['String']>;
   updatedAt: Scalars['String'];
   createdAt: Scalars['String'];
-  workoutExercise: WorkoutExercise;
+  workoutExercise: Array<WorkoutExercise>;
 };
 
 export type Mutation = {
@@ -130,7 +140,7 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   changeOnboardingStep: User;
   finishOnboarding: UpdateOnboardingResponse;
-  createWorkout?: Maybe<CreateWorkoutResponse>;
+  createWorkout?: Maybe<Workout>;
 };
 
 
@@ -234,11 +244,6 @@ export type CreateUserMetricsInput = {
   birthDate: Scalars['String'];
 };
 
-export type CreateWorkoutResponse = {
-  __typename?: 'CreateWorkoutResponse';
-  workout?: Maybe<Workout>;
-};
-
 export type CreateWorkoutInput = {
   date: Scalars['String'];
   name: Scalars['String'];
@@ -247,8 +252,8 @@ export type CreateWorkoutInput = {
 
 export type ExercisesInput = {
   id: Scalars['String'];
+  isCommonExercise: Scalars['Boolean'];
   name: Scalars['String'];
-  muscles: Array<Scalars['String']>;
   sets: Array<SetInput>;
 };
 
@@ -268,6 +273,11 @@ export type RegularErrorFragment = (
   & Pick<FieldError, 'field' | 'message'>
 );
 
+export type RegularExerciseSetFragment = (
+  { __typename?: 'ExerciseSet' }
+  & Pick<ExerciseSet, 'id' | 'set' | 'weight' | 'reps'>
+);
+
 export type RegularUpdateOnboardingResponseFragment = (
   { __typename?: 'UpdateOnboardingResponse' }
   & { userMetrics?: Maybe<(
@@ -284,6 +294,11 @@ export type RegularUserFragment = (
   & Pick<User, 'id' | 'username' | 'email' | 'isPremium' | 'emailVerified' | 'subscriptionStart' | 'onboardingStep'>
 );
 
+export type RegularUserExerciseFragment = (
+  { __typename?: 'UserExercise' }
+  & Pick<UserExercise, 'id' | 'isCommonExercise' | 'name' | 'primaryMuscles' | 'secondaryMuscles' | 'force' | 'level' | 'mechanic' | 'equipment' | 'category' | 'instructions' | 'updatedAt' | 'createdAt'>
+);
+
 export type RegularUserMetricsFragment = (
   { __typename?: 'UserMetrics' }
   & Pick<UserMetrics, 'id' | 'weightGoal' | 'activityLevel' | 'height' | 'weight'>
@@ -297,6 +312,33 @@ export type RegularUserResponseFragment = (
   )>>, user?: Maybe<(
     { __typename?: 'User' }
     & RegularUserFragment
+  )> }
+);
+
+export type RegularWorkoutFragment = (
+  { __typename?: 'Workout' }
+  & Pick<Workout, 'id' | 'name' | 'updatedAt' | 'createdAt'>
+  & { workoutExercise: Array<(
+    { __typename?: 'WorkoutExercise' }
+    & RegularWorkoutExerciseFragment
+  )>, user: (
+    { __typename?: 'User' }
+    & RegularUserFragment
+  ) }
+);
+
+export type RegularWorkoutExerciseFragment = (
+  { __typename?: 'WorkoutExercise' }
+  & Pick<WorkoutExercise, 'id' | 'updatedAt' | 'createdAt'>
+  & { exerciseSet: Array<(
+    { __typename?: 'ExerciseSet' }
+    & RegularExerciseSetFragment
+  )>, userExercise?: Maybe<(
+    { __typename?: 'UserExercise' }
+    & RegularUserExerciseFragment
+  )>, commonExercise?: Maybe<(
+    { __typename?: 'CommonExercise' }
+    & RegularCommonExerciseFragment
   )> }
 );
 
@@ -335,6 +377,19 @@ export type ConfirmUserMutationVariables = Exact<{
 export type ConfirmUserMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'confirmUser'>
+);
+
+export type CreateWorkoutMutationVariables = Exact<{
+  input: CreateWorkoutInput;
+}>;
+
+
+export type CreateWorkoutMutation = (
+  { __typename?: 'Mutation' }
+  & { createWorkout?: Maybe<(
+    { __typename?: 'Workout' }
+    & Pick<Workout, 'name'>
+  )> }
 );
 
 export type FinishOnboardingMutationVariables = Exact<{
@@ -482,23 +537,6 @@ export type MeQuery = (
   )> }
 );
 
-export const RegularCommonExerciseFragmentDoc = gql`
-    fragment RegularCommonExercise on CommonExercise {
-  id
-  isCommonExercise
-  name
-  primaryMuscles
-  secondaryMuscles
-  force
-  level
-  mechanic
-  equipment
-  category
-  instructions
-  updatedAt
-  createdAt
-}
-    `;
 export const RegularUserMetricsFragmentDoc = gql`
     fragment RegularUserMetrics on UserMetrics {
   id
@@ -546,6 +584,81 @@ export const RegularUserResponseFragmentDoc = gql`
   }
 }
     ${RegularErrorFragmentDoc}
+${RegularUserFragmentDoc}`;
+export const RegularExerciseSetFragmentDoc = gql`
+    fragment RegularExerciseSet on ExerciseSet {
+  id
+  set
+  weight
+  reps
+}
+    `;
+export const RegularUserExerciseFragmentDoc = gql`
+    fragment RegularUserExercise on UserExercise {
+  id
+  isCommonExercise
+  name
+  primaryMuscles
+  secondaryMuscles
+  force
+  level
+  mechanic
+  equipment
+  category
+  instructions
+  updatedAt
+  createdAt
+}
+    `;
+export const RegularCommonExerciseFragmentDoc = gql`
+    fragment RegularCommonExercise on CommonExercise {
+  id
+  isCommonExercise
+  name
+  primaryMuscles
+  secondaryMuscles
+  force
+  level
+  mechanic
+  equipment
+  category
+  instructions
+  updatedAt
+  createdAt
+}
+    `;
+export const RegularWorkoutExerciseFragmentDoc = gql`
+    fragment RegularWorkoutExercise on WorkoutExercise {
+  id
+  updatedAt
+  createdAt
+  exerciseSet {
+    ...RegularExerciseSet
+  }
+  userExercise {
+    ...RegularUserExercise
+  }
+  commonExercise {
+    ...RegularCommonExercise
+  }
+}
+    ${RegularExerciseSetFragmentDoc}
+${RegularUserExerciseFragmentDoc}
+${RegularCommonExerciseFragmentDoc}`;
+export const RegularWorkoutFragmentDoc = gql`
+    fragment RegularWorkout on Workout {
+  id
+  name
+  updatedAt
+  createdAt
+  workoutExercise {
+    ...RegularWorkoutExercise
+  }
+  user {
+    ...RegularUser
+  }
+}
+    ${RegularWorkoutExerciseFragmentDoc}
 ${RegularUserFragmentDoc}`;
 export const ChangeOnboardingStepDocument = gql`
     mutation ChangeOnboardingStep($step: Float!) {
@@ -642,6 +755,38 @@ export function useConfirmUserMutation(baseOptions?: Apollo.MutationHookOptions<
 export type ConfirmUserMutationHookResult = ReturnType<typeof useConfirmUserMutation>;
 export type ConfirmUserMutationResult = Apollo.MutationResult<ConfirmUserMutation>;
 export type ConfirmUserMutationOptions = Apollo.BaseMutationOptions<ConfirmUserMutation, ConfirmUserMutationVariables>;
+export const CreateWorkoutDocument = gql`
+    mutation CreateWorkout($input: CreateWorkoutInput!) {
+  createWorkout(input: $input) {
+    name
+  }
+}
+    `;
+export type CreateWorkoutMutationFn = Apollo.MutationFunction<CreateWorkoutMutation, CreateWorkoutMutationVariables>;
+
+/**
+ * __useCreateWorkoutMutation__
+ *
+ * To run a mutation, you first call `useCreateWorkoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateWorkoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createWorkoutMutation, { data, loading, error }] = useCreateWorkoutMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateWorkoutMutation(baseOptions?: Apollo.MutationHookOptions<CreateWorkoutMutation, CreateWorkoutMutationVariables>) {
+        return Apollo.useMutation<CreateWorkoutMutation, CreateWorkoutMutationVariables>(CreateWorkoutDocument, baseOptions);
+      }
+export type CreateWorkoutMutationHookResult = ReturnType<typeof useCreateWorkoutMutation>;
+export type CreateWorkoutMutationResult = Apollo.MutationResult<CreateWorkoutMutation>;
+export type CreateWorkoutMutationOptions = Apollo.BaseMutationOptions<CreateWorkoutMutation, CreateWorkoutMutationVariables>;
 export const FinishOnboardingDocument = gql`
     mutation FinishOnboarding($input: CreateUserMetricsInput!) {
   finishOnboarding(input: $input) {

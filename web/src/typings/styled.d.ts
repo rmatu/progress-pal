@@ -16,6 +16,9 @@ declare module "styled-components" {
       successTextColor: string;
       modalBackground: string;
       white: string;
+
+      modelPrimaryMuslces: string;
+      modelSecondaryMuscles: string;
     };
     mediaQueries: {
       phones: string;

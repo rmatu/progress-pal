@@ -13,6 +13,9 @@ const theme = {
     errorTextColor: "#ff5757",
     successTextColor: "#70a514",
     white: "#fff",
+
+    modelPrimaryMuslces: "#db2f2f",
+    modelSecondaryMuscles: "#cc9952",
   },
   mediaQueries: {
     phones: `screen and (max-width: 480px)`,

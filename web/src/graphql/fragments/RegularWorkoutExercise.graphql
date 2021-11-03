@@ -1,0 +1,14 @@
+fragment RegularWorkoutExercise on WorkoutExercise {
+  id
+  updatedAt
+  createdAt
+  exerciseSet {
+    ...RegularExerciseSet
+  }
+  userExercise {
+    ...RegularUserExercise
+  }
+  commonExercise {
+    ...RegularCommonExercise
+  }
+}

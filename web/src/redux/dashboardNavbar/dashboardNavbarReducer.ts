@@ -7,7 +7,7 @@ import {
 const dashboardNavbarDefaultState: DashboardNavbarState = {
   open: false,
   visible: false,
-  selectedItem: "dashboard",
+  selectedItem: "/",
 };
 
 const dashboardNavbarReducer = (

@@ -4,6 +4,7 @@ import { Wrapper, StyledButton } from "./styles";
 interface ButtonProps {
   children: React.ReactNode[] | React.ReactNode;
   marginTop?: string;
+  margin?: string;
   disabled?: boolean;
   padding?: string;
   bColor?: string;
@@ -20,6 +21,7 @@ const Button: React.FC<
   bColor,
   borderRadius,
   marginTop,
+  margin,
   disabled,
   padding,
   fontSize,
@@ -27,7 +29,7 @@ const Button: React.FC<
   ...rest
 }) => {
   return (
-    <Wrapper marginTop={marginTop}>
+    <Wrapper marginTop={marginTop} margin={margin}>
       <StyledButton
         padding={padding}
         disabled={disabled}

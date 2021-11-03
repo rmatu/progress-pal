@@ -35,12 +35,12 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
 }) => {
   const [exportedExercise, setSetsAmount] = useState<IExportedExercise>({
     id: exercise.id,
-    exerciseName: exercise.name,
+    name: exercise.name,
     isCommonExercise: exercise.isCommonExercise,
     sets: [
       {
         id: 1,
-        kg: null,
+        weight: null,
         reps: null,
       },
     ],
@@ -57,7 +57,7 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
         ...prev.sets,
         {
           id: latestItem.id + 1,
-          kg: null,
+          weight: null,
           reps: null,
         },
       ],
@@ -84,7 +84,7 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
     const arr = { ...exportedExercise, sets: [...exportedExercise.sets] };
     const idx = arr.sets.findIndex(item => item.id === el.id);
 
-    if (name === "kg" && !el.kg) {
+    if (name === "weight" && !el.weight) {
       setKgInputErrors(prev => prev.filter(id => id !== el.id));
     }
 
@@ -92,9 +92,9 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
       setRepsInputErrors(prev => prev.filter(id => id !== el.id));
     }
 
-    if (name === "kg") {
+    if (name === "weight") {
       if (value < 0 || value > 1500) return;
-      arr.sets[idx].kg = value;
+      arr.sets[idx].weight = value;
     } else if (name === "reps") {
       if (value < 0 || value > 100) return;
       arr.sets[idx].reps = value;
@@ -105,7 +105,7 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
 
   const handleBlur = (e: React.ChangeEvent<HTMLInputElement>, set: ISet) => {
     const name = e.target.name;
-    if (name === "kg" && !set.kg) {
+    if (name === "weight" && !set.weight) {
       setKgInputErrors(prev => [...prev, set.id]);
     } else {
       setKgInputErrors(prev => prev.filter(id => id !== set.id));
@@ -124,7 +124,7 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
         setExerciseWithSets(prev => [...prev, exportedExercise]);
       } else {
         const arr = [...exerciseWithSets];
-        const idx = arr.findIndex(el => el.exerciseName === exercise.name);
+        const idx = arr.findIndex(el => el.name === exercise.name);
         if (idx < 0) {
           setExerciseWithSets(prev => [...prev, exportedExercise]);
         } else {
@@ -158,10 +158,10 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
           </GridItem>
           <GridItem>
             <Input
-              name="kg"
+              name="weight"
               type="text"
               pattern="[0-9]{3}"
-              value={el.kg ? el.kg : ""}
+              value={el.weight ? el.weight : ""}
               onChange={e => handleChange(e, el)}
               onBlur={e => handleBlur(e, el)}
               error={!!kgInputErrors.find(id => id === el.id)}
@@ -199,7 +199,7 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
           handleDeleteExercise(exercise);
           if (setExerciseWithSets) {
             setExerciseWithSets(prev =>
-              prev.filter(el => el.exerciseName !== exercise.name),
+              prev.filter(el => el.name !== exercise.name),
             );
           }
         }}

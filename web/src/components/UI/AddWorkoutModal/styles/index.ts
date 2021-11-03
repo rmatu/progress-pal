@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components/macro";
+import theme from "../../../../theme/theme";
 import { convertPxToRem } from "../../../../utils/cssHelpers";
 
 export const TopSearchWrapper = styled.div`
@@ -140,12 +141,12 @@ export const ExerciseSVG = styled.div<{
 
   ${({ secondaryMuscles }) => {
     if (!secondaryMuscles || secondaryMuscles.length === 0) return;
-    return createCSS(secondaryMuscles, "#cc9952");
+    return createCSS(secondaryMuscles, theme.colors.modelSecondaryMuscles);
   }}
 
   ${({ muscles }) => {
     if (!muscles || muscles.length === 0) return;
-    return createCSS(muscles, "#db2f2f");
+    return createCSS(muscles, theme.colors.modelPrimaryMuslces);
   }} /* ${({ secondaryMuscles }) => {
     if (!secondaryMuscles || secondaryMuscles.length === 0) return;
     if (secondaryMuscles.includes("trapezius")) {

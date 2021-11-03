@@ -1,0 +1,6 @@
+fragment RegularExerciseSet on ExerciseSet {
+  id
+  set
+  weight
+  reps
+}

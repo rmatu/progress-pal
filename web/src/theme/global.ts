@@ -122,6 +122,9 @@ html{
   --successTextColor: ${props => props.theme.colors.successTextColor}
   --modalBackground: ${props => props.theme.colors.modalBackground}
   --white: ${props => props.theme.colors.white}
+  
+  --modelPrimaryMuslces: ${props => props.theme.colors.modelPrimaryMuslces}
+  --modelSecondaryMuscles: ${props => props.theme.colors.modelSecondaryMuscles}
 
 input:focus,
 select:focus,

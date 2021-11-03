@@ -7,6 +7,7 @@ import { ReactComponent as HumanFrontSVG } from "../../../assets/svg/humanFront.
 import { ReactComponent as SearchIcon } from "../../../assets/svg/search.svg";
 import { IExercise, Muscle } from "../../../constants/exercises";
 import { useGetAllCommonExercisesQuery } from "../../../generated/graphql";
+import theme from "../../../theme/theme";
 import {
   convertMusclesToSVGNames,
   sanitazeMuscleNameFromDB,
@@ -187,9 +188,9 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
             </Button>
           </TopSearchWrapper>
           <Legend>
-            <Circle color="#db2f2f" />
+            <Circle color={theme.colors.modelPrimaryMuslces} />
             <LegendText>Primary Muscles</LegendText>
-            <Circle color="#cc9952" />
+            <Circle color={theme.colors.modelSecondaryMuscles} />
             <LegendText>Secondary Muscles</LegendText>
           </Legend>
           <LoaderWrapper>
@@ -233,9 +234,9 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
           </Button>
         </TopSearchWrapper>
         <Legend>
-          <Circle color="#db2f2f" />
+          <Circle color={theme.colors.modelPrimaryMuslces} />
           <LegendText>Primary Muscles</LegendText>
-          <Circle color="#d69b47" />
+          <Circle color={theme.colors.modelSecondaryMuscles} />
           <LegendText>Secondary Muscles</LegendText>
         </Legend>
         <ExercisesAmmount>

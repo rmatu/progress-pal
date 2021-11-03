@@ -3,11 +3,11 @@ import { convertPxToRem } from "../../utils/cssHelpers";
 
 export const Wrapper = styled.div<{ open?: boolean }>`
   min-height: calc(100vh - 6em);
-  min-height: 100vh;
   display: flex;
   flex-direction: row;
 
   @media screen and (min-width: 1024px) {
+    min-height: 0vh;
     top: 0;
   }
 `;
@@ -19,9 +19,13 @@ export const HeaderWrapper = styled.div`
   z-index: 100;
 `;
 
-export const RightContent = styled.div<{ open?: boolean }>`
+export const RightContent = styled.div<{
+  open?: boolean;
+  justifyContent?: string;
+}>`
   display: flex;
   flex-direction: column;
+  justify-content: ${({ justifyContent }) => justifyContent};
   width: 85%;
   margin: 1em 0 1em 1em;
   max-width: ${convertPxToRem(1600)};
