@@ -35,7 +35,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
   useEffect(() => {
     setDashboardItem(selectedItem, "dashboard", dispatch);
-  }, [dispatch, selectedItem]);
+  }, []);
 
   useEffect(() => {
     if (width < 600) {

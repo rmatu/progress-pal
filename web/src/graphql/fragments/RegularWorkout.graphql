@@ -1,0 +1,12 @@
+fragment RegularWorkout on Workout {
+  id
+  name
+  updatedAt
+  createdAt
+  workoutExercise {
+    ...RegularWorkoutExercise
+  }
+  user {
+    ...RegularUser
+  }
+}

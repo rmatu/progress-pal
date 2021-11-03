@@ -4,23 +4,29 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { ReactComponent as PencilIcon } from "../../assets/svg/pencil.svg";
+import { ReactComponent as SuccessfulWorkoutCreationSVG2 } from "../../assets/svg/successfulWorkoutCreation2.svg";
 import ExerciseSets from "../../components/ExerciseSets/ExerciseSets";
 import { FlexWrapperDiv } from "../../components/FlexElements";
-import { Button, Heading } from "../../components/UI";
+import { Button, Heading, Popup } from "../../components/UI";
 import AddWorkoutModal from "../../components/UI/AddWorkoutModal/AddWorkoutModal";
 import InputWithIcon from "../../components/UI/InputWithIcon/InputWithIcon";
-import { MAIN_PAGE } from "../../constants/routes";
-import { useMeQuery } from "../../generated/graphql";
+import { useCreateWorkoutMutation, useMeQuery } from "../../generated/graphql";
 import DashbordLayoutHOC from "../../hoc/DashbordLayoutHOC";
 import { RightContent } from "../../hoc/styles";
+import * as navActions from "../../redux/dashboardNavbar/dashboardNavbarActions";
+import { MAIN_PAGE, ADD_WORKOUT } from "../../constants/routes";
 import { AppState } from "../../redux/rootReducer";
 import theme from "../../theme/theme";
 import { AddWorkoutSchema, IExportedExercise } from "../../utils/formSchemas";
-import { setDashboardItem } from "../../utils/setDashboardItem";
-import { ButtonWrapper, ExercisesList, WorkoutForm } from "./styles";
+import {
+  ButtonWrapper,
+  ExercisesList,
+  SuccessWorkoutWrapper,
+  WorkoutForm,
+} from "./styles";
 
 export interface IWorkout {
-  workoutName: string;
+  name: string;
   exercises: IExportedExercise[];
   date: string;
 }
@@ -30,27 +36,50 @@ const AddWorkout = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [showAddExercisesModal, setShowAddExercisesModal] = useState(true);
+  const [createWorkout] = useCreateWorkoutMutation({
+    onCompleted: () => {
+      resetWorkoutCreation();
+      setSuccessfulWorkoutCreation(true);
+    },
+    onError: () => {
+      setPopup({
+        showPopup: true,
+        text: "Something went wrong...",
+      });
+      setTimeout(() => {
+        setPopup({
+          showPopup: false,
+          text: "",
+        });
+      }, 4000);
+
+      resetWorkoutCreation();
+    },
+  });
+
   const [selectedExercises, setSelectedExercises] = useState<[]>([]);
   const [exerciseWithSets, setExerciseWithSets] = useState<IExportedExercise[]>(
     [],
   );
   const [workout, setWorkout] = useState<IWorkout>();
+  const [showAddExercisesModal, setShowAddExercisesModal] =
+    useState<boolean>(false);
   const [blockSubmit, setBlockSubmit] = useState<boolean>(false);
-
-  const { selectedItem, open } = useSelector(
-    (state: AppState) => state.dashboardNavbar,
-  );
+  const [successfulWorkoutCreation, setSuccessfulWorkoutCreation] =
+    useState(false);
+  const [popup, setPopup] = useState({
+    showPopup: false,
+    text: "",
+  });
+  const { open } = useSelector((state: AppState) => state.dashboardNavbar);
 
   const workoutFormik = useFormik({
     initialValues: {
-      workoutName: moment().format(`[Workout] DD-MM-YYYY`),
+      name: moment().format(`[Workout] DD-MM-YYYY`),
     },
     validationSchema: AddWorkoutSchema,
     onSubmit: () => {},
   });
-
-  console.log({ selectedExercises });
 
   const handleSelectedItem = (exercise: any) => {
     const elementExist = selectedExercises?.find(
@@ -73,30 +102,60 @@ const AddWorkout = () => {
   const handleFinishWorkout = () => {
     if (blockSubmit) return;
 
-    console.log({ workout });
+    if (!workout) return;
+
+    const updatedWorkout = {
+      ...workout,
+      exercises: workout.exercises.map(el => ({
+        ...el,
+        sets: el.sets.map((set, idx) => ({
+          set: idx + 1,
+          weight: set.weight,
+          reps: set.reps,
+        })),
+      })),
+    };
+
+    if (!updatedWorkout) return;
+
+    createWorkout({
+      variables: {
+        input: {
+          name: updatedWorkout.name,
+          date: updatedWorkout.date,
+          //@ts-ignore
+          exercises: updatedWorkout.exercises,
+        },
+      },
+    });
+  };
+
+  const resetWorkoutCreation = () => {
+    setSelectedExercises([]);
+    setExerciseWithSets([]);
+    setWorkout(undefined);
+  };
+
+  const handleGoToDashboard = () => {
+    dispatch(navActions.changeItem(MAIN_PAGE));
+    history.push(MAIN_PAGE);
   };
 
   const handleExerciseFormikOnChange = (e: any) => {
     workoutFormik.handleChange(e);
   };
 
-  const handleCancelWorkout = () => {
-    history.push(MAIN_PAGE);
-  };
-
-  console.log({ workout });
-
   useEffect(() => {
     setWorkout({
-      workoutName: workoutFormik.values.workoutName,
+      name: workoutFormik.values.name,
       date: new Date().toISOString(),
       exercises: exerciseWithSets,
     });
 
     for (let i = 0; i < exerciseWithSets.length; i++) {
       const error = exerciseWithSets[i].sets.some(el => {
-        return el.kg === null ||
-          el.kg === 0 ||
+        return el.weight === null ||
+          el.weight === 0 ||
           el.reps === null ||
           el.reps === 0
           ? true
@@ -113,23 +172,69 @@ const AddWorkout = () => {
   }, [exerciseWithSets]);
 
   useEffect(() => {
-    setDashboardItem(selectedItem, "add-workout", dispatch);
-  }, [dispatch, selectedItem]);
+    dispatch(navActions.changeItem(ADD_WORKOUT));
+  }, []);
+
+  if (successfulWorkoutCreation) {
+    return (
+      <DashbordLayoutHOC user={user?.me}>
+        <RightContent open={open} justifyContent="center">
+          <SuccessWorkoutWrapper
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -50, opacity: 0 }}
+          >
+            <Heading size="h2">
+              Your workout has been created successfuly!
+            </Heading>
+            <SuccessfulWorkoutCreationSVG2 className="successfulWorkoutCreation" />
+            <ButtonWrapper>
+              <Button
+                marginTop="2em"
+                padding="0.2em 2em"
+                fontSize="1.125rem"
+                bColor={theme.colors.orange}
+                onClick={() => setSuccessfulWorkoutCreation(false)}
+                type="button"
+              >
+                Create new Workout
+              </Button>
+              <Button
+                marginTop="2em"
+                padding="0.2em 2em"
+                fontSize="1.125rem"
+                bColor={theme.colors.errorTextColor}
+                onClick={handleGoToDashboard}
+                type="button"
+              >
+                Go to Dashboard
+              </Button>
+            </ButtonWrapper>
+          </SuccessWorkoutWrapper>
+        </RightContent>
+      </DashbordLayoutHOC>
+    );
+  }
 
   return (
     <DashbordLayoutHOC user={user?.me}>
       <RightContent open={open}>
-        <WorkoutForm onSubmit={workoutFormik.handleSubmit}>
+        <WorkoutForm
+          onSubmit={workoutFormik.handleSubmit}
+          initial={{ y: 50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -50, opacity: 0 }}
+        >
           <Heading size="h2">Add Workout</Heading>
           <FlexWrapperDiv justifyContent="center">
             <InputWithIcon
-              name="workoutName"
-              value={workoutFormik.values.workoutName}
+              name="name"
+              value={workoutFormik.values.name}
               type="text"
               onChange={handleExerciseFormikOnChange}
               iconComp={<PencilIcon />}
               width="13em"
-              error={workoutFormik.errors.workoutName}
+              error={workoutFormik.errors.name}
             />
           </FlexWrapperDiv>
           <ButtonWrapper>
@@ -147,7 +252,7 @@ const AddWorkout = () => {
               padding="0.2em 2em"
               fontSize="1.125rem"
               bColor={theme.colors.errorTextColor}
-              onClick={handleCancelWorkout}
+              onClick={handleGoToDashboard}
               type="button"
             >
               Cancel Workout
@@ -180,7 +285,6 @@ const AddWorkout = () => {
           </ExercisesList>
         </WorkoutForm>
       </RightContent>
-      {/* @ts-ignore */}
       {showAddExercisesModal && (
         <AddWorkoutModal
           show={showAddExercisesModal}
@@ -190,6 +294,7 @@ const AddWorkout = () => {
           selectedExercises={selectedExercises}
         />
       )}
+      <Popup showPopup={popup.showPopup}>{popup.text}</Popup>
     </DashbordLayoutHOC>
   );
 };

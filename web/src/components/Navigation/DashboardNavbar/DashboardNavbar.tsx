@@ -39,6 +39,7 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user }) => {
 
   const handleClick = (name: string) => {
     dispatch(navActions.changeItem(name));
+    dispatch(navActions.setOpen(false));
     history.push(name);
   };
 

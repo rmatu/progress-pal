@@ -7,7 +7,6 @@ import {
   Field,
   InputType,
   Mutation,
-  ObjectType,
   Query,
   Resolver,
   UseMiddleware,
@@ -17,12 +16,6 @@ import { Workout } from "../entities/Workout";
 import { ExerciseSet } from "../entities/ExerciseSet";
 import { getConnection, getRepository } from "typeorm";
 import { WorkoutExercise } from "../entities/WorkoutExercise";
-
-@ObjectType()
-class CreateWorkoutResponse {
-  @Field(() => Workout, { nullable: true })
-  workout?: Workout;
-}
 
 @InputType()
 class SetInput {
@@ -122,7 +115,7 @@ export class WorkoutResolver {
   // ======= MUTATIONS =========
   // ===========================
 
-  @Mutation(() => CreateWorkoutResponse, { nullable: true })
+  @Mutation(() => Workout, { nullable: true })
   @UseMiddleware(isAuthenticated)
   async createWorkout(
     @Arg("input") input: CreateWorkoutInput,
@@ -185,6 +178,6 @@ export class WorkoutResolver {
       await queryRunner.release();
     }
 
-    return { workout };
+    return workout;
   }
 }

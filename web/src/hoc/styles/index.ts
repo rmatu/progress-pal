@@ -19,9 +19,13 @@ export const HeaderWrapper = styled.div`
   z-index: 100;
 `;
 
-export const RightContent = styled.div<{ open?: boolean }>`
+export const RightContent = styled.div<{
+  open?: boolean;
+  justifyContent?: string;
+}>`
   display: flex;
   flex-direction: column;
+  justify-content: ${({ justifyContent }) => justifyContent};
   width: 85%;
   margin: 1em 0 1em 1em;
   max-width: ${convertPxToRem(1600)};

@@ -8,8 +8,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { ExerciseSet } from "./ExerciseSet";
-import { Workout } from "./Workout";
 import { WorkoutExercise } from "./WorkoutExercise";
 
 export enum AppMuscle {
