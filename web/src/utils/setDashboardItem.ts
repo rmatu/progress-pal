@@ -6,8 +6,6 @@ export const setDashboardItem = (
   pageName: string,
   dispatch: Dispatch<any>,
 ) => {
-  console.log("hereee");
-  console.log({ selectedItem, pageName });
   if (selectedItem === pageName) return;
 
   dispatch(() => navActions.changeItem(pageName));

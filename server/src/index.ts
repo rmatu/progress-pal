@@ -26,7 +26,7 @@ import { WorkoutExercise } from "./entities/WorkoutExercise";
 //Resolvers
 import { UserResolver } from "./resolvers/user";
 import { UserMetricsResolver } from "./resolvers/userMetrics";
-import { WorkoutResolver } from "./resolvers/workout";
+import { WorkoutResolver } from "./resolvers/workout/workoutResolver";
 import { CommonExerciseResolver } from "./resolvers/commonExercise";
 
 const main = async () => {

@@ -1,10 +1,11 @@
 import styled from "styled-components/macro";
 import { convertPxToRem } from "../../../../utils/cssHelpers";
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<{ noData?: boolean }>`
   position: relative;
   display: flex;
   justify-content: center;
+  align-items: ${({ noData }) => noData && "center"};
   background-color: ${({ theme }) => theme.colors.backgroundGray};
   border-radius: 0.5em;
   padding: 0.5em 1em 0.5em 0.5em;

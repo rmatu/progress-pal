@@ -1,9 +1,10 @@
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import * as ROUTES from "./constants/routes";
-import { withAuth } from "./services/auth.service";
 import { AnimatePresence } from "framer-motion";
+import { withAuth } from "./services/auth.service";
 import { withEmail } from "./services/email.service";
+import { withRedirectLoggedInUser } from "./services/loggedInUser.service";
 
 //Components
 import {
@@ -34,13 +35,13 @@ const App: React.FC = () => (
         key={ROUTES.SIGN_IN}
         exact
         path={ROUTES.SIGN_IN}
-        component={SignIn}
+        component={withRedirectLoggedInUser(SignIn)}
       />
       <Route
         key={ROUTES.SIGN_UP}
         exact
         path={ROUTES.SIGN_UP}
-        component={SignUp}
+        component={withRedirectLoggedInUser(SignUp)}
       />
       <Route
         key={ROUTES.VERIFY_EMAIL}

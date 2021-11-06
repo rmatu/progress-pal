@@ -1,60 +1,20 @@
 import moment from "moment";
-import { isAuthenticated } from "../middleware/isAuthenticated";
-import { UserMetrics } from "../entities/UserMetrics";
+import { MyContext } from "src/types";
 import {
   Arg,
   Ctx,
-  Field,
-  InputType,
   Mutation,
   Query,
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { MyContext } from "src/types";
-import { Workout } from "../entities/Workout";
-import { ExerciseSet } from "../entities/ExerciseSet";
-import { getConnection, getRepository } from "typeorm";
-import { WorkoutExercise } from "../entities/WorkoutExercise";
-
-@InputType()
-class SetInput {
-  @Field(() => Number)
-  set: number;
-
-  @Field(() => Number)
-  weight: number;
-
-  @Field(() => Number)
-  reps: number;
-}
-
-@InputType()
-class ExercisesInput {
-  @Field(() => String)
-  id: string;
-
-  @Field(() => Boolean)
-  isCommonExercise: boolean;
-
-  @Field(() => String)
-  name: string;
-
-  @Field(() => [SetInput])
-  sets: SetInput[];
-}
-
-@InputType()
-class CreateWorkoutInput {
-  @Field(() => String)
-  date: string;
-
-  @Field(() => String)
-  name: string;
-
-  @Field(() => [ExercisesInput])
-  exercises: ExercisesInput[];
-}
+import { Between, getConnection, getRepository } from "typeorm";
+import { ExerciseSet } from "../../entities/ExerciseSet";
+import { UserMetrics } from "../../entities/UserMetrics";
+import { Workout } from "../../entities/Workout";
+import { WorkoutExercise } from "../../entities/WorkoutExercise";
+import { isAuthenticated } from "../../middleware/isAuthenticated";
+import { CreateWorkoutInput, YearlyWorkoutsAmountResponse } from "./types";
 
 @Resolver(UserMetrics)
 export class WorkoutResolver {
@@ -109,6 +69,65 @@ export class WorkoutResolver {
     }
 
     return workout;
+  }
+
+  @Query(() => [YearlyWorkoutsAmountResponse], { nullable: true })
+  @UseMiddleware(isAuthenticated)
+  async getUserYearlyWorkoutData(
+    @Arg("startDate") startDate: string,
+    @Arg("endDate") endDate: string,
+    @Ctx() { req }: MyContext,
+  ) {
+    const workoutRepo = await getRepository(Workout);
+    const { userId } = req.session;
+
+    // Between clause wouldn't include these dates so we need to extend them
+    const cStartDate = moment(startDate)
+      .subtract(1, "days")
+      .format("YYYY-MM-DD");
+    const cEndDate = moment(endDate).add(1, "days").format("YYYY-MM-DD");
+
+    // Get all workouts
+    const workout = await workoutRepo.find({
+      relations: ["workoutExercise"],
+      where: {
+        user: userId,
+        updatedAt: Between(cStartDate, cEndDate),
+      },
+    });
+
+    // Format the dates
+    const dates = workout.map(el => moment(el.updatedAt).format("YYYY-MM-DD"));
+
+    // Date here will look like this
+    // {YYYY-MM-DD: number}
+    // {"2021-11-03": 10}
+    const map = dates.reduce(
+      (
+        prev: {
+          [key: string]: number;
+        },
+        cur: string,
+      ) => {
+        prev[cur] = (prev[cur] || 0) + 1;
+        return prev;
+      },
+      {},
+    );
+
+    const data = [];
+    for (const [key, value] of Object.entries(map)) {
+      data.push({
+        date: key,
+        amount: value,
+      });
+    }
+
+    if (!data) {
+      return null;
+    }
+
+    return data;
   }
 
   // ===========================
