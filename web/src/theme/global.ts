@@ -165,7 +165,7 @@ button:focus {
 }
 
 .react-calendar-heatmap .color-filled {
-  fill: #8cc665;
+  fill: #53c507;
 }
 
 /*

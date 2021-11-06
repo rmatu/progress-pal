@@ -28,7 +28,7 @@ interface YearlyCalendarHeatmapProps {
     | GetUserYearlyWorkoutDataQuery["getUserYearlyWorkoutData"];
   startDate: string;
   endDate: string;
-  loadingCalendarData: boolean;
+  loadingCalendarData?: boolean;
   getAllUserYearlyWorkoutData: (
     options?:
       | QueryLazyOptions<
@@ -47,7 +47,6 @@ const WEEKDAY_LABELS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
 const YearlyCalendarHeatmap: React.FC<YearlyCalendarHeatmapProps> = ({
   startDate,
-  loadingCalendarData,
   endDate,
   values,
   getAllUserYearlyWorkoutData,

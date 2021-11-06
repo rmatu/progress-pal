@@ -14,13 +14,14 @@ import { UserMetrics } from "../../entities/UserMetrics";
 import { Workout } from "../../entities/Workout";
 import { WorkoutExercise } from "../../entities/WorkoutExercise";
 import { isAuthenticated } from "../../middleware/isAuthenticated";
-import { CreateWorkoutInput, YearlyWorkoutsAmountResponse } from "./types";
+import {
+  CreateWorkoutInput,
+  DataForMuscleHeatmap,
+  YearlyWorkoutsAmountResponse,
+} from "./types";
 
 @Resolver(UserMetrics)
 export class WorkoutResolver {
-  // ===========================
-  // ====== FIELD RESOLVERS ====
-  // ===========================
   // ===========================
   // ========= QUERYS ==========
   // ===========================
@@ -128,6 +129,114 @@ export class WorkoutResolver {
     }
 
     return data;
+  }
+
+  @Query(() => DataForMuscleHeatmap, { nullable: true })
+  @UseMiddleware(isAuthenticated)
+  async getDataForMuscleHeatmap(
+    @Arg("startDate") startDate: string,
+    @Arg("endDate") endDate: string,
+    @Ctx() { req }: MyContext,
+  ) {
+    const workoutRepo = await getRepository(Workout);
+    const { userId } = req.session;
+
+    // Between clause wouldn't include these dates so we need to extend them
+    const cStartDate = moment(startDate)
+      .subtract(1, "days")
+      .format("YYYY-MM-DD");
+    const cEndDate = moment(endDate).add(1, "days").format("YYYY-MM-DD");
+
+    // Get all workouts
+    const workouts = await workoutRepo.find({
+      relations: [
+        "workoutExercise",
+        "workoutExercise.commonExercise",
+        "workoutExercise.userExercise",
+      ],
+      where: {
+        user: userId,
+        updatedAt: Between(cStartDate, cEndDate),
+      },
+    });
+
+    // Get primary and secondary muscles from this data
+    // Nested entities are returned as arrays by typeORM,
+    // so we need to access data like that
+    const data = workouts.map((workout: any) => ({
+      commonExercisePrimaryMuscles:
+        workout.workoutExercise[0].commonExercise?.primaryMuscles,
+      commonExerciseSecondaryMuscles:
+        workout.workoutExercise[0].commonExercise?.secondaryMuscles,
+      userExercisePrimaryMuscles:
+        workout.workoutExercise[0]?.userExercise?.primaryMuscles,
+      userExerciseSecondaryMuscles:
+        workout.workoutExercise[0]?.userExercise?.secondaryMuscles,
+    }));
+
+    const primaryMusclesData: { [key: string]: number } = {};
+    const secondaryMusclesData: { [key: string]: number } = {};
+
+    data.forEach(muscles => {
+      muscles.commonExercisePrimaryMuscles?.forEach((muscleName: string) => {
+        if (!primaryMusclesData[muscleName]) {
+          primaryMusclesData[muscleName] = 1;
+        } else {
+          primaryMusclesData[muscleName] = primaryMusclesData[muscleName] + 1;
+        }
+      });
+
+      muscles.commonExerciseSecondaryMuscles?.forEach((muscleName: string) => {
+        if (!secondaryMusclesData[muscleName]) {
+          secondaryMusclesData[muscleName] = 1;
+        } else {
+          secondaryMusclesData[muscleName] =
+            secondaryMusclesData[muscleName] + 1;
+        }
+      });
+
+      muscles.userExercisePrimaryMuscles?.forEach((muscleName: string) => {
+        if (!primaryMusclesData[muscleName]) {
+          primaryMusclesData[muscleName] = 1;
+        } else {
+          primaryMusclesData[muscleName] = primaryMusclesData[muscleName] + 1;
+        }
+      });
+
+      muscles.userExerciseSecondaryMuscles?.forEach((muscleName: string) => {
+        if (!secondaryMusclesData[muscleName]) {
+          secondaryMusclesData[muscleName] = 1;
+        } else {
+          secondaryMusclesData[muscleName] =
+            secondaryMusclesData[muscleName] + 1;
+        }
+      });
+    });
+
+    const finalData: {
+      primaryMuscles: { muscleName: string; amount: number }[];
+      secondaryMuscles: { muscleName: string; amount: number }[];
+    } = { primaryMuscles: [], secondaryMuscles: [] };
+
+    for (const [key, value] of Object.entries(primaryMusclesData)) {
+      finalData.primaryMuscles.push({
+        muscleName: key,
+        amount: value,
+      });
+    }
+
+    for (const [key, value] of Object.entries(secondaryMusclesData)) {
+      finalData.secondaryMuscles.push({
+        muscleName: key,
+        amount: value,
+      });
+    }
+
+    if (!finalData) {
+      return null;
+    }
+
+    return finalData;
   }
 
   // ===========================

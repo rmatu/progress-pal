@@ -12,8 +12,6 @@ import { useWindowResize } from "../../../hooks/useWindowResize";
 import { AppState } from "../../../redux/rootReducer";
 import { setDashboardItem } from "../../../utils/setDashboardItem";
 
-const values = [{ date: "", amount: 0 }];
-
 interface DashboardProps {
   user: MeQuery["me"] | undefined;
 }
