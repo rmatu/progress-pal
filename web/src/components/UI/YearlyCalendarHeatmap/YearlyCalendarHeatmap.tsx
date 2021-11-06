@@ -15,11 +15,30 @@ import {
   HalfYear,
 } from "./styles";
 import Modal from "../Modal/Modal";
+import {
+  Exact,
+  GetUserYearlyWorkoutDataQuery,
+} from "../../../generated/graphql";
+import { QueryLazyOptions } from "@apollo/client";
+import Loader from "../Loader/Loader";
 
 interface YearlyCalendarHeatmapProps {
-  values: { date: string; amount: number }[];
+  values:
+    | { date: string; amount: number }[]
+    | GetUserYearlyWorkoutDataQuery["getUserYearlyWorkoutData"];
   startDate: string;
   endDate: string;
+  loadingCalendarData: boolean;
+  getAllUserYearlyWorkoutData: (
+    options?:
+      | QueryLazyOptions<
+          Exact<{
+            startDate: string;
+            endDate: string;
+          }>
+        >
+      | undefined,
+  ) => void;
   setStartDate: (value: React.SetStateAction<string>) => void;
   setEndDate: (value: React.SetStateAction<string>) => void;
 }
@@ -28,8 +47,10 @@ const WEEKDAY_LABELS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
 const YearlyCalendarHeatmap: React.FC<YearlyCalendarHeatmapProps> = ({
   startDate,
+  loadingCalendarData,
   endDate,
   values,
+  getAllUserYearlyWorkoutData,
   setStartDate,
   setEndDate,
 }) => {
@@ -45,16 +66,22 @@ const YearlyCalendarHeatmap: React.FC<YearlyCalendarHeatmapProps> = ({
     setEndDate(endDate =>
       moment(endDate).set("year", year).format("YYYY-MM-DD"),
     );
+    getAllUserYearlyWorkoutData({
+      variables: {
+        startDate: moment(startDate).set("year", year).format("YYYY-MM-DD"),
+        endDate: moment(endDate).set("year", year).format("YYYY-MM-DD"),
+      },
+    });
   };
 
   const changeYearHalf = (yearHalf: string) => {
     if (yearHalf === "1") {
       setSelectedHalf("1");
       setStartDate(moment(startDate).set("month", 0).format("YYYY-MM-DD"));
-      setEndDate(moment(endDate).set("month", 6).format("YYYY-MM-DD"));
+      setEndDate(moment(endDate).set("month", 5).format("YYYY-MM-DD"));
     } else if (yearHalf === "2") {
       setSelectedHalf("2");
-      setStartDate(moment(startDate).set("month", 6).format("YYYY-MM-DD"));
+      setStartDate(moment(startDate).set("month", 5).format("YYYY-MM-DD"));
       setEndDate(moment(endDate).set("month", 11).format("YYYY-MM-DD"));
     }
   };
@@ -67,6 +94,37 @@ const YearlyCalendarHeatmap: React.FC<YearlyCalendarHeatmapProps> = ({
     setYears(newYears);
   }, []);
 
+  if (!values) {
+    return (
+      <Wrapper noData>
+        <Loader />
+        <TrainingAmount>
+          <AmountText>Amount of trainings: </AmountText>
+          <Amount> 0 </Amount>
+        </TrainingAmount>
+        <HalfYearPicker>
+          <HalfYear
+            selected={selectedHalf === "1"}
+            onClick={() => changeYearHalf("1")}
+          >
+            1
+          </HalfYear>
+          /
+          <HalfYear
+            selected={selectedHalf === "2"}
+            onClick={() => changeYearHalf("2")}
+          >
+            2
+          </HalfYear>
+        </HalfYearPicker>
+        <CalendarWrapper>
+          <Year>{moment(startDate).get("y")}</Year>
+          <CalendarIcon />
+        </CalendarWrapper>
+      </Wrapper>
+    );
+  }
+
   return (
     <Wrapper>
       <CalendarHeatmap
@@ -75,7 +133,6 @@ const YearlyCalendarHeatmap: React.FC<YearlyCalendarHeatmapProps> = ({
         showMonthLabels
         showWeekdayLabels
         weekdayLabels={WEEKDAY_LABELS}
-        onClick={value => alert(`Clicked on value with count: ${value.amount}`)}
         transformDayElement={(element, value, index) =>
           React.cloneElement(element, { rx: 100, ry: 100 })
         }

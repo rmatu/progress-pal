@@ -17,12 +17,19 @@ export type Query = {
   getUserMetrics?: Maybe<Array<UserMetrics>>;
   getAllUserWorkouts?: Maybe<Array<Workout>>;
   getUserWorkout?: Maybe<Workout>;
+  getUserYearlyWorkoutData?: Maybe<Array<YearlyWorkoutsAmountResponse>>;
   getAllCommonExercises?: Maybe<Array<CommonExercise>>;
 };
 
 
 export type QueryGetUserWorkoutArgs = {
   workoutId: Scalars['Float'];
+};
+
+
+export type QueryGetUserYearlyWorkoutDataArgs = {
+  endDate: Scalars['String'];
+  startDate: Scalars['String'];
 };
 
 export type User = {
@@ -123,6 +130,12 @@ export type CommonExercise = {
   updatedAt: Scalars['String'];
   createdAt: Scalars['String'];
   workoutExercise: Array<WorkoutExercise>;
+};
+
+export type YearlyWorkoutsAmountResponse = {
+  __typename?: 'YearlyWorkoutsAmountResponse';
+  date?: Maybe<Scalars['String']>;
+  amount?: Maybe<Scalars['Float']>;
 };
 
 export type Mutation = {
@@ -523,6 +536,20 @@ export type GetAllCommonExercisesQuery = (
   & { getAllCommonExercises?: Maybe<Array<(
     { __typename?: 'CommonExercise' }
     & RegularCommonExerciseFragment
+  )>> }
+);
+
+export type GetUserYearlyWorkoutDataQueryVariables = Exact<{
+  startDate: Scalars['String'];
+  endDate: Scalars['String'];
+}>;
+
+
+export type GetUserYearlyWorkoutDataQuery = (
+  { __typename?: 'Query' }
+  & { getUserYearlyWorkoutData?: Maybe<Array<(
+    { __typename?: 'YearlyWorkoutsAmountResponse' }
+    & Pick<YearlyWorkoutsAmountResponse, 'date' | 'amount'>
   )>> }
 );
 
@@ -1135,6 +1162,41 @@ export function useGetAllCommonExercisesLazyQuery(baseOptions?: Apollo.LazyQuery
 export type GetAllCommonExercisesQueryHookResult = ReturnType<typeof useGetAllCommonExercisesQuery>;
 export type GetAllCommonExercisesLazyQueryHookResult = ReturnType<typeof useGetAllCommonExercisesLazyQuery>;
 export type GetAllCommonExercisesQueryResult = Apollo.QueryResult<GetAllCommonExercisesQuery, GetAllCommonExercisesQueryVariables>;
+export const GetUserYearlyWorkoutDataDocument = gql`
+    query GetUserYearlyWorkoutData($startDate: String!, $endDate: String!) {
+  getUserYearlyWorkoutData(startDate: $startDate, endDate: $endDate) {
+    date
+    amount
+  }
+}
+    `;
+
+/**
+ * __useGetUserYearlyWorkoutDataQuery__
+ *
+ * To run a query within a React component, call `useGetUserYearlyWorkoutDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserYearlyWorkoutDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserYearlyWorkoutDataQuery({
+ *   variables: {
+ *      startDate: // value for 'startDate'
+ *      endDate: // value for 'endDate'
+ *   },
+ * });
+ */
+export function useGetUserYearlyWorkoutDataQuery(baseOptions: Apollo.QueryHookOptions<GetUserYearlyWorkoutDataQuery, GetUserYearlyWorkoutDataQueryVariables>) {
+        return Apollo.useQuery<GetUserYearlyWorkoutDataQuery, GetUserYearlyWorkoutDataQueryVariables>(GetUserYearlyWorkoutDataDocument, baseOptions);
+      }
+export function useGetUserYearlyWorkoutDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserYearlyWorkoutDataQuery, GetUserYearlyWorkoutDataQueryVariables>) {
+          return Apollo.useLazyQuery<GetUserYearlyWorkoutDataQuery, GetUserYearlyWorkoutDataQueryVariables>(GetUserYearlyWorkoutDataDocument, baseOptions);
+        }
+export type GetUserYearlyWorkoutDataQueryHookResult = ReturnType<typeof useGetUserYearlyWorkoutDataQuery>;
+export type GetUserYearlyWorkoutDataLazyQueryHookResult = ReturnType<typeof useGetUserYearlyWorkoutDataLazyQuery>;
+export type GetUserYearlyWorkoutDataQueryResult = Apollo.QueryResult<GetUserYearlyWorkoutDataQuery, GetUserYearlyWorkoutDataQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {

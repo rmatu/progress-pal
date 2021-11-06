@@ -1,0 +1,6 @@
+query GetUserYearlyWorkoutData($startDate: String!, $endDate: String!) {
+  getUserYearlyWorkoutData(startDate: $startDate, endDate: $endDate) {
+    date
+    amount
+  }
+}

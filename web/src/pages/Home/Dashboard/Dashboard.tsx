@@ -2,24 +2,28 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import YearlyCalendarHeatmap from "../../../components/UI/YearlyCalendarHeatmap/YearlyCalendarHeatmap";
-import { MeQuery } from "../../../generated/graphql";
+import {
+  MeQuery,
+  useGetUserYearlyWorkoutDataLazyQuery,
+} from "../../../generated/graphql";
 import DashbordLayoutHOC from "../../../hoc/DashbordLayoutHOC";
 import { RightContent } from "../../../hoc/styles";
 import { useWindowResize } from "../../../hooks/useWindowResize";
 import { AppState } from "../../../redux/rootReducer";
 import { setDashboardItem } from "../../../utils/setDashboardItem";
 
-const values = [
-  { date: "2021-01-02", amount: 12 },
-  { date: "2021-01-22", amount: 122 },
-  { date: "2021-12-15", amount: 38 },
-];
+const values = [{ date: "", amount: 0 }];
 
 interface DashboardProps {
   user: MeQuery["me"] | undefined;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ user }) => {
+  const [
+    getAllUserYearlyWorkoutData,
+    { data: calendarData, loading: loadingCalendarData },
+  ] = useGetUserYearlyWorkoutDataLazyQuery();
+
   const [startDate, setStartDate] = useState(
     moment("2021-01-01").format("YYYY-MM-DD"),
   );
@@ -37,6 +41,16 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     setDashboardItem(selectedItem, "dashboard", dispatch);
   }, []);
 
+  // Data for this page
+  useEffect(() => {
+    getAllUserYearlyWorkoutData({
+      variables: {
+        startDate: moment().set({ month: 0, date: 1 }).format("YYYY-MM-DD"),
+        endDate: moment().set({ month: 11, date: 31 }).format("YYYY-MM-DD"),
+      },
+    });
+  }, []);
+
   useEffect(() => {
     if (width < 600) {
       setStartDate(moment(startDate).set("month", 6).format("YYYY-MM-DD"));
@@ -49,11 +63,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     <DashbordLayoutHOC user={user}>
       <RightContent open={open}>
         <YearlyCalendarHeatmap
-          setStartDate={setStartDate}
-          setEndDate={setEndDate}
-          startDate={startDate}
           endDate={endDate}
-          values={values}
+          loadingCalendarData={loadingCalendarData}
+          getAllUserYearlyWorkoutData={getAllUserYearlyWorkoutData}
+          setEndDate={setEndDate}
+          setStartDate={setStartDate}
+          startDate={startDate}
+          values={calendarData?.getUserYearlyWorkoutData}
         />
       </RightContent>
     </DashbordLayoutHOC>
