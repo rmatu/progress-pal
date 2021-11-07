@@ -23,12 +23,13 @@ export const populateColorsForMuscleHeatmap = (
 ) => {
   const colorArr = [];
   const amountToSubstract = startColorG - endColorG;
+  const subAmount = Math.ceil(amountToSubstract / amount);
 
   for (let i = amount; i > 0; i--) {
     colorArr.push(
       `rgb(${startColorR}, ${
-        startColorG - Math.ceil(amountToSubstract / (i + 1))
-      }, ${startColorB - Math.ceil(amountToSubstract / (i + 1))})`,
+        startColorG - (amountToSubstract - subAmount * i)
+      }, ${startColorB - (amountToSubstract - subAmount * i)})`,
     );
   }
 
