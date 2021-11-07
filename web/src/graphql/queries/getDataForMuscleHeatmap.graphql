@@ -1,0 +1,12 @@
+query GetDataForMuscleHeatmap($startDate: String!, $endDate: String!) {
+  getDataForMuscleHeatmap(startDate: $startDate, endDate: $endDate) {
+    primaryMuscles {
+      muscleName
+      amount
+    }
+    secondaryMuscles {
+      muscleName
+      amount
+    }
+  }
+}

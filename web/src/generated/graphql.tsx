@@ -18,6 +18,7 @@ export type Query = {
   getAllUserWorkouts?: Maybe<Array<Workout>>;
   getUserWorkout?: Maybe<Workout>;
   getUserYearlyWorkoutData?: Maybe<Array<YearlyWorkoutsAmountResponse>>;
+  getDataForMuscleHeatmap?: Maybe<DataForMuscleHeatmap>;
   getAllCommonExercises?: Maybe<Array<CommonExercise>>;
 };
 
@@ -28,6 +29,12 @@ export type QueryGetUserWorkoutArgs = {
 
 
 export type QueryGetUserYearlyWorkoutDataArgs = {
+  endDate: Scalars['String'];
+  startDate: Scalars['String'];
+};
+
+
+export type QueryGetDataForMuscleHeatmapArgs = {
   endDate: Scalars['String'];
   startDate: Scalars['String'];
 };
@@ -136,6 +143,18 @@ export type YearlyWorkoutsAmountResponse = {
   __typename?: 'YearlyWorkoutsAmountResponse';
   date?: Maybe<Scalars['String']>;
   amount?: Maybe<Scalars['Float']>;
+};
+
+export type DataForMuscleHeatmap = {
+  __typename?: 'DataForMuscleHeatmap';
+  primaryMuscles?: Maybe<Array<Muscles>>;
+  secondaryMuscles?: Maybe<Array<Muscles>>;
+};
+
+export type Muscles = {
+  __typename?: 'Muscles';
+  muscleName: Scalars['String'];
+  amount: Scalars['Float'];
 };
 
 export type Mutation = {
@@ -537,6 +556,26 @@ export type GetAllCommonExercisesQuery = (
     { __typename?: 'CommonExercise' }
     & RegularCommonExerciseFragment
   )>> }
+);
+
+export type GetDataForMuscleHeatmapQueryVariables = Exact<{
+  startDate: Scalars['String'];
+  endDate: Scalars['String'];
+}>;
+
+
+export type GetDataForMuscleHeatmapQuery = (
+  { __typename?: 'Query' }
+  & { getDataForMuscleHeatmap?: Maybe<(
+    { __typename?: 'DataForMuscleHeatmap' }
+    & { primaryMuscles?: Maybe<Array<(
+      { __typename?: 'Muscles' }
+      & Pick<Muscles, 'muscleName' | 'amount'>
+    )>>, secondaryMuscles?: Maybe<Array<(
+      { __typename?: 'Muscles' }
+      & Pick<Muscles, 'muscleName' | 'amount'>
+    )>> }
+  )> }
 );
 
 export type GetUserYearlyWorkoutDataQueryVariables = Exact<{
@@ -1162,6 +1201,47 @@ export function useGetAllCommonExercisesLazyQuery(baseOptions?: Apollo.LazyQuery
 export type GetAllCommonExercisesQueryHookResult = ReturnType<typeof useGetAllCommonExercisesQuery>;
 export type GetAllCommonExercisesLazyQueryHookResult = ReturnType<typeof useGetAllCommonExercisesLazyQuery>;
 export type GetAllCommonExercisesQueryResult = Apollo.QueryResult<GetAllCommonExercisesQuery, GetAllCommonExercisesQueryVariables>;
+export const GetDataForMuscleHeatmapDocument = gql`
+    query GetDataForMuscleHeatmap($startDate: String!, $endDate: String!) {
+  getDataForMuscleHeatmap(startDate: $startDate, endDate: $endDate) {
+    primaryMuscles {
+      muscleName
+      amount
+    }
+    secondaryMuscles {
+      muscleName
+      amount
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetDataForMuscleHeatmapQuery__
+ *
+ * To run a query within a React component, call `useGetDataForMuscleHeatmapQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDataForMuscleHeatmapQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDataForMuscleHeatmapQuery({
+ *   variables: {
+ *      startDate: // value for 'startDate'
+ *      endDate: // value for 'endDate'
+ *   },
+ * });
+ */
+export function useGetDataForMuscleHeatmapQuery(baseOptions: Apollo.QueryHookOptions<GetDataForMuscleHeatmapQuery, GetDataForMuscleHeatmapQueryVariables>) {
+        return Apollo.useQuery<GetDataForMuscleHeatmapQuery, GetDataForMuscleHeatmapQueryVariables>(GetDataForMuscleHeatmapDocument, baseOptions);
+      }
+export function useGetDataForMuscleHeatmapLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDataForMuscleHeatmapQuery, GetDataForMuscleHeatmapQueryVariables>) {
+          return Apollo.useLazyQuery<GetDataForMuscleHeatmapQuery, GetDataForMuscleHeatmapQueryVariables>(GetDataForMuscleHeatmapDocument, baseOptions);
+        }
+export type GetDataForMuscleHeatmapQueryHookResult = ReturnType<typeof useGetDataForMuscleHeatmapQuery>;
+export type GetDataForMuscleHeatmapLazyQueryHookResult = ReturnType<typeof useGetDataForMuscleHeatmapLazyQuery>;
+export type GetDataForMuscleHeatmapQueryResult = Apollo.QueryResult<GetDataForMuscleHeatmapQuery, GetDataForMuscleHeatmapQueryVariables>;
 export const GetUserYearlyWorkoutDataDocument = gql`
     query GetUserYearlyWorkoutData($startDate: String!, $endDate: String!) {
   getUserYearlyWorkoutData(startDate: $startDate, endDate: $endDate) {
