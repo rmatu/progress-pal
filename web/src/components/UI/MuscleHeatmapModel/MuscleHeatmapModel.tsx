@@ -8,7 +8,15 @@ import {
 } from "../../../utils/converters";
 import { populateColorsForMuscleHeatmap } from "../../../utils/cssHelpers";
 import Loader from "../Loader/Loader";
-import { ModelWrapper, LoaderWrapper, Text, Wrapper } from "./styles";
+import { ReactComponent as CalendarIcon } from "../../../assets/svg/calendar.svg";
+import {
+  CalendarWrapper,
+  LoaderWrapper,
+  ModelWrapper,
+  Row,
+  Text,
+  Wrapper,
+} from "./styles";
 
 interface MuscleHeatmapModelProps {
   dataForMuscleHeatmap: GetDataForMuscleHeatmapQuery | undefined;
@@ -89,10 +97,15 @@ const MuscleHeatmapModel: React.FC<MuscleHeatmapModelProps> = ({
           ]}
         />
       </ModelWrapper>
-      <Text>
-        {moment(startDate).format("DD-MM-YYYY")} -{" "}
-        {moment(endDate).format("DD-MM-YYYY")}
-      </Text>
+      <Row>
+        <Text>
+          {moment(startDate).format("DD-MM-YYYY")} -{" "}
+          {moment(endDate).format("DD-MM-YYYY")}
+        </Text>
+        <CalendarWrapper>
+          <CalendarIcon onClick={() => {}} />
+        </CalendarWrapper>
+      </Row>
     </Wrapper>
   );
 };

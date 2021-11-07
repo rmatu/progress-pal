@@ -30,6 +30,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     { data: dataForMuscleHeatmap, loading: loadingDataForMuscleHeatmap },
   ] = useGetDataForMuscleHeatmapLazyQuery();
 
+  console.log(dataForMuscleHeatmap);
+
   // Whole year data for calendar
   const [startDate, setStartDate] = useState(
     moment().set({ month: 0, date: 1 }).format("YYYY-MM-DD"),

@@ -14,7 +14,7 @@ class Muscles {
   @Field(() => String)
   muscleName: string;
 
-  @Field(() => String)
+  @Field(() => Number)
   amount: number;
 }
 

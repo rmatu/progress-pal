@@ -164,14 +164,26 @@ export class WorkoutResolver {
     // Nested entities are returned as arrays by typeORM,
     // so we need to access data like that
     const data = workouts.map((workout: any) => ({
-      commonExercisePrimaryMuscles:
-        workout.workoutExercise[0].commonExercise?.primaryMuscles,
-      commonExerciseSecondaryMuscles:
-        workout.workoutExercise[0].commonExercise?.secondaryMuscles,
-      userExercisePrimaryMuscles:
-        workout.workoutExercise[0]?.userExercise?.primaryMuscles,
-      userExerciseSecondaryMuscles:
-        workout.workoutExercise[0]?.userExercise?.secondaryMuscles,
+      commonExercisePrimaryMuscles: [
+        ...workout.workoutExercise.map(
+          (el: any) => el.commonExercise?.primaryMuscles,
+        ),
+      ],
+      commonExerciseSecondaryMuscles: [
+        ...workout.workoutExercise.map(
+          (el: any) => el.commonExercise?.secondaryMuscles,
+        ),
+      ],
+      userExercisePrimaryMuscles: [
+        ...workout.workoutExercise.map(
+          (el: any) => el.userExercise?.primaryMuscles,
+        ),
+      ],
+      userExerciseSecondaryMuscles: [
+        ...workout.workoutExercise.map(
+          (el: any) => el.userExercise?.secondaryMuscles,
+        ),
+      ],
     }));
 
     const primaryMusclesData: { [key: string]: number } = {};
@@ -231,6 +243,13 @@ export class WorkoutResolver {
         amount: value,
       });
     }
+
+    finalData.primaryMuscles = finalData.primaryMuscles.filter(
+      el => el.muscleName !== "undefined",
+    );
+    finalData.secondaryMuscles = finalData.secondaryMuscles.filter(
+      el => el.muscleName !== "undefined",
+    );
 
     if (!finalData) {
       return null;
