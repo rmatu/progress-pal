@@ -148,7 +148,6 @@ const YearlyCalendarHeatmap: React.FC<YearlyCalendarHeatmapProps> = ({
         >
           1
         </HalfYear>
-        /
         <HalfYear
           selected={selectedHalf === "2"}
           onClick={() => changeYearHalf("2")}

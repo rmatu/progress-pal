@@ -5,7 +5,6 @@ import MuscleHeatmapModel from "../../../components/UI/MuscleHeatmapModel/Muscle
 import YearlyCalendarHeatmap from "../../../components/UI/YearlyCalendarHeatmap/YearlyCalendarHeatmap";
 import {
   MeQuery,
-  useGetDataForMuscleHeatmapLazyQuery,
   useGetUserYearlyWorkoutDataLazyQuery,
 } from "../../../generated/graphql";
 import DashbordLayoutHOC from "../../../hoc/DashbordLayoutHOC";
@@ -25,27 +24,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     { data: calendarData, loading: loadingCalendarData },
   ] = useGetUserYearlyWorkoutDataLazyQuery();
 
-  const [
-    getDataForMuscleHeatmap,
-    { data: dataForMuscleHeatmap, loading: loadingDataForMuscleHeatmap },
-  ] = useGetDataForMuscleHeatmapLazyQuery();
-
-  console.log(dataForMuscleHeatmap);
-
   // Whole year data for calendar
   const [startDate, setStartDate] = useState(
     moment().set({ month: 0, date: 1 }).format("YYYY-MM-DD"),
   );
   const [endDate, setEndDate] = useState(
     moment().set({ month: 11, date: 31 }).format("YYYY-MM-DD"),
-  );
-
-  // 2 weeks of data for muscle heatmap
-  const [muscleHeatMapStartDate, setMuscleHeatMapStartDate] = useState(
-    moment().subtract(14, "days").format("YYYY-MM-DD"),
-  );
-  const [muscleHeatMapEndDate, setMuscleHeatMapEndDate] = useState(
-    moment().format("YYYY-MM-DD"),
   );
 
   const width = useWindowResize();
@@ -64,23 +48,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     const startDate = moment().set({ month: 0, date: 1 }).format("YYYY-MM-DD");
     const endDate = moment().set({ month: 11, date: 31 }).format("YYYY-MM-DD");
 
-    const muscleHeatMapStartDate = moment()
-      .subtract(14, "days")
-      .format("YYYY-MM-DD");
-
-    const muscleHeatMapEndDate = moment().format("YYYY-MM-DD");
-
     getAllUserYearlyWorkoutData({
       variables: {
         startDate,
         endDate,
-      },
-    });
-
-    getDataForMuscleHeatmap({
-      variables: {
-        startDate: muscleHeatMapStartDate,
-        endDate: muscleHeatMapEndDate,
       },
     });
   }, []);
@@ -106,11 +77,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           values={calendarData?.getUserYearlyWorkoutData}
         />
         <Row>
-          <MuscleHeatmapModel
-            dataForMuscleHeatmap={dataForMuscleHeatmap}
-            startDate={muscleHeatMapStartDate}
-            endDate={muscleHeatMapEndDate}
-          />
+          <MuscleHeatmapModel />
         </Row>
       </RightContent>
     </DashbordLayoutHOC>
