@@ -1,7 +1,7 @@
+import { subDays } from "date-fns";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import Model from "react-body-highlighter";
-import { DateRangePicker } from "react-date-range";
 import { ReactComponent as CalendarIcon } from "../../../assets/svg/calendar.svg";
 import { useGetDataForMuscleHeatmapLazyQuery } from "../../../generated/graphql";
 import {
@@ -9,34 +9,26 @@ import {
   getTheMostTrainedMuscleAmount,
 } from "../../../utils/converters";
 import { populateColorsForMuscleHeatmap } from "../../../utils/cssHelpers";
+import DateRangePickerModal from "../DateRangePickerModal/DateRangePickerModal";
 import Loader from "../Loader/Loader";
-import ModalScroll from "../ModalScroll/ModalScroll";
 import {
   CalendarWrapper,
-  DateRangePickerWrapper,
   LoaderWrapper,
   ModelWrapper,
   Row,
   Text,
   Wrapper,
 } from "./styles";
-import { addDays, subDays } from "date-fns";
-import theme from "../../../theme/theme";
 
 interface MuscleHeatmapModelProps {}
 
 const MuscleHeatmapModel: React.FC<MuscleHeatmapModelProps> = ({}) => {
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   const [getDataForMuscleHeatmap, { data: dataForMuscleHeatmap }] =
     useGetDataForMuscleHeatmapLazyQuery();
 
-  // 2 weeks of data for muscle heatmap
-  const [startDate, setStartDate] = useState(
-    moment().subtract(14, "days").format("YYYY-MM-DD"),
-  );
-  const [endDate, setEndDate] = useState(moment().format("YYYY-MM-DD"));
-
+  // Data for muscle heatmap
   const [heatmapData, setHeatmapData] = useState([
     {
       startDate: subDays(new Date(), 14),
@@ -45,7 +37,14 @@ const MuscleHeatmapModel: React.FC<MuscleHeatmapModelProps> = ({}) => {
     },
   ]);
 
-  console.log(heatmapData);
+  const handleFinish = () => {
+    getDataForMuscleHeatmap({
+      variables: {
+        startDate: moment(heatmapData[0].startDate).format("YYYY-MM-DD"),
+        endDate: moment(heatmapData[0].endDate).format("YYYY-MM-DD"),
+      },
+    });
+  };
 
   useEffect(() => {
     const muscleHeatMapStartDate = moment()
@@ -143,26 +142,13 @@ const MuscleHeatmapModel: React.FC<MuscleHeatmapModelProps> = ({}) => {
           />
         </CalendarWrapper>
       </Row>
-      <ModalScroll
+      <DateRangePickerModal
         show={showModal}
         handleClose={() => setShowModal(false)}
-        width={"fit-content"}
-        minHeight={"570px"}
-      >
-        <DateRangePickerWrapper>
-          <DateRangePicker
-            //@ts-ignore
-            onChange={item => setHeatmapData([item.selection])}
-            showSelectionPreview={true}
-            moveRangeOnFirstSelection={false}
-            months={2}
-            maxDate={new Date()}
-            ranges={heatmapData}
-            direction="horizontal"
-            rangeColors={[theme.colors.orange]}
-          />
-        </DateRangePickerWrapper>
-      </ModalScroll>
+        heatmapData={heatmapData}
+        setHeatmapData={setHeatmapData}
+        handleFinish={handleFinish}
+      />
     </Wrapper>
   );
 };

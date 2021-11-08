@@ -16,7 +16,9 @@ export const LoaderWrapper = styled.div`
   justify-content: center;
   align-items: center;
   width: ${convertPxToRem(300)};
-  height: ${convertPxToRem(258)};
+  height: ${convertPxToRem(315)};
+  background-color: ${({ theme }) => theme.colors.backgroundGray};
+  border-radius: 0.5em;
 `;
 
 export const Text = styled.p`
@@ -59,14 +61,4 @@ export const Row = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-`;
-
-export const DateRangePickerWrapper = styled.div`
-  margin: 2em 0;
-
-  > div {
-    padding: 1em 2em;
-    background-color: white;
-    border-radius: 0.5em;
-  }
 `;
