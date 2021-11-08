@@ -23,6 +23,9 @@ export const LeftNavbar = styled.nav`
 `;
 
 export const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-top: 1em;
   width: 100%;
 `;
 

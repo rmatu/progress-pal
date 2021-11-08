@@ -1,6 +1,7 @@
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import MuscleHeatmapModel from "../../../components/UI/MuscleHeatmapModel/MuscleHeatmapModel";
 import YearlyCalendarHeatmap from "../../../components/UI/YearlyCalendarHeatmap/YearlyCalendarHeatmap";
 import {
   MeQuery,
@@ -11,8 +12,7 @@ import { RightContent } from "../../../hoc/styles";
 import { useWindowResize } from "../../../hooks/useWindowResize";
 import { AppState } from "../../../redux/rootReducer";
 import { setDashboardItem } from "../../../utils/setDashboardItem";
-
-const values = [{ date: "", amount: 0 }];
+import { Row } from "./styles";
 
 interface DashboardProps {
   user: MeQuery["me"] | undefined;
@@ -24,12 +24,14 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     { data: calendarData, loading: loadingCalendarData },
   ] = useGetUserYearlyWorkoutDataLazyQuery();
 
+  // Whole year data for calendar
   const [startDate, setStartDate] = useState(
-    moment("2021-01-01").format("YYYY-MM-DD"),
+    moment().set({ month: 0, date: 1 }).format("YYYY-MM-DD"),
   );
   const [endDate, setEndDate] = useState(
-    moment("2021-12-31").format("YYYY-MM-DD"),
+    moment().set({ month: 11, date: 31 }).format("YYYY-MM-DD"),
   );
+
   const width = useWindowResize();
   const { selectedItem, open } = useSelector(
     (state: AppState) => state.dashboardNavbar,
@@ -43,10 +45,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
   // Data for this page
   useEffect(() => {
+    const startDate = moment().set({ month: 0, date: 1 }).format("YYYY-MM-DD");
+    const endDate = moment().set({ month: 11, date: 31 }).format("YYYY-MM-DD");
+
     getAllUserYearlyWorkoutData({
       variables: {
-        startDate: moment().set({ month: 0, date: 1 }).format("YYYY-MM-DD"),
-        endDate: moment().set({ month: 11, date: 31 }).format("YYYY-MM-DD"),
+        startDate,
+        endDate,
       },
     });
   }, []);
@@ -71,6 +76,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           startDate={startDate}
           values={calendarData?.getUserYearlyWorkoutData}
         />
+        <Row>
+          <MuscleHeatmapModel />
+        </Row>
       </RightContent>
     </DashbordLayoutHOC>
   );

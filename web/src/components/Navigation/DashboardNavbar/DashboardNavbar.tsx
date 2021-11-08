@@ -18,7 +18,6 @@ import * as navActions from "../../../redux/dashboardNavbar/dashboardNavbarActio
 import { ReactComponent as PlusCircle } from "../../../assets/svg/plusCircle.svg";
 import { ReactComponent as Cancel } from "../../../assets/svg/cancel.svg";
 import * as ROUTES from "../../../constants/routes";
-
 interface DashboardNavbarProps {
   user: MeQuery["me"] | undefined;
 }

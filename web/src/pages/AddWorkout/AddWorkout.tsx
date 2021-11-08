@@ -11,7 +11,11 @@ import { FlexWrapperDiv } from "../../components/FlexElements";
 import { Button, Heading, Popup } from "../../components/UI";
 import AddWorkoutModal from "../../components/UI/AddWorkoutModal/AddWorkoutModal";
 import InputWithIcon from "../../components/UI/InputWithIcon/InputWithIcon";
-import { useCreateWorkoutMutation, useMeQuery } from "../../generated/graphql";
+import {
+  GetDataForMuscleHeatmapDocument,
+  useCreateWorkoutMutation,
+  useMeQuery,
+} from "../../generated/graphql";
 import DashbordLayoutHOC from "../../hoc/DashbordLayoutHOC";
 import { RightContent } from "../../hoc/styles";
 import * as navActions from "../../redux/dashboardNavbar/dashboardNavbarActions";
@@ -57,6 +61,15 @@ const AddWorkout = () => {
 
       resetWorkoutCreation();
     },
+    refetchQueries: [
+      {
+        query: GetDataForMuscleHeatmapDocument,
+        variables: {
+          startDate: moment().subtract(14, "days").format("YYYY-MM-DD"),
+          endDate: moment().format("YYYY-MM-DD"),
+        },
+      },
+    ],
   });
 
   const [selectedExercises, setSelectedExercises] = useState<[]>([]);
@@ -196,7 +209,10 @@ const AddWorkout = () => {
                 padding="0.2em 2em"
                 fontSize="1.125rem"
                 bColor={theme.colors.orange}
-                onClick={() => setSuccessfulWorkoutCreation(false)}
+                onClick={() => {
+                  setSuccessfulWorkoutCreation(false);
+                  setShowAddExercisesModal(true);
+                }}
                 type="button"
               >
                 Create new Workout

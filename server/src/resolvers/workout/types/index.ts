@@ -9,6 +9,24 @@ export class YearlyWorkoutsAmountResponse {
   amount?: number;
 }
 
+@ObjectType()
+class Muscles {
+  @Field(() => String)
+  muscleName: string;
+
+  @Field(() => Number)
+  amount: number;
+}
+
+@ObjectType()
+export class DataForMuscleHeatmap {
+  @Field(() => [Muscles], { nullable: true })
+  primaryMuscles?: Muscles;
+
+  @Field(() => [Muscles], { nullable: true })
+  secondaryMuscles?: Muscles;
+}
+
 @InputType()
 export class SetInput {
   @Field(() => Number)

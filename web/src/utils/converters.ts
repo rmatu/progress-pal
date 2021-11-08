@@ -1,4 +1,5 @@
 import { IExerciseData } from "react-body-highlighter";
+import { GetDataForMuscleHeatmapQuery } from "../generated/graphql";
 
 // anyBodyCategory: "Any Body Category",
 // abdominals: "Abdominals",       // miesnie brzucha
@@ -108,4 +109,44 @@ export const convertMuscleDBToNPMPackage = (
   );
 
   return [{ muscles: newArr, name: "" }] as IExerciseData[];
+};
+
+export const convertDataForMuscleHeatmap = (
+  data: GetDataForMuscleHeatmapQuery["getDataForMuscleHeatmap"],
+) => {
+  if (!data) return [];
+
+  const newArr: IExerciseData[] | [] = [];
+
+  data?.primaryMuscles?.forEach(el => {
+    for (let i = 0; i < el.amount; i++) {
+      // @ts-ignore
+      newArr.push(...convertMusclesToSVGNames(el.muscleName));
+    }
+  });
+
+  data?.secondaryMuscles?.forEach(el => {
+    for (let i = 0; i < el.amount; i++) {
+      // @ts-ignore
+      newArr.push(...convertMusclesToSVGNames(el.muscleName));
+    }
+  });
+
+  return newArr;
+};
+
+export const getTheMostTrainedMuscleAmount = (
+  data: GetDataForMuscleHeatmapQuery["getDataForMuscleHeatmap"],
+) => {
+  let max = 0;
+
+  data?.primaryMuscles?.forEach(el => {
+    if (max < el.amount) max = el.amount;
+  });
+
+  data?.secondaryMuscles?.forEach(el => {
+    if (max < el.amount) max = el.amount;
+  });
+
+  return max;
 };

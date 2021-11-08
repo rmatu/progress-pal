@@ -64,6 +64,10 @@ const ModalScroll: React.FC<ModalProps> = ({
     // eslint-disable-next-line
   }, [modalRef]);
 
+  if (!show) {
+    return null;
+  }
+
   return (
     <ModalWrap noClose={noClose} noTop={noTop} show={show}>
       <ModalMain
