@@ -114,8 +114,6 @@ const AddWorkout = () => {
     }
   };
 
-  console.log(workout);
-
   const handleFinishWorkout = () => {
     if (blockSubmit) return;
 
