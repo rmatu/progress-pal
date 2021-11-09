@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { ReactComponent as PencilIcon } from "../../assets/svg/pencil.svg";
 import { ReactComponent as SuccessfulWorkoutCreationSVG2 } from "../../assets/svg/successfulWorkoutCreation2.svg";
-import { ReactComponent as NoItemsSVG } from "../../assets/svg/noItems.svg";
 import ExerciseSets from "../../components/ExerciseSets/ExerciseSets";
 import { FlexWrapperDiv } from "../../components/FlexElements";
 import { Button, Heading, Popup } from "../../components/UI";

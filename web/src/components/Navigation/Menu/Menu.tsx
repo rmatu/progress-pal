@@ -49,7 +49,7 @@ const Menu: React.FC<MenuProps> = () => {
           onClick={async () => {
             await logout();
             dispatch(toggleNavbar());
-            await client.resetStore();
+            await client.cache.reset();
           }}
           to={ROUTES.SIGN_IN}
         >

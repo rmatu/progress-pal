@@ -1,0 +1,5 @@
+query GetUserWorkouts($startDate: String!, $endDate: String!) {
+  getUserWorkouts(startDate: $startDate, endDate: $endDate) {
+    ...RegularWorkout
+  }
+}

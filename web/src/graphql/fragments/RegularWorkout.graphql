@@ -6,7 +6,4 @@ fragment RegularWorkout on Workout {
   workoutExercise {
     ...RegularWorkoutExercise
   }
-  user {
-    ...RegularUser
-  }
 }

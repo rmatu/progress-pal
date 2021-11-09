@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MuscleHeatmapModel from "../../../components/UI/MuscleHeatmapModel/MuscleHeatmapModel";
 import YearlyCalendarHeatmap from "../../../components/UI/YearlyCalendarHeatmap/YearlyCalendarHeatmap";
+import { MAIN_PAGE } from "../../../constants/routes";
 import {
   MeQuery,
   useGetUserYearlyWorkoutDataLazyQuery,
@@ -10,8 +11,8 @@ import {
 import DashbordLayoutHOC from "../../../hoc/DashbordLayoutHOC";
 import { RightContent } from "../../../hoc/styles";
 import { useWindowResize } from "../../../hooks/useWindowResize";
+import * as navActions from "../../../redux/dashboardNavbar/dashboardNavbarActions";
 import { AppState } from "../../../redux/rootReducer";
-import { setDashboardItem } from "../../../utils/setDashboardItem";
 import { Row } from "./styles";
 
 interface DashboardProps {
@@ -40,7 +41,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setDashboardItem(selectedItem, "dashboard", dispatch);
+    dispatch(navActions.changeItem(MAIN_PAGE));
   }, []);
 
   // Data for this page

@@ -8,7 +8,8 @@ export const Wrapper = styled.nav<{ open?: boolean }>`
   max-height: calc(100vh);
   overflow-y: auto;
   border-right: 1px solid #3f3f3f;
-  position: relative;
+  position: sticky;
+  top: 0;
 
   ::-webkit-scrollbar {
     width: 0; /* Remove scrollbar space */

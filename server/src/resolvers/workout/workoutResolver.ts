@@ -50,6 +50,43 @@ export class WorkoutResolver {
     return workout;
   }
 
+  @Query(() => [Workout], { nullable: true })
+  @UseMiddleware(isAuthenticated)
+  async getUserWorkouts(
+    @Ctx() { req }: MyContext,
+    @Arg("startDate") startDate: string,
+    @Arg("endDate") endDate: string,
+  ) {
+    const workoutRepo = await getRepository(Workout);
+
+    // Between clause wouldn't include these dates so we need to extend them
+    const cStartDate = moment(startDate)
+      .subtract(1, "days")
+      .format("YYYY-MM-DD");
+    const cEndDate = moment(endDate).add(1, "days").format("YYYY-MM-DD");
+
+    const { userId } = req.session;
+
+    const workout = await workoutRepo.find({
+      relations: [
+        "workoutExercise",
+        "workoutExercise.commonExercise",
+        "workoutExercise.userExercise",
+        "workoutExercise.exerciseSet",
+      ],
+      order: {
+        updatedAt: "DESC",
+      },
+      where: { user: userId, updatedAt: Between(cStartDate, cEndDate) },
+    });
+
+    if (!workout) {
+      return null;
+    }
+
+    return workout;
+  }
+
   @Query(() => Workout, { nullable: true })
   @UseMiddleware(isAuthenticated)
   async getUserWorkout(@Arg("workoutId") workoutId: number) {

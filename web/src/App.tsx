@@ -21,6 +21,7 @@ import TermsOfService from "./pages/TermsOfService/TermsOfService";
 import Privacy from "./pages/Privacy/Privacy";
 import PageNotFound from "./pages/PageNotFound/PageNotFound";
 import AddWorkout from "./pages/AddWorkout/AddWorkout";
+import Workouts from "./pages/Workouts/Workouts";
 
 const App: React.FC = () => (
   <AnimatePresence>
@@ -96,6 +97,12 @@ const App: React.FC = () => (
         exact
         path={ROUTES.ADD_WORKOUT}
         component={withAuth(AddWorkout)}
+      />
+      <Route
+        key={ROUTES.WORKOUTS}
+        exact
+        path={ROUTES.WORKOUTS}
+        component={withAuth(Workouts)}
       />
       <Redirect to={ROUTES.PAGE_NOT_FOUND} />
     </Switch>

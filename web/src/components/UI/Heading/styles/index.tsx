@@ -5,6 +5,7 @@ export interface Props {
   marginB: string;
   size?: string;
   textAlign?: string;
+  padding?: string;
 }
 
 const baseStyle = css<Props>`
@@ -15,7 +16,7 @@ const baseStyle = css<Props>`
   margin-top: 0;
   margin-bottom: ${({ marginB }) => marginB};
   text-align: ${({ textAlign }) => (textAlign ? textAlign : "center")};
-  padding: 0 0.5em;
+  padding: ${({ padding }) => (padding ? padding : "0 0.5em")};
 `;
 
 export const Heading1 = styled.h1`
