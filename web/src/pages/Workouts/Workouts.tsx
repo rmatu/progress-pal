@@ -4,7 +4,11 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { ReactComponent as CalendarIcon } from "../../assets/svg/calendar.svg";
+import { ReactComponent as HumanBackSVG } from "../../assets/svg/humanBack.svg";
+import { ReactComponent as HumanFrontSVG } from "../../assets/svg/humanFront.svg";
 import { ReactComponent as SearchIcon } from "../../assets/svg/search.svg";
+import { ReactComponent as TrashIcon } from "../../assets/svg/trash.svg";
+import { ReactComponent as WeightIcon } from "../../assets/svg/weight.svg";
 import { Heading } from "../../components/UI";
 import DateRangePickerModal from "../../components/UI/DateRangePickerModal/DateRangePickerModal";
 import InputWithIcon from "../../components/UI/InputWithIcon/InputWithIcon";
@@ -13,29 +17,37 @@ import { WORKOUTS } from "../../constants/routes";
 import {
   useGetUserWorkoutsLazyQuery,
   useMeQuery,
+  Workout,
 } from "../../generated/graphql";
 import DashbordLayoutHOC from "../../hoc/DashbordLayoutHOC";
 import { RightContent } from "../../hoc/styles";
 import * as navActions from "../../redux/dashboardNavbar/dashboardNavbarActions";
 import { AppState } from "../../redux/rootReducer";
+import { getPrimaryMusclesFromWorkout } from "../../utils/converters";
 import {
   getDateXMonthsBefore,
   isNewMonthTimeStamp,
 } from "../../utils/dateHelpers";
 import { SearchSchema } from "../../utils/formSchemas";
 import {
-  ContentWrapper,
   CalendarWrapper,
-  SearchWrapper,
+  ContentWrapper,
+  ExerciseSVG,
+  LeftCardContent,
+  LoaderWrapper,
   MonthAndYear,
+  MonthAndYearWrapper,
+  NoWorkoutsText,
+  QuickInfoRow,
+  RightCardContent,
+  SearchWrapper,
+  SVGWrapper,
+  TrashIconWrapper,
+  WorkoutCard,
+  WorkoutDate,
+  WorkoutName,
   WorkoutsWrapper,
   WorkoutWrapper,
-  MonthAndYearWrapper,
-  WorkoutCard,
-  WorkoutName,
-  WorkoutDate,
-  LoaderWrapper,
-  NoWorkoutsText,
 } from "./styles";
 
 interface WorkoutsProps {}
@@ -85,6 +97,18 @@ const Workouts: React.FC<WorkoutsProps> = ({}) => {
     if (bottom) {
       setEndSlice(prev => prev + AMOUNT_TO_ADD);
     }
+  };
+
+  const calculateVolume = (workout: Workout) => {
+    let volume = 0;
+
+    workout.workoutExercise.forEach(exercise => {
+      exercise.exerciseSet.forEach(set => {
+        volume = volume + set.reps * set.weight;
+      });
+    });
+
+    return volume;
   };
 
   const handleSelectDates = () => {
@@ -177,10 +201,29 @@ const Workouts: React.FC<WorkoutsProps> = ({}) => {
                   )}
                   <WorkoutWrapper>
                     <WorkoutCard>
-                      <WorkoutName>{el.name}</WorkoutName>
-                      <WorkoutDate>
-                        {moment(el.updatedAt, "x").format("DD MMMM - HH:MM")}
-                      </WorkoutDate>
+                      <LeftCardContent>
+                        <WorkoutName>{el.name}</WorkoutName>
+                        <WorkoutDate>
+                          {moment(el.updatedAt, "x").format("DD MMMM - HH:MM")}
+                        </WorkoutDate>
+                        <QuickInfoRow>
+                          <SVGWrapper>
+                            <WeightIcon />
+                            {calculateVolume(el as Workout)} kg
+                          </SVGWrapper>
+                        </QuickInfoRow>
+                      </LeftCardContent>
+                      <RightCardContent>
+                        <ExerciseSVG
+                          muscles={getPrimaryMusclesFromWorkout(el as Workout)}
+                        >
+                          <HumanFrontSVG />
+                          <HumanBackSVG />
+                        </ExerciseSVG>
+                      </RightCardContent>
+                      <TrashIconWrapper>
+                        <TrashIcon />
+                      </TrashIconWrapper>
                     </WorkoutCard>
                   </WorkoutWrapper>
                 </React.Fragment>

@@ -1,5 +1,5 @@
 import { IExerciseData } from "react-body-highlighter";
-import { GetDataForMuscleHeatmapQuery } from "../generated/graphql";
+import { GetDataForMuscleHeatmapQuery, Workout } from "../generated/graphql";
 
 // anyBodyCategory: "Any Body Category",
 // abdominals: "Abdominals",       // miesnie brzucha
@@ -149,4 +149,24 @@ export const getTheMostTrainedMuscleAmount = (
   });
 
   return max;
+};
+
+export const getPrimaryMusclesFromWorkout = (workout: Workout) => {
+  const musclesArr: string[] = [];
+
+  workout.workoutExercise.forEach(exercise => {
+    if (exercise.commonExercise) {
+      exercise.commonExercise.primaryMuscles.forEach(el => {
+        musclesArr.push(...convertMusclesToSVGNames([el]));
+      });
+    } else if (exercise.userExercise) {
+      exercise.userExercise.primaryMuscles.forEach(el => {
+        musclesArr.push(...convertMusclesToSVGNames([el]));
+      });
+    }
+  });
+
+  console.log({ musclesArr });
+
+  return musclesArr;
 };
