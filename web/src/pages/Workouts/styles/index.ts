@@ -166,14 +166,17 @@ export const TrashIconWrapper = styled.div`
   }
 `;
 
-export const RightCardContent = styled.div``;
+export const RightCardContent = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 export const LeftCardContent = styled.div`
   width: ${convertPxToRem(150)};
 `;
 
 export const ExerciseSVG = styled.div<{
-  muscles: string[];
+  muscles?: string[];
 }>`
   display: flex;
   flex-direction: row;
@@ -183,9 +186,4 @@ export const ExerciseSVG = styled.div<{
     height: ${convertPxToRem(150)};
     padding: 0.5em;
   }
-
-  ${({ muscles }) => {
-    if (!muscles || muscles.length === 0) return;
-    return createCSS(muscles, theme.colors.modelPrimaryMuslces);
-  }}
 `;

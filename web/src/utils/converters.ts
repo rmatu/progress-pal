@@ -151,6 +151,38 @@ export const getTheMostTrainedMuscleAmount = (
   return max;
 };
 
+export const getThemostTraineMuscleAmountFromWorkout = (workout: Workout) => {
+  let max = 0;
+
+  const musclesArr: string[] = [];
+
+  workout.workoutExercise.forEach(exercise => {
+    if (exercise.commonExercise) {
+      exercise.commonExercise.primaryMuscles.forEach(el => {
+        musclesArr.push(...convertMusclesToSVGNames([el]));
+      });
+    } else if (exercise.userExercise) {
+      exercise.userExercise.primaryMuscles.forEach(el => {
+        musclesArr.push(...convertMusclesToSVGNames([el]));
+      });
+    }
+  });
+
+  const counts: { [key: string]: number } = {};
+
+  musclesArr.forEach(el => {
+    if (!counts[el]) {
+      counts[el] = 1;
+      max = 1;
+    } else {
+      counts[el] += 1;
+      max += 1;
+    }
+  });
+
+  return max;
+};
+
 export const getPrimaryMusclesFromWorkout = (workout: Workout) => {
   const musclesArr: string[] = [];
 
@@ -166,7 +198,29 @@ export const getPrimaryMusclesFromWorkout = (workout: Workout) => {
     }
   });
 
-  console.log({ musclesArr });
+  return musclesArr;
+};
+
+export const getMusclesFromWorkout = (workout: Workout) => {
+  const musclesArr: string[] = [];
+
+  workout.workoutExercise.forEach(exercise => {
+    if (exercise.commonExercise) {
+      exercise.commonExercise.primaryMuscles.forEach(el => {
+        musclesArr.push(...convertMusclesToSVGNames([el]));
+      });
+      exercise.commonExercise.secondaryMuscles.forEach(el => {
+        musclesArr.push(...convertMusclesToSVGNames([el]));
+      });
+    } else if (exercise.userExercise) {
+      exercise.userExercise.primaryMuscles.forEach(el => {
+        musclesArr.push(...convertMusclesToSVGNames([el]));
+      });
+      exercise.userExercise.secondaryMuscles.forEach(el => {
+        musclesArr.push(...convertMusclesToSVGNames([el]));
+      });
+    }
+  });
 
   return musclesArr;
 };

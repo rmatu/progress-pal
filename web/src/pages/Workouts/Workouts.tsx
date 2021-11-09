@@ -1,11 +1,10 @@
 import { useFormik } from "formik";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
+import Model from "react-body-highlighter";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { ReactComponent as CalendarIcon } from "../../assets/svg/calendar.svg";
-import { ReactComponent as HumanBackSVG } from "../../assets/svg/humanBack.svg";
-import { ReactComponent as HumanFrontSVG } from "../../assets/svg/humanFront.svg";
 import { ReactComponent as SearchIcon } from "../../assets/svg/search.svg";
 import { ReactComponent as TrashIcon } from "../../assets/svg/trash.svg";
 import { ReactComponent as WeightIcon } from "../../assets/svg/weight.svg";
@@ -23,7 +22,11 @@ import DashbordLayoutHOC from "../../hoc/DashbordLayoutHOC";
 import { RightContent } from "../../hoc/styles";
 import * as navActions from "../../redux/dashboardNavbar/dashboardNavbarActions";
 import { AppState } from "../../redux/rootReducer";
-import { getPrimaryMusclesFromWorkout } from "../../utils/converters";
+import {
+  getMusclesFromWorkout,
+  getThemostTraineMuscleAmountFromWorkout,
+} from "../../utils/converters";
+import { populateColorsForMuscleHeatmap } from "../../utils/cssHelpers";
 import {
   getDateXMonthsBefore,
   isNewMonthTimeStamp,
@@ -61,8 +64,6 @@ const Workouts: React.FC<WorkoutsProps> = ({}) => {
 
   const [getUserWorkouts, { data: workoutsData }] =
     useGetUserWorkoutsLazyQuery();
-
-  console.log(workoutsData);
 
   const [showModal, setShowModal] = useState(false);
 
@@ -214,11 +215,49 @@ const Workouts: React.FC<WorkoutsProps> = ({}) => {
                         </QuickInfoRow>
                       </LeftCardContent>
                       <RightCardContent>
-                        <ExerciseSVG
-                          muscles={getPrimaryMusclesFromWorkout(el as Workout)}
-                        >
-                          <HumanFrontSVG />
-                          <HumanBackSVG />
+                        <ExerciseSVG>
+                          <Model
+                            highlightedColors={[
+                              ...populateColorsForMuscleHeatmap(
+                                getThemostTraineMuscleAmountFromWorkout(
+                                  el as Workout,
+                                ),
+                                299,
+                                180,
+                                180,
+                                8,
+                              ),
+                            ]}
+                            data={[
+                              {
+                                name: "",
+                                //@ts-ignore
+                                muscles: getMusclesFromWorkout(el as Workout),
+                              },
+                            ]}
+                          />
+
+                          <Model
+                            type="posterior"
+                            highlightedColors={[
+                              ...populateColorsForMuscleHeatmap(
+                                getThemostTraineMuscleAmountFromWorkout(
+                                  el as Workout,
+                                ),
+                                299,
+                                180,
+                                180,
+                                8,
+                              ),
+                            ]}
+                            data={[
+                              {
+                                name: "",
+                                //@ts-ignore
+                                muscles: getMusclesFromWorkout(el as Workout),
+                              },
+                            ]}
+                          />
                         </ExerciseSVG>
                       </RightCardContent>
                       <TrashIconWrapper>
