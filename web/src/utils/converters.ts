@@ -224,3 +224,15 @@ export const getMusclesFromWorkout = (workout: Workout) => {
 
   return musclesArr;
 };
+
+export const calculateVolume = (workout: Workout) => {
+  let volume = 0;
+
+  workout.workoutExercise.forEach(exercise => {
+    exercise.exerciseSet.forEach(set => {
+      volume = volume + set.reps * set.weight;
+    });
+  });
+
+  return volume;
+};
