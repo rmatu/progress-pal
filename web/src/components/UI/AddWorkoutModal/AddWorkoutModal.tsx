@@ -83,7 +83,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
     }
   };
 
-  const displayFirtLetter = (exercise: IExercise, currIdx: number) => {
+  const displayFirstLetter = (exercise: IExercise, currIdx: number) => {
     if (!exercise) return;
 
     const currFirstChar = exercise.name.charAt(0);
@@ -246,7 +246,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
         <ExercisesWrapper onScroll={handleScroll}>
           {fetchedExercises.slice(startSlice, endSlice).map((exercise, idx) => (
             <React.Fragment key={exercise.name}>
-              {displayFirtLetter(exercise, idx)}
+              {displayFirstLetter(exercise, idx)}
               <Exercise
                 onClick={() => handleSelectedItem(exercise)}
                 selected={

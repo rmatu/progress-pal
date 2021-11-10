@@ -1,6 +1,7 @@
 import moment from "moment";
-import React, { useState } from "react";
+import React from "react";
 import { GetUserWorkoutsQuery, Workout } from "../../../generated/graphql";
+import { AMOUNT_WORKOUTS_TO_ADD } from "../../../pages/Workouts/Workouts";
 import { isNewMonthTimeStamp } from "../../../utils/dateHelpers";
 import {
   MonthAndYear,
@@ -12,15 +13,18 @@ import {
 import WorkoutCard from "./WorkoutCard/WorkoutCard";
 
 interface WorkoutsListProps {
-  workoutsData: GetUserWorkoutsQuery | undefined;
+  workoutsData: GetUserWorkoutsQuery["getUserWorkouts"] | undefined;
+  startSlice: number;
+  endSlice: number;
+  setEndSlice: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const AMOUNT_TO_ADD = 16;
-
-const WorkoutsList: React.FC<WorkoutsListProps> = ({ workoutsData }) => {
-  const [startSlice, setStartSlice] = useState(0);
-  const [endSlice, setEndSlice] = useState(AMOUNT_TO_ADD);
-
+const WorkoutsList: React.FC<WorkoutsListProps> = ({
+  workoutsData,
+  startSlice,
+  endSlice,
+  setEndSlice,
+}) => {
   const handleScroll = (e: any) => {
     const top = e.target.scrollTop === 0;
 
@@ -28,50 +32,46 @@ const WorkoutsList: React.FC<WorkoutsListProps> = ({ workoutsData }) => {
       e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
 
     if (bottom) {
-      setEndSlice(prev => prev + AMOUNT_TO_ADD);
+      setEndSlice(prev => prev + AMOUNT_WORKOUTS_TO_ADD);
     }
   };
 
   return (
     <WorkoutsWrapper onScroll={handleScroll}>
-      {workoutsData?.getUserWorkouts
-        ?.slice(startSlice, endSlice)
-        .map((el, idx) => (
-          <React.Fragment key={el.id}>
-            {idx === 0 ? (
-              <MonthAndYearWrapper>
-                <MonthAndYear>
-                  {moment(el.updatedAt, "x").format("MMMM YYYY")}
-                </MonthAndYear>
-              </MonthAndYearWrapper>
-            ) : (
-              <>
-                {workoutsData &&
-                  workoutsData.getUserWorkouts &&
-                  isNewMonthTimeStamp(
-                    workoutsData?.getUserWorkouts[idx - 1]?.createdAt,
-                    workoutsData?.getUserWorkouts[idx]?.createdAt,
-                  ) && (
-                    <MonthAndYearWrapper>
-                      <MonthAndYear>
-                        {moment(el.updatedAt, "x").format("MMMM YYYY")}
-                      </MonthAndYear>
-                    </MonthAndYearWrapper>
-                  )}
-              </>
-            )}
-            <WorkoutWrapper>
-              <WorkoutCard workout={el as Workout} />
-            </WorkoutWrapper>
-          </React.Fragment>
-        ))}
-      {workoutsData &&
-        workoutsData.getUserWorkouts &&
-        workoutsData?.getUserWorkouts?.length <= 0 && (
-          <NoWorkoutsText>
-            You have no exercises in this time period
-          </NoWorkoutsText>
-        )}
+      {workoutsData?.slice(startSlice, endSlice).map((el, idx) => (
+        <React.Fragment key={el.id}>
+          {idx === 0 ? (
+            <MonthAndYearWrapper>
+              <MonthAndYear>
+                {moment(el.updatedAt, "x").format("MMMM YYYY")}
+              </MonthAndYear>
+            </MonthAndYearWrapper>
+          ) : (
+            <>
+              {workoutsData &&
+                workoutsData &&
+                isNewMonthTimeStamp(
+                  workoutsData[idx - 1]?.createdAt,
+                  workoutsData[idx]?.createdAt,
+                ) && (
+                  <MonthAndYearWrapper>
+                    <MonthAndYear>
+                      {moment(el.updatedAt, "x").format("MMMM YYYY")}
+                    </MonthAndYear>
+                  </MonthAndYearWrapper>
+                )}
+            </>
+          )}
+          <WorkoutWrapper>
+            <WorkoutCard workout={el as Workout} />
+          </WorkoutWrapper>
+        </React.Fragment>
+      ))}
+      {workoutsData && workoutsData && workoutsData?.length <= 0 && (
+        <NoWorkoutsText>
+          You have no workouts in this time period
+        </NoWorkoutsText>
+      )}
     </WorkoutsWrapper>
   );
 };

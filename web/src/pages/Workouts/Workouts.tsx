@@ -12,8 +12,10 @@ import Loader from "../../components/UI/Loader/Loader";
 import WorkoutsList from "../../components/UI/WorkoutsList/WorkoutsList";
 import { WORKOUTS } from "../../constants/routes";
 import {
+  GetUserWorkoutsQuery,
   useGetUserWorkoutsLazyQuery,
   useMeQuery,
+  Workout,
 } from "../../generated/graphql";
 import DashbordLayoutHOC from "../../hoc/DashbordLayoutHOC";
 import { RightContent } from "../../hoc/styles";
@@ -30,15 +32,22 @@ import {
 
 interface WorkoutsProps {}
 
+export const AMOUNT_WORKOUTS_TO_ADD = 16;
+
 const Workouts: React.FC<WorkoutsProps> = ({}) => {
   const { data: user } = useMeQuery();
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [getUserWorkouts, { data: workoutsData }] =
+  const [getUserWorkouts, { data: workoutsData, loading: workoutsLoading }] =
     useGetUserWorkoutsLazyQuery();
 
+  const [fetchedWorkouts, setFetchedWorkouts] =
+    useState<GetUserWorkoutsQuery["getUserWorkouts"]>();
+
   const [showModal, setShowModal] = useState(false);
+  const [startSlice, setStartSlice] = useState(0);
+  const [endSlice, setEndSlice] = useState(AMOUNT_WORKOUTS_TO_ADD);
 
   const { open } = useSelector((state: AppState) => state.dashboardNavbar);
 
@@ -70,6 +79,21 @@ const Workouts: React.FC<WorkoutsProps> = ({}) => {
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!workoutsData || !workoutsData.getUserWorkouts) return;
+
+    setEndSlice(AMOUNT_WORKOUTS_TO_ADD);
+
+    const userInput = e.target.value;
+
+    if (!userInput) {
+      setFetchedWorkouts(workoutsData.getUserWorkouts);
+    } else {
+      const filteredExercises = workoutsData.getUserWorkouts.filter(el =>
+        el.name.toLowerCase().includes(userInput.toLowerCase()),
+      );
+      setFetchedWorkouts(filteredExercises);
+    }
+
     searchFormik.handleChange(e);
   };
 
@@ -87,6 +111,12 @@ const Workouts: React.FC<WorkoutsProps> = ({}) => {
       },
     });
   }, []);
+
+  useEffect(() => {
+    if (workoutsData && workoutsData.getUserWorkouts) {
+      setFetchedWorkouts(workoutsData.getUserWorkouts);
+    }
+  }, [workoutsData]);
 
   return (
     <DashbordLayoutHOC user={user?.me}>
@@ -121,7 +151,14 @@ const Workouts: React.FC<WorkoutsProps> = ({}) => {
               <Loader />
             </LoaderWrapper>
           )}
-          <WorkoutsList workoutsData={workoutsData} />
+          {!workoutsLoading && (
+            <WorkoutsList
+              workoutsData={fetchedWorkouts}
+              startSlice={startSlice}
+              endSlice={endSlice}
+              setEndSlice={setEndSlice}
+            />
+          )}
         </ContentWrapper>
       </RightContent>
       <DateRangePickerModal
