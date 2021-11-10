@@ -15,7 +15,6 @@ import {
   GetUserWorkoutsQuery,
   useGetUserWorkoutsLazyQuery,
   useMeQuery,
-  Workout,
 } from "../../generated/graphql";
 import DashbordLayoutHOC from "../../hoc/DashbordLayoutHOC";
 import { RightContent } from "../../hoc/styles";

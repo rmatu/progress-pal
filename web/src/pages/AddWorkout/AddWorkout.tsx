@@ -78,7 +78,7 @@ const AddWorkout = () => {
   const [workout, setWorkout] = useState<IWorkout>();
   const [showAddExercisesModal, setShowAddExercisesModal] =
     useState<boolean>(true);
-  const [blockSubmit, setBlockSubmit] = useState<boolean>(false);
+  const [blockSubmit, setBlockSubmit] = useState<boolean>(true);
   const [successfulWorkoutCreation, setSuccessfulWorkoutCreation] =
     useState(false);
   const [popup, setPopup] = useState({
@@ -86,6 +86,9 @@ const AddWorkout = () => {
     text: "",
   });
   const { open } = useSelector((state: AppState) => state.dashboardNavbar);
+
+  console.log({ workout });
+  console.log({ exerciseWithSets });
 
   const workoutFormik = useFormik({
     initialValues: {
@@ -101,6 +104,8 @@ const AddWorkout = () => {
       el => el.name === exercise.name,
     );
 
+    console.log({ exercise });
+
     if (elementExist) {
       // @ts-ignore
       setSelectedExercises(prev =>
@@ -111,6 +116,8 @@ const AddWorkout = () => {
       // @ts-ignore
       setSelectedExercises(prev => [...prev, exercise]);
     }
+
+    setExerciseWithSets(prev => prev.filter(el => el.id !== exercise.id));
   };
 
   const handleFinishWorkout = () => {
@@ -183,6 +190,8 @@ const AddWorkout = () => {
         setBlockSubmit(false);
       }
     }
+
+    if (!exerciseWithSets) setBlockSubmit(true);
   }, [exerciseWithSets]);
 
   useEffect(() => {

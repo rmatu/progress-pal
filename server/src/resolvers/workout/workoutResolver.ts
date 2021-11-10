@@ -89,7 +89,7 @@ export class WorkoutResolver {
 
   @Query(() => Workout, { nullable: true })
   @UseMiddleware(isAuthenticated)
-  async getUserWorkout(@Arg("workoutId") workoutId: number) {
+  async getUserWorkout(@Arg("workoutId") workoutId: string) {
     const workoutRepo = await getRepository(Workout);
 
     const workout = await workoutRepo.findOne({
@@ -363,5 +363,26 @@ export class WorkoutResolver {
     }
 
     return workout;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuthenticated)
+  async deleteWorkout(
+    @Arg("workoutId") workoutId: string,
+    @Ctx() { req }: MyContext,
+  ) {
+    const { userId } = req.session;
+
+    const workoutRepo = await getRepository(Workout);
+
+    const workout = workoutRepo.find({ id: workoutId, user: userId });
+
+    if (!workout) {
+      return false;
+    }
+
+    workoutRepo.delete({ id: workoutId });
+
+    return true;
   }
 }
