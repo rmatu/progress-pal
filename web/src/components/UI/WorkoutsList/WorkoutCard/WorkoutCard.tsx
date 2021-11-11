@@ -3,13 +3,17 @@ import React from "react";
 import Model from "react-body-highlighter";
 import { ReactComponent as TrashIcon } from "../../../../assets/svg/trash.svg";
 import { ReactComponent as WeightIcon } from "../../../../assets/svg/weight.svg";
-import { Workout } from "../../../../generated/graphql";
+import {
+  useDeleteWorkoutMutation,
+  Workout,
+} from "../../../../generated/graphql";
 import {
   calculateVolume,
   getMusclesFromWorkout,
   getThemostTraineMuscleAmountFromWorkout,
 } from "../../../../utils/converters";
 import { populateColorsForMuscleHeatmap } from "../../../../utils/cssHelpers";
+import { createRefetchQueriesArray } from "../../../../utils/graphQLHelpers";
 import {
   ExerciseSVG,
   LeftCardContent,
@@ -27,6 +31,24 @@ interface WorkoutCardProps {
 }
 
 const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout }) => {
+  const [deleteWorkout, { data }] = useDeleteWorkoutMutation({
+    refetchQueries: createRefetchQueriesArray([
+      "getDataForMuscleHeatmap",
+      "getUserWorkouts",
+      "getUserYearlyWorkout",
+    ]),
+  });
+
+  const handleDeleteWorkout = () => {
+    if (!workout) return;
+
+    deleteWorkout({
+      variables: {
+        workoutId: workout.id,
+      },
+    });
+  };
+
   return (
     <WorkoutCardWrapper>
       <LeftCardContent>
@@ -84,7 +106,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout }) => {
         </ExerciseSVG>
       </RightCardContent>
       <TrashIconWrapper>
-        <TrashIcon />
+        <TrashIcon onClick={handleDeleteWorkout} />
       </TrashIconWrapper>
     </WorkoutCardWrapper>
   );

@@ -12,6 +12,7 @@ import AddWorkoutModal from "../../components/UI/AddWorkoutModal/AddWorkoutModal
 import InputWithIcon from "../../components/UI/InputWithIcon/InputWithIcon";
 import {
   GetDataForMuscleHeatmapDocument,
+  GetUserWorkoutsDocument,
   useCreateWorkoutMutation,
   useMeQuery,
 } from "../../generated/graphql";
@@ -29,6 +30,8 @@ import {
   SuccessWorkoutWrapper,
   WorkoutForm,
 } from "./styles";
+import { getDateXMonthsBefore } from "../../utils/dateHelpers";
+import { createRefetchQueriesArray } from "../../utils/graphQLHelpers";
 
 export interface IWorkout {
   name: string;
@@ -60,15 +63,11 @@ const AddWorkout = () => {
 
       resetWorkoutCreation();
     },
-    refetchQueries: [
-      {
-        query: GetDataForMuscleHeatmapDocument,
-        variables: {
-          startDate: moment().subtract(14, "days").format("YYYY-MM-DD"),
-          endDate: moment().format("YYYY-MM-DD"),
-        },
-      },
-    ],
+    refetchQueries: createRefetchQueriesArray([
+      "getDataForMuscleHeatmap",
+      "getUserWorkouts",
+      "getUserYearlyWorkout",
+    ]),
   });
 
   const [selectedExercises, setSelectedExercises] = useState<[]>([]);
@@ -87,9 +86,6 @@ const AddWorkout = () => {
   });
   const { open } = useSelector((state: AppState) => state.dashboardNavbar);
 
-  console.log({ workout });
-  console.log({ exerciseWithSets });
-
   const workoutFormik = useFormik({
     initialValues: {
       name: moment().format(`[Workout] DD-MM-YYYY`),
@@ -103,8 +99,6 @@ const AddWorkout = () => {
       // @ts-ignore
       el => el.name === exercise.name,
     );
-
-    console.log({ exercise });
 
     if (elementExist) {
       // @ts-ignore
@@ -164,6 +158,10 @@ const AddWorkout = () => {
 
   const handleExerciseFormikOnChange = (e: any) => {
     workoutFormik.handleChange(e);
+
+    if (workout) {
+      setWorkout({ ...workout, name: e.target.value });
+    }
   };
 
   useEffect(() => {

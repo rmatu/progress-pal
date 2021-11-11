@@ -69,7 +69,8 @@ const WorkoutsList: React.FC<WorkoutsListProps> = ({
       ))}
       {workoutsData && workoutsData && workoutsData?.length <= 0 && (
         <NoWorkoutsText>
-          You have no workouts in this time period
+          You have no workouts in this time period or the workout name you've
+          provided does not match
         </NoWorkoutsText>
       )}
     </WorkoutsWrapper>

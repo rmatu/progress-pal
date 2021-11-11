@@ -38,8 +38,9 @@ const Workouts: React.FC<WorkoutsProps> = ({}) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
+  // https://medium.com/@galen.corey/understanding-apollo-fetch-policies-705b5ad71980
   const [getUserWorkouts, { data: workoutsData, loading: workoutsLoading }] =
-    useGetUserWorkoutsLazyQuery();
+    useGetUserWorkoutsLazyQuery({ fetchPolicy: "cache-and-network" });
 
   const [fetchedWorkouts, setFetchedWorkouts] =
     useState<GetUserWorkoutsQuery["getUserWorkouts"]>();
