@@ -12,6 +12,7 @@ interface ButtonProps {
   borderRadius?: string;
   // For future loader
   loading?: any;
+  justifyContent?: string;
 }
 
 const Button: React.FC<
@@ -25,11 +26,16 @@ const Button: React.FC<
   disabled,
   padding,
   fontSize,
+  justifyContent,
   loading,
   ...rest
 }) => {
   return (
-    <Wrapper marginTop={marginTop} margin={margin}>
+    <Wrapper
+      marginTop={marginTop}
+      margin={margin}
+      justifyContent={justifyContent}
+    >
       <StyledButton
         padding={padding}
         disabled={disabled}

@@ -70,6 +70,8 @@ export const RightCardContent = styled.div`
 
 export const LeftCardContent = styled.div`
   width: ${convertPxToRem(150)};
+  display: flex;
+  flex-direction: column;
 `;
 
 export const ExerciseSVG = styled.div<{

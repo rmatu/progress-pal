@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { ReactComponent as CalendarIcon } from "../../assets/svg/calendar.svg";
 import { ReactComponent as SearchIcon } from "../../assets/svg/search.svg";
-import { Heading } from "../../components/UI";
+import { Heading, Popup } from "../../components/UI";
 import DateRangePickerModal from "../../components/UI/DateRangePickerModal/DateRangePickerModal";
 import InputWithIcon from "../../components/UI/InputWithIcon/InputWithIcon";
 import Loader from "../../components/UI/Loader/Loader";
@@ -15,7 +15,6 @@ import {
   GetUserWorkoutsQuery,
   useGetUserWorkoutsLazyQuery,
   useMeQuery,
-  Workout,
 } from "../../generated/graphql";
 import DashbordLayoutHOC from "../../hoc/DashbordLayoutHOC";
 import { RightContent } from "../../hoc/styles";
@@ -39,8 +38,9 @@ const Workouts: React.FC<WorkoutsProps> = ({}) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
+  // https://medium.com/@galen.corey/understanding-apollo-fetch-policies-705b5ad71980
   const [getUserWorkouts, { data: workoutsData, loading: workoutsLoading }] =
-    useGetUserWorkoutsLazyQuery();
+    useGetUserWorkoutsLazyQuery({ fetchPolicy: "cache-and-network" });
 
   const [fetchedWorkouts, setFetchedWorkouts] =
     useState<GetUserWorkoutsQuery["getUserWorkouts"]>();
@@ -48,6 +48,10 @@ const Workouts: React.FC<WorkoutsProps> = ({}) => {
   const [showModal, setShowModal] = useState(false);
   const [startSlice, setStartSlice] = useState(0);
   const [endSlice, setEndSlice] = useState(AMOUNT_WORKOUTS_TO_ADD);
+  const [popup, setPopup] = useState({
+    showPopup: false,
+    text: "",
+  });
 
   const { open } = useSelector((state: AppState) => state.dashboardNavbar);
 
@@ -157,6 +161,7 @@ const Workouts: React.FC<WorkoutsProps> = ({}) => {
               startSlice={startSlice}
               endSlice={endSlice}
               setEndSlice={setEndSlice}
+              setPopup={setPopup}
             />
           )}
         </ContentWrapper>
@@ -168,6 +173,7 @@ const Workouts: React.FC<WorkoutsProps> = ({}) => {
         setHeatmapData={setHeatmapData}
         handleFinish={handleSelectDates}
       />
+      <Popup showPopup={popup.showPopup}>{popup.text}</Popup>
     </DashbordLayoutHOC>
   );
 };

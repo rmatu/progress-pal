@@ -17,6 +17,12 @@ interface WorkoutsListProps {
   startSlice: number;
   endSlice: number;
   setEndSlice: React.Dispatch<React.SetStateAction<number>>;
+  setPopup?: React.Dispatch<
+    React.SetStateAction<{
+      showPopup: boolean;
+      text: string;
+    }>
+  >;
 }
 
 const WorkoutsList: React.FC<WorkoutsListProps> = ({
@@ -24,6 +30,7 @@ const WorkoutsList: React.FC<WorkoutsListProps> = ({
   startSlice,
   endSlice,
   setEndSlice,
+  setPopup,
 }) => {
   const handleScroll = (e: any) => {
     const top = e.target.scrollTop === 0;
@@ -63,13 +70,14 @@ const WorkoutsList: React.FC<WorkoutsListProps> = ({
             </>
           )}
           <WorkoutWrapper>
-            <WorkoutCard workout={el as Workout} />
+            <WorkoutCard setPopup={setPopup} workout={el as Workout} />
           </WorkoutWrapper>
         </React.Fragment>
       ))}
       {workoutsData && workoutsData && workoutsData?.length <= 0 && (
         <NoWorkoutsText>
-          You have no workouts in this time period
+          You have no workouts in this time period or the workout name you've
+          provided does not match
         </NoWorkoutsText>
       )}
     </WorkoutsWrapper>

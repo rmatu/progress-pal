@@ -32,6 +32,7 @@ export class ExerciseSet extends BaseEntity {
   @ManyToOne(
     () => WorkoutExercise,
     (workoutExercise: WorkoutExercise) => workoutExercise.exerciseSet,
+    { onDelete: "CASCADE" },
   )
   workoutExercise: WorkoutExercise;
 }

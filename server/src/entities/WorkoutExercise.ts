@@ -31,13 +31,16 @@ export class WorkoutExercise extends BaseEntity {
 
   // Relations
   @Field(() => Workout)
-  @ManyToOne(() => Workout, (workout: Workout) => workout.workoutExercise)
+  @ManyToOne(() => Workout, (workout: Workout) => workout.workoutExercise, {
+    onDelete: "CASCADE",
+  })
   workout: Workout;
 
   @Field(() => [ExerciseSet])
   @OneToMany(
     () => ExerciseSet,
     (exerciseSet: ExerciseSet) => exerciseSet.workoutExercise,
+    { onDelete: "CASCADE" },
   )
   exerciseSet: ExerciseSet;
 
@@ -45,6 +48,7 @@ export class WorkoutExercise extends BaseEntity {
   @ManyToOne(
     () => UserExercise,
     (userExercise: UserExercise) => userExercise.workoutExercise,
+    { onDelete: "CASCADE" },
   )
   userExercise: UserExercise;
 
@@ -52,6 +56,7 @@ export class WorkoutExercise extends BaseEntity {
   @ManyToOne(
     () => CommonExercise,
     (commonExercise: CommonExercise) => commonExercise.workoutExercise,
+    { onDelete: "CASCADE" },
   )
   commonExercise: CommonExercise;
 }

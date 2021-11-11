@@ -3,13 +3,15 @@ import styled from "styled-components/macro";
 interface WrapperProps {
   marginTop?: string;
   margin?: string;
+  justifyContent?: string;
 }
 
 export const Wrapper = styled.div<WrapperProps>`
   margin-top: ${({ marginTop }) => marginTop};
   margin: ${({ margin }) => margin};
   display: flex;
-  justify-content: center;
+  justify-content: ${({ justifyContent }) =>
+    justifyContent ? justifyContent : "center"};
 `;
 
 interface ButtonProps {

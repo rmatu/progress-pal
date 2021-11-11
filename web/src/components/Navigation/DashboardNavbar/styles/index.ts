@@ -60,7 +60,10 @@ export const Category = styled.h4`
   margin-bottom: 0.5em;
 `;
 
-export const NavListItem = styled.li<{ selected?: boolean; button?: boolean }>`
+export const NavListItem = styled.li<{
+  selected?: boolean;
+  button?: boolean;
+}>`
   display: flex;
   align-items: center;
   justify-content: space-between;
