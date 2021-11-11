@@ -88,10 +88,13 @@ export class User extends BaseEntity {
   @OneToMany(
     () => UserExercise,
     (userExercise: UserExercise) => userExercise.user,
+    { onDelete: "CASCADE" },
   )
   userExercise: UserExercise;
 
   @Field(() => [Workout])
-  @OneToMany(() => Workout, (workout: Workout) => workout.user)
+  @OneToMany(() => Workout, (workout: Workout) => workout.user, {
+    onDelete: "CASCADE",
+  })
   workout: Workout;
 }

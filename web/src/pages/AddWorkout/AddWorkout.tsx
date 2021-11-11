@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { ReactComponent as PencilIcon } from "../../assets/svg/pencil.svg";
 import { ReactComponent as SuccessfulWorkoutCreationSVG2 } from "../../assets/svg/successfulWorkoutCreation2.svg";
-import { ReactComponent as NoItemsSVG } from "../../assets/svg/noItems.svg";
 import ExerciseSets from "../../components/ExerciseSets/ExerciseSets";
 import { FlexWrapperDiv } from "../../components/FlexElements";
 import { Button, Heading, Popup } from "../../components/UI";
@@ -13,6 +12,7 @@ import AddWorkoutModal from "../../components/UI/AddWorkoutModal/AddWorkoutModal
 import InputWithIcon from "../../components/UI/InputWithIcon/InputWithIcon";
 import {
   GetDataForMuscleHeatmapDocument,
+  GetUserWorkoutsDocument,
   useCreateWorkoutMutation,
   useMeQuery,
 } from "../../generated/graphql";
@@ -30,6 +30,8 @@ import {
   SuccessWorkoutWrapper,
   WorkoutForm,
 } from "./styles";
+import { getDateXMonthsBefore } from "../../utils/dateHelpers";
+import { createRefetchQueriesArray } from "../../utils/graphQLHelpers";
 
 export interface IWorkout {
   name: string;
@@ -61,15 +63,11 @@ const AddWorkout = () => {
 
       resetWorkoutCreation();
     },
-    refetchQueries: [
-      {
-        query: GetDataForMuscleHeatmapDocument,
-        variables: {
-          startDate: moment().subtract(14, "days").format("YYYY-MM-DD"),
-          endDate: moment().format("YYYY-MM-DD"),
-        },
-      },
-    ],
+    refetchQueries: createRefetchQueriesArray([
+      "getDataForMuscleHeatmap",
+      "getUserWorkouts",
+      "getUserYearlyWorkout",
+    ]),
   });
 
   const [selectedExercises, setSelectedExercises] = useState<[]>([]);
@@ -79,7 +77,7 @@ const AddWorkout = () => {
   const [workout, setWorkout] = useState<IWorkout>();
   const [showAddExercisesModal, setShowAddExercisesModal] =
     useState<boolean>(true);
-  const [blockSubmit, setBlockSubmit] = useState<boolean>(false);
+  const [blockSubmit, setBlockSubmit] = useState<boolean>(true);
   const [successfulWorkoutCreation, setSuccessfulWorkoutCreation] =
     useState(false);
   const [popup, setPopup] = useState({
@@ -112,6 +110,8 @@ const AddWorkout = () => {
       // @ts-ignore
       setSelectedExercises(prev => [...prev, exercise]);
     }
+
+    setExerciseWithSets(prev => prev.filter(el => el.id !== exercise.id));
   };
 
   const handleFinishWorkout = () => {
@@ -158,6 +158,10 @@ const AddWorkout = () => {
 
   const handleExerciseFormikOnChange = (e: any) => {
     workoutFormik.handleChange(e);
+
+    if (workout) {
+      setWorkout({ ...workout, name: e.target.value });
+    }
   };
 
   useEffect(() => {
@@ -184,6 +188,8 @@ const AddWorkout = () => {
         setBlockSubmit(false);
       }
     }
+
+    if (!exerciseWithSets) setBlockSubmit(true);
   }, [exerciseWithSets]);
 
   useEffect(() => {

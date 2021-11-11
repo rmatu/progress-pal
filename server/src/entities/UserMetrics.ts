@@ -49,6 +49,8 @@ export class UserMetrics extends BaseEntity {
 
   // Relations
   @Field(() => User)
-  @ManyToOne(() => User, (user: User) => user.userMetrics)
+  @ManyToOne(() => User, (user: User) => user.userMetrics, {
+    onDelete: "CASCADE",
+  })
   user: User;
 }

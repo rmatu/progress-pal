@@ -16,6 +16,7 @@ export type Query = {
   me?: Maybe<User>;
   getUserMetrics?: Maybe<Array<UserMetrics>>;
   getAllUserWorkouts?: Maybe<Array<Workout>>;
+  getUserWorkouts?: Maybe<Array<Workout>>;
   getUserWorkout?: Maybe<Workout>;
   getUserYearlyWorkoutData?: Maybe<Array<YearlyWorkoutsAmountResponse>>;
   getDataForMuscleHeatmap?: Maybe<DataForMuscleHeatmap>;
@@ -23,8 +24,14 @@ export type Query = {
 };
 
 
+export type QueryGetUserWorkoutsArgs = {
+  endDate: Scalars['String'];
+  startDate: Scalars['String'];
+};
+
+
 export type QueryGetUserWorkoutArgs = {
-  workoutId: Scalars['Float'];
+  workoutId: Scalars['String'];
 };
 
 
@@ -173,6 +180,7 @@ export type Mutation = {
   changeOnboardingStep: User;
   finishOnboarding: UpdateOnboardingResponse;
   createWorkout?: Maybe<Workout>;
+  deleteWorkout: Scalars['Boolean'];
 };
 
 
@@ -240,6 +248,11 @@ export type MutationFinishOnboardingArgs = {
 
 export type MutationCreateWorkoutArgs = {
   input: CreateWorkoutInput;
+};
+
+
+export type MutationDeleteWorkoutArgs = {
+  workoutId: Scalars['String'];
 };
 
 export type UserResponse = {
@@ -353,10 +366,7 @@ export type RegularWorkoutFragment = (
   & { workoutExercise: Array<(
     { __typename?: 'WorkoutExercise' }
     & RegularWorkoutExerciseFragment
-  )>, user: (
-    { __typename?: 'User' }
-    & RegularUserFragment
-  ) }
+  )> }
 );
 
 export type RegularWorkoutExerciseFragment = (
@@ -422,6 +432,16 @@ export type CreateWorkoutMutation = (
     { __typename?: 'Workout' }
     & Pick<Workout, 'name'>
   )> }
+);
+
+export type DeleteWorkoutMutationVariables = Exact<{
+  workoutId: Scalars['String'];
+}>;
+
+
+export type DeleteWorkoutMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteWorkout'>
 );
 
 export type FinishOnboardingMutationVariables = Exact<{
@@ -558,6 +578,17 @@ export type GetAllCommonExercisesQuery = (
   )>> }
 );
 
+export type GetAllUserWorkoutsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllUserWorkoutsQuery = (
+  { __typename?: 'Query' }
+  & { getAllUserWorkouts?: Maybe<Array<(
+    { __typename?: 'Workout' }
+    & RegularWorkoutFragment
+  )>> }
+);
+
 export type GetDataForMuscleHeatmapQueryVariables = Exact<{
   startDate: Scalars['String'];
   endDate: Scalars['String'];
@@ -576,6 +607,20 @@ export type GetDataForMuscleHeatmapQuery = (
       & Pick<Muscles, 'muscleName' | 'amount'>
     )>> }
   )> }
+);
+
+export type GetUserWorkoutsQueryVariables = Exact<{
+  startDate: Scalars['String'];
+  endDate: Scalars['String'];
+}>;
+
+
+export type GetUserWorkoutsQuery = (
+  { __typename?: 'Query' }
+  & { getUserWorkouts?: Maybe<Array<(
+    { __typename?: 'Workout' }
+    & RegularWorkoutFragment
+  )>> }
 );
 
 export type GetUserYearlyWorkoutDataQueryVariables = Exact<{
@@ -720,12 +765,8 @@ export const RegularWorkoutFragmentDoc = gql`
   workoutExercise {
     ...RegularWorkoutExercise
   }
-  user {
-    ...RegularUser
-  }
 }
-    ${RegularWorkoutExerciseFragmentDoc}
-${RegularUserFragmentDoc}`;
+    ${RegularWorkoutExerciseFragmentDoc}`;
 export const ChangeOnboardingStepDocument = gql`
     mutation ChangeOnboardingStep($step: Float!) {
   changeOnboardingStep(step: $step) {
@@ -853,6 +894,36 @@ export function useCreateWorkoutMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateWorkoutMutationHookResult = ReturnType<typeof useCreateWorkoutMutation>;
 export type CreateWorkoutMutationResult = Apollo.MutationResult<CreateWorkoutMutation>;
 export type CreateWorkoutMutationOptions = Apollo.BaseMutationOptions<CreateWorkoutMutation, CreateWorkoutMutationVariables>;
+export const DeleteWorkoutDocument = gql`
+    mutation DeleteWorkout($workoutId: String!) {
+  deleteWorkout(workoutId: $workoutId)
+}
+    `;
+export type DeleteWorkoutMutationFn = Apollo.MutationFunction<DeleteWorkoutMutation, DeleteWorkoutMutationVariables>;
+
+/**
+ * __useDeleteWorkoutMutation__
+ *
+ * To run a mutation, you first call `useDeleteWorkoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteWorkoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteWorkoutMutation, { data, loading, error }] = useDeleteWorkoutMutation({
+ *   variables: {
+ *      workoutId: // value for 'workoutId'
+ *   },
+ * });
+ */
+export function useDeleteWorkoutMutation(baseOptions?: Apollo.MutationHookOptions<DeleteWorkoutMutation, DeleteWorkoutMutationVariables>) {
+        return Apollo.useMutation<DeleteWorkoutMutation, DeleteWorkoutMutationVariables>(DeleteWorkoutDocument, baseOptions);
+      }
+export type DeleteWorkoutMutationHookResult = ReturnType<typeof useDeleteWorkoutMutation>;
+export type DeleteWorkoutMutationResult = Apollo.MutationResult<DeleteWorkoutMutation>;
+export type DeleteWorkoutMutationOptions = Apollo.BaseMutationOptions<DeleteWorkoutMutation, DeleteWorkoutMutationVariables>;
 export const FinishOnboardingDocument = gql`
     mutation FinishOnboarding($input: CreateUserMetricsInput!) {
   finishOnboarding(input: $input) {
@@ -1201,6 +1272,38 @@ export function useGetAllCommonExercisesLazyQuery(baseOptions?: Apollo.LazyQuery
 export type GetAllCommonExercisesQueryHookResult = ReturnType<typeof useGetAllCommonExercisesQuery>;
 export type GetAllCommonExercisesLazyQueryHookResult = ReturnType<typeof useGetAllCommonExercisesLazyQuery>;
 export type GetAllCommonExercisesQueryResult = Apollo.QueryResult<GetAllCommonExercisesQuery, GetAllCommonExercisesQueryVariables>;
+export const GetAllUserWorkoutsDocument = gql`
+    query GetAllUserWorkouts {
+  getAllUserWorkouts {
+    ...RegularWorkout
+  }
+}
+    ${RegularWorkoutFragmentDoc}`;
+
+/**
+ * __useGetAllUserWorkoutsQuery__
+ *
+ * To run a query within a React component, call `useGetAllUserWorkoutsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllUserWorkoutsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllUserWorkoutsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllUserWorkoutsQuery(baseOptions?: Apollo.QueryHookOptions<GetAllUserWorkoutsQuery, GetAllUserWorkoutsQueryVariables>) {
+        return Apollo.useQuery<GetAllUserWorkoutsQuery, GetAllUserWorkoutsQueryVariables>(GetAllUserWorkoutsDocument, baseOptions);
+      }
+export function useGetAllUserWorkoutsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllUserWorkoutsQuery, GetAllUserWorkoutsQueryVariables>) {
+          return Apollo.useLazyQuery<GetAllUserWorkoutsQuery, GetAllUserWorkoutsQueryVariables>(GetAllUserWorkoutsDocument, baseOptions);
+        }
+export type GetAllUserWorkoutsQueryHookResult = ReturnType<typeof useGetAllUserWorkoutsQuery>;
+export type GetAllUserWorkoutsLazyQueryHookResult = ReturnType<typeof useGetAllUserWorkoutsLazyQuery>;
+export type GetAllUserWorkoutsQueryResult = Apollo.QueryResult<GetAllUserWorkoutsQuery, GetAllUserWorkoutsQueryVariables>;
 export const GetDataForMuscleHeatmapDocument = gql`
     query GetDataForMuscleHeatmap($startDate: String!, $endDate: String!) {
   getDataForMuscleHeatmap(startDate: $startDate, endDate: $endDate) {
@@ -1242,6 +1345,40 @@ export function useGetDataForMuscleHeatmapLazyQuery(baseOptions?: Apollo.LazyQue
 export type GetDataForMuscleHeatmapQueryHookResult = ReturnType<typeof useGetDataForMuscleHeatmapQuery>;
 export type GetDataForMuscleHeatmapLazyQueryHookResult = ReturnType<typeof useGetDataForMuscleHeatmapLazyQuery>;
 export type GetDataForMuscleHeatmapQueryResult = Apollo.QueryResult<GetDataForMuscleHeatmapQuery, GetDataForMuscleHeatmapQueryVariables>;
+export const GetUserWorkoutsDocument = gql`
+    query GetUserWorkouts($startDate: String!, $endDate: String!) {
+  getUserWorkouts(startDate: $startDate, endDate: $endDate) {
+    ...RegularWorkout
+  }
+}
+    ${RegularWorkoutFragmentDoc}`;
+
+/**
+ * __useGetUserWorkoutsQuery__
+ *
+ * To run a query within a React component, call `useGetUserWorkoutsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserWorkoutsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserWorkoutsQuery({
+ *   variables: {
+ *      startDate: // value for 'startDate'
+ *      endDate: // value for 'endDate'
+ *   },
+ * });
+ */
+export function useGetUserWorkoutsQuery(baseOptions: Apollo.QueryHookOptions<GetUserWorkoutsQuery, GetUserWorkoutsQueryVariables>) {
+        return Apollo.useQuery<GetUserWorkoutsQuery, GetUserWorkoutsQueryVariables>(GetUserWorkoutsDocument, baseOptions);
+      }
+export function useGetUserWorkoutsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserWorkoutsQuery, GetUserWorkoutsQueryVariables>) {
+          return Apollo.useLazyQuery<GetUserWorkoutsQuery, GetUserWorkoutsQueryVariables>(GetUserWorkoutsDocument, baseOptions);
+        }
+export type GetUserWorkoutsQueryHookResult = ReturnType<typeof useGetUserWorkoutsQuery>;
+export type GetUserWorkoutsLazyQueryHookResult = ReturnType<typeof useGetUserWorkoutsLazyQuery>;
+export type GetUserWorkoutsQueryResult = Apollo.QueryResult<GetUserWorkoutsQuery, GetUserWorkoutsQueryVariables>;
 export const GetUserYearlyWorkoutDataDocument = gql`
     query GetUserYearlyWorkoutData($startDate: String!, $endDate: String!) {
   getUserYearlyWorkoutData(startDate: $startDate, endDate: $endDate) {

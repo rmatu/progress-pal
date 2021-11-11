@@ -15,4 +15,4 @@ export const RESET_PASSWORD_WITH_TOKEN = "/reset-password/:token";
 export const TERMS_OF_SERVICE = "/terms-of-service";
 export const PRIVACY_POLICY = "/privacy-policy";
 export const PAGE_NOT_FOUND = "/page-not-found";
-export const WORKOUTS = "workouts";
+export const WORKOUTS = "/workouts";

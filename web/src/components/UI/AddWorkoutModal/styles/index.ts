@@ -104,7 +104,7 @@ export const Exercise = styled.div<{ selected: boolean }>`
     `}
 `;
 
-function createCSS(muscles: string[], color: string) {
+export function createCSS(muscles: string[], color: string) {
   let styles = "";
 
   for (let i = 0; i < muscles.length; i += 1) {

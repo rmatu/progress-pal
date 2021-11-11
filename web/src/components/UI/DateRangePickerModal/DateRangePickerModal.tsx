@@ -6,6 +6,9 @@ import theme from "../../../theme/theme";
 import ModalScroll from "../ModalScroll/ModalScroll";
 import { DateRangePickerWrapper } from "./styles";
 
+//@ts-ignore
+import * as locales from "react-date-range/dist/locale";
+
 interface DateRangePickerModalProps {
   handleClose: () => void;
   handleFinish?: () => void;
@@ -72,6 +75,7 @@ const DateRangePickerModal: React.FC<DateRangePickerModalProps> = ({
           ranges={heatmapData}
           direction="horizontal"
           rangeColors={[theme.colors.orange]}
+          locale={locales["enGB"]}
         />
       </DateRangePickerWrapper>
       <Button

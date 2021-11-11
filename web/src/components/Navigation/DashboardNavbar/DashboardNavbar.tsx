@@ -33,7 +33,7 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user }) => {
 
   const handleLogout = async () => {
     await logout();
-    await client.resetStore();
+    await client.cache.reset();
   };
 
   const handleClick = (name: string) => {

@@ -173,6 +173,7 @@ export class CommonExercise extends BaseEntity {
   @OneToMany(
     () => WorkoutExercise,
     (workoutExercise: WorkoutExercise) => workoutExercise.commonExercise,
+    { onDelete: "CASCADE" },
   )
   workoutExercise: WorkoutExercise;
 }
