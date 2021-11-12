@@ -3,7 +3,7 @@ import { convertPxToRem } from "../../../utils/cssHelpers";
 
 export const Wrapper = styled.div`
   padding: 1em;
-  max-width: ${convertPxToRem(400)};
+  max-width: ${convertPxToRem(500)};
   width: 100%;
   position: relative;
 
@@ -33,10 +33,10 @@ export const PrimaryMuscle = styled.p`
 export const Grid = styled.div`
   font-size: 1.115rem;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 0.3fr;
+  grid-template-columns: 1fr 1fr 1fr 0.5fr;
 `;
 
-export const GridItem = styled.div`
+export const GridItem = styled.div<{ svg?: boolean }>`
   padding: 0.5em 0;
 
   :nth-of-type(1) {
@@ -53,6 +53,18 @@ export const GridItem = styled.div`
 
   :nth-of-type(4) {
     justify-self: flex-end;
+    svg {
+      transition: all 0.1s ease-in-out;
+      opacity: 0.5;
+      margin-top: 0.4em;
+      width: ${convertPxToRem(16)};
+      height: ${convertPxToRem(16)};
+
+      :hover {
+        cursor: pointer;
+        opacity: 1;
+      }
+    }
   }
 `;
 
@@ -112,5 +124,21 @@ export const TrashIcon = styled.div`
     cursor: pointer;
     height: ${convertPxToRem(16)};
     width: ${convertPxToRem(16)};
+  }
+`;
+
+export const EditButtonsWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-top: 2em;
+  justify-content: center;
+
+  button {
+    margin: 0;
+    border-radius: 0.5em;
+    padding: 0.2em 0.5em;
+    width: ${convertPxToRem(100)};
+    margin: 0 0.4em;
+    opacity: 0.7;
   }
 `;

@@ -609,6 +609,19 @@ export type GetDataForMuscleHeatmapQuery = (
   )> }
 );
 
+export type GetUserWorkoutQueryVariables = Exact<{
+  workoutId: Scalars['String'];
+}>;
+
+
+export type GetUserWorkoutQuery = (
+  { __typename?: 'Query' }
+  & { getUserWorkout?: Maybe<(
+    { __typename?: 'Workout' }
+    & RegularWorkoutFragment
+  )> }
+);
+
 export type GetUserWorkoutsQueryVariables = Exact<{
   startDate: Scalars['String'];
   endDate: Scalars['String'];
@@ -1345,6 +1358,39 @@ export function useGetDataForMuscleHeatmapLazyQuery(baseOptions?: Apollo.LazyQue
 export type GetDataForMuscleHeatmapQueryHookResult = ReturnType<typeof useGetDataForMuscleHeatmapQuery>;
 export type GetDataForMuscleHeatmapLazyQueryHookResult = ReturnType<typeof useGetDataForMuscleHeatmapLazyQuery>;
 export type GetDataForMuscleHeatmapQueryResult = Apollo.QueryResult<GetDataForMuscleHeatmapQuery, GetDataForMuscleHeatmapQueryVariables>;
+export const GetUserWorkoutDocument = gql`
+    query GetUserWorkout($workoutId: String!) {
+  getUserWorkout(workoutId: $workoutId) {
+    ...RegularWorkout
+  }
+}
+    ${RegularWorkoutFragmentDoc}`;
+
+/**
+ * __useGetUserWorkoutQuery__
+ *
+ * To run a query within a React component, call `useGetUserWorkoutQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserWorkoutQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserWorkoutQuery({
+ *   variables: {
+ *      workoutId: // value for 'workoutId'
+ *   },
+ * });
+ */
+export function useGetUserWorkoutQuery(baseOptions: Apollo.QueryHookOptions<GetUserWorkoutQuery, GetUserWorkoutQueryVariables>) {
+        return Apollo.useQuery<GetUserWorkoutQuery, GetUserWorkoutQueryVariables>(GetUserWorkoutDocument, baseOptions);
+      }
+export function useGetUserWorkoutLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserWorkoutQuery, GetUserWorkoutQueryVariables>) {
+          return Apollo.useLazyQuery<GetUserWorkoutQuery, GetUserWorkoutQueryVariables>(GetUserWorkoutDocument, baseOptions);
+        }
+export type GetUserWorkoutQueryHookResult = ReturnType<typeof useGetUserWorkoutQuery>;
+export type GetUserWorkoutLazyQueryHookResult = ReturnType<typeof useGetUserWorkoutLazyQuery>;
+export type GetUserWorkoutQueryResult = Apollo.QueryResult<GetUserWorkoutQuery, GetUserWorkoutQueryVariables>;
 export const GetUserWorkoutsDocument = gql`
     query GetUserWorkouts($startDate: String!, $endDate: String!) {
   getUserWorkouts(startDate: $startDate, endDate: $endDate) {

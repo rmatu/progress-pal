@@ -1,9 +1,11 @@
 import moment from "moment";
 import React from "react";
 import Model from "react-body-highlighter";
+import { useHistory } from "react-router";
 import { Button } from "../..";
 import { ReactComponent as TrashIcon } from "../../../../assets/svg/trash.svg";
 import { ReactComponent as WeightIcon } from "../../../../assets/svg/weight.svg";
+import { WORKOUTS } from "../../../../constants/routes";
 import {
   useDeleteWorkoutMutation,
   Workout,
@@ -60,7 +62,13 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout, setPopup }) => {
     },
   });
 
-  const handleSelectWorkout = () => {};
+  const history = useHistory();
+
+  const handleSelectWorkout = () => {
+    if (!workout) return;
+
+    history.push(`${WORKOUTS}/${workout.id}`);
+  };
 
   const handleDeleteWorkout = () => {
     if (!workout) return;
@@ -73,7 +81,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout, setPopup }) => {
   };
 
   return (
-    <WorkoutCardWrapper>
+    <WorkoutCardWrapper onClick={handleSelectWorkout}>
       <LeftCardContent>
         <WorkoutName>{workout?.name}</WorkoutName>
         <WorkoutDate>

@@ -1,0 +1,5 @@
+query GetUserWorkout($workoutId: String!) {
+  getUserWorkout(workoutId: $workoutId) {
+    ...RegularWorkout
+  }
+}

@@ -1,7 +1,27 @@
 import React from "react";
 import styled, { keyframes } from "styled-components/macro";
 
-const Loader = ({ bgShadow = true }) => {
+interface LoaderProps {
+  bgShadow?: boolean;
+  layoutLoaderUI?: boolean;
+}
+
+const Loader: React.FC<LoaderProps> = ({ bgShadow = true, layoutLoaderUI }) => {
+  if (layoutLoaderUI) {
+    return (
+      <Wrapper>
+        <SkChase>
+          <SkChaseDot bgShadow={bgShadow} />
+          <SkChaseDot bgShadow={bgShadow} />
+          <SkChaseDot bgShadow={bgShadow} />
+          <SkChaseDot bgShadow={bgShadow} />
+          <SkChaseDot bgShadow={bgShadow} />
+          <SkChaseDot bgShadow={bgShadow} />
+        </SkChase>
+      </Wrapper>
+    );
+  }
+
   return (
     <SkChase>
       <SkChaseDot bgShadow={bgShadow} />
@@ -15,6 +35,13 @@ const Loader = ({ bgShadow = true }) => {
 };
 
 export default Loader;
+
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+`;
 
 const Chase = keyframes`
   100% {
