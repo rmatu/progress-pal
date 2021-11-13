@@ -17,6 +17,7 @@ import {
 } from "../../../../utils/converters";
 import { populateColorsForMuscleHeatmap } from "../../../../utils/cssHelpers";
 import { createRefetchQueriesArray } from "../../../../utils/graphQLHelpers";
+import { gramsToKilograms } from "../../../../utils/numberUtils";
 import {
   ExerciseSVG,
   LeftCardContent,
@@ -90,7 +91,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout, setPopup }) => {
         <QuickInfoRow>
           <SVGWrapper>
             <WeightIcon />
-            {calculateVolume(workout as Workout)} kg
+            {gramsToKilograms(calculateVolume(workout as Workout))} kg
           </SVGWrapper>
         </QuickInfoRow>
       </LeftCardContent>

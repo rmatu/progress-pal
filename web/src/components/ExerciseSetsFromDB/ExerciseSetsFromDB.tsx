@@ -24,7 +24,7 @@ import {
   Wrapper,
 } from "./styles";
 import theme from "../../theme/theme";
-import { countDecimals } from "../../utils/numberUtils";
+import { countDecimals, gramsToKilograms } from "../../utils/numberUtils";
 
 interface ExerciseSetsFromDBProps {
   exercise: WorkoutExercise;
@@ -207,7 +207,7 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
                 max={9999}
                 readOnly={!edit}
                 tabIndex={!edit ? -1 : 1}
-                value={el.weight ? el.weight : ""}
+                value={el.weight ? gramsToKilograms(el.weight) : ""}
               />
             </GridItem>
             <GridItem>

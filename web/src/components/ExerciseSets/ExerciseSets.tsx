@@ -84,10 +84,12 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
     if (name === "weight") {
       if (countDecimals(value) > 2) return;
       if (value < 0 || value > 9999) return;
+
       arr.sets[idx].weight = value;
     } else if (name === "reps") {
       if (countDecimals(value) >= 1) return;
       if (value < 0 || value > 99999) return;
+
       arr.sets[idx].reps = value;
     }
 
