@@ -4,6 +4,7 @@ import { ReactComponent as TrashIconSVG } from "../../assets/svg/trash.svg";
 import { IExercise } from "../../constants/exercises";
 import { sanitazeMuscleNameFromDB } from "../../utils/converters";
 import { IExportedExercise, ISet } from "../../utils/formSchemas";
+import { countDecimals } from "../../utils/numberUtils";
 import { capitalizeFirstLetter } from "../../utils/stringUtils";
 import { Button } from "../UI";
 import {
@@ -77,12 +78,18 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
     const name = e.target.name;
     const value = Number(e.target.value);
 
-    const minusKey = e.target.value[e.target.value.length - 1];
-
-    if (minusKey === "-") return;
-
     const arr = { ...exportedExercise, sets: [...exportedExercise.sets] };
     const idx = arr.sets.findIndex(item => item.id === el.id);
+
+    if (name === "weight") {
+      if (countDecimals(value) > 2) return;
+      if (value < 0 || value > 9999) return;
+      arr.sets[idx].weight = value;
+    } else if (name === "reps") {
+      if (countDecimals(value) >= 1) return;
+      if (value < 0 || value > 99999) return;
+      arr.sets[idx].reps = value;
+    }
 
     if (name === "weight" && !el.weight) {
       setKgInputErrors(prev => prev.filter(id => id !== el.id));
@@ -90,14 +97,6 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
 
     if (name === "reps" && !el.reps) {
       setRepsInputErrors(prev => prev.filter(id => id !== el.id));
-    }
-
-    if (name === "weight") {
-      if (value < 0 || value > 1500) return;
-      arr.sets[idx].weight = value;
-    } else if (name === "reps") {
-      if (value < 0 || value > 100) return;
-      arr.sets[idx].reps = value;
     }
 
     setSetsAmount(arr);
@@ -159,8 +158,10 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
           <GridItem>
             <Input
               name="weight"
-              type="text"
-              pattern="[0-9]{3}"
+              type="number"
+              step="0.01"
+              min={0}
+              max={9999}
               value={el.weight ? el.weight : ""}
               onChange={e => handleChange(e, el)}
               onBlur={e => handleBlur(e, el)}
@@ -171,6 +172,9 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
             <Input
               name="reps"
               type="number"
+              step="1"
+              min={0}
+              max={99999}
               value={el.reps ? el.reps : ""}
               onChange={e => handleChange(e, el)}
               onBlur={e => handleBlur(e, el)}

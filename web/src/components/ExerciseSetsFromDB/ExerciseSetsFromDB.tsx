@@ -24,6 +24,7 @@ import {
   Wrapper,
 } from "./styles";
 import theme from "../../theme/theme";
+import { countDecimals } from "../../utils/numberUtils";
 
 interface ExerciseSetsFromDBProps {
   exercise: WorkoutExercise;
@@ -51,6 +52,7 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
 
   const handleSave = () => {
     setEdit(false);
+    console.log({ exerciseSets });
   };
 
   const handleChange = (
@@ -58,13 +60,21 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
     set: ExerciseSet,
     inputType: "kg" | "reps",
   ) => {
+    const value = Number(e.target.value);
+
     const arr = [...exerciseSets];
     const idx = exerciseSets.findIndex(el => el.id === set.id);
 
     if (inputType === "kg") {
-      arr[idx] = { ...arr[idx], weight: Number(e.target.value) };
+      if (countDecimals(value) > 2) return;
+      if (value < 0 || value > 9999) return;
+
+      arr[idx] = { ...arr[idx], weight: value };
     } else if (inputType === "reps") {
-      arr[idx] = { ...arr[idx], reps: Number(e.target.value) };
+      if (countDecimals(value) > 2) return;
+      if (value < 0 || value > 99999) return;
+
+      arr[idx] = { ...arr[idx], reps: value };
     }
 
     setUpdatedItemsIds(prev => prev.add(set.id));
@@ -81,7 +91,6 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
     set: ExerciseSet,
   ) => {
     const name = e.target.name;
-    console.log({ name });
 
     if (name === "weight" && !set.weight) {
       setKgInputErrors(prev => [...prev, set.id]);
@@ -111,6 +120,7 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
         reps: null,
         weight: null,
         set: exerciseSets.length + 1,
+        newSet: true,
         __typename: "ExerciseSet",
       },
     ]);
@@ -191,10 +201,12 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
                 name="weight"
                 onBlur={e => handleBlur(e, el)}
                 onChange={e => handleChange(e, el, "kg")}
-                pattern="[0-9]{3}"
+                type="number"
+                step="0.01"
+                min={0}
+                max={9999}
                 readOnly={!edit}
                 tabIndex={!edit ? -1 : 1}
-                type="text"
                 value={el.weight ? el.weight : ""}
               />
             </GridItem>
@@ -204,9 +216,12 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
                 name="reps"
                 onBlur={e => handleBlur(e, el)}
                 onChange={e => handleChange(e, el, "reps")}
+                type="number"
+                step="1"
+                min={0}
+                max={99999}
                 readOnly={!edit}
                 tabIndex={!edit ? -1 : 1}
-                type="number"
                 value={el.reps ? el.reps : ""}
               />
             </GridItem>

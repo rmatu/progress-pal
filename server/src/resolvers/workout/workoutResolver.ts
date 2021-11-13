@@ -342,8 +342,9 @@ export class WorkoutResolver {
 
         inputExercise.sets.forEach(async inputSet => {
           const set = new ExerciseSet();
+
           set.set = inputSet.set;
-          set.weight = inputSet.weight;
+          set.weight = inputSet.weight * 1000;
           set.reps = inputSet.reps;
           //@ts-ignore
           set.workoutExercise = savedExercise.id;
