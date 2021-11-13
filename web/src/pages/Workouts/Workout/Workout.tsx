@@ -24,6 +24,14 @@ import {
 
 interface WorkoutProps {}
 
+// How do I handle updating workout on DOM and on the backend:
+// DOM:
+//   -> I store the workoutData in fetchedWorkout variable
+//   -> Use setFetchedWorkout to update the DOM
+//   -> On each update pass that updated set to the setArray
+// Backend:
+//   -> Send only updated stuff to the backend
+
 const Workout: React.FC<WorkoutProps> = () => {
   const { data: user } = useMeQuery();
   const [getWorkout, { data: workoutData }] = useGetUserWorkoutLazyQuery();
@@ -33,7 +41,7 @@ const Workout: React.FC<WorkoutProps> = () => {
 
   const [fetchedWorkout, setFetchedWorkout] = useState<GetUserWorkoutQuery>();
 
-  console.log({ fetchedWorkout });
+  console.log({ fetchedWorkout }, "All data from the backend");
 
   const dispatch = useDispatch();
 
@@ -67,7 +75,6 @@ const Workout: React.FC<WorkoutProps> = () => {
     );
   }
 
-  console.log(fetchedWorkout);
   return (
     <DashbordLayoutHOC user={user?.me}>
       <RightContent open={open}>
@@ -86,7 +93,12 @@ const Workout: React.FC<WorkoutProps> = () => {
           </WorkoutHeadingWrapper>
 
           {fetchedWorkout?.getUserWorkout?.workoutExercise.map(exercise => (
-            <ExerciseSetsFromDB exercise={exercise as WorkoutExercise} />
+            <ExerciseSetsFromDB
+              key={exercise.id}
+              exercise={exercise as WorkoutExercise}
+              fetchedWorkout={fetchedWorkout}
+              setFetchedWorkout={setFetchedWorkout}
+            />
           ))}
         </ContentWrapper>
       </RightContent>

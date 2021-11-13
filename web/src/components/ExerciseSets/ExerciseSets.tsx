@@ -107,13 +107,13 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
     const name = e.target.name;
     if (name === "weight" && !set.weight) {
       setKgInputErrors(prev => [...prev, set.id]);
-    } else {
+    } else if (name === "weight") {
       setKgInputErrors(prev => prev.filter(id => id !== set.id));
     }
 
     if (name === "reps" && !set.reps) {
       setRepsInputErrors(prev => [...prev, set.id]);
-    } else {
+    } else if (name === "reps") {
       setRepsInputErrors(prev => prev.filter(id => id !== set.id));
     }
   };

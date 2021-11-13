@@ -55,7 +55,7 @@ export const GridItem = styled.div<{ svg?: boolean }>`
     justify-self: flex-end;
     svg {
       transition: all 0.1s ease-in-out;
-      opacity: 0.5;
+      opacity: 0.8;
       margin-top: 0.4em;
       width: ${convertPxToRem(16)};
       height: ${convertPxToRem(16)};
@@ -127,10 +127,11 @@ export const TrashIcon = styled.div`
   }
 `;
 
-export const EditButtonsWrapper = styled.div`
+export const EditButtonsWrapper = styled.div<{ margin?: string }>`
   display: flex;
   flex-direction: row;
   margin-top: 2em;
+  margin: ${({ margin }) => margin};
   justify-content: center;
 
   button {
