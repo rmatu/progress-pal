@@ -1,5 +1,5 @@
 import moment from "moment";
-import { MyContext } from "src/types";
+import { MyContext } from "../../types";
 import {
   Arg,
   Ctx,
@@ -17,6 +17,7 @@ import { isAuthenticated } from "../../middleware/isAuthenticated";
 import {
   CreateWorkoutInput,
   DataForMuscleHeatmap,
+  UpdateExerciseSets,
   YearlyWorkoutsAmountResponse,
 } from "./types";
 
@@ -389,5 +390,69 @@ export class WorkoutResolver {
     }
 
     return true;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuthenticated)
+  async updateExerciseSets(
+    @Arg("input") input: UpdateExerciseSets,
+    @Ctx() { req }: MyContext,
+  ) {
+    // get a connection and create a new query runner
+    const connection = getConnection();
+    const queryRunner = connection.createQueryRunner();
+
+    try {
+      const { userId } = req.session;
+
+      // establish real database connection using our new query runner
+      await queryRunner.connect();
+
+      // lets now open a new transaction:
+      await queryRunner.startTransaction();
+
+      const exerciseSetsRepo = await getRepository(ExerciseSet);
+      const workoutExerciseRepo = await getRepository(WorkoutExercise);
+      const workoutRepo = await getRepository(Workout);
+
+      for (const inputSet of input.exerciseSets) {
+        const exerciseSet = await exerciseSetsRepo.findOne({ id: inputSet.id });
+        if (!exerciseSet) return;
+
+        console.log(exerciseSet);
+        //@ts-ignore
+        const workoutExercise = await workoutExerciseRepo.findOne({
+          id: exerciseSet.workoutExercise,
+        });
+
+        console.log(workoutExercise);
+        if (!workoutExercise) return;
+
+        //@ts-ignore
+        const workout = await workoutRepo.findOne({
+          id: workoutExercise.workout,
+        });
+
+        console.log(workout, "XDDDDDDDDD");
+
+        //@ts-ignore
+        if (workout.user !== userId) return;
+
+        exerciseSet.reps = inputSet.reps;
+        exerciseSet.weight = inputSet.weight * 1000;
+
+        await queryRunner.manager.save(exerciseSet);
+      }
+
+      // commit transaction now:
+      await queryRunner.commitTransaction();
+      return true;
+    } catch {
+      // since we have errors let's rollback changes we made
+      await queryRunner.rollbackTransaction();
+      return false;
+    } finally {
+      await queryRunner.release();
+    }
   }
 }

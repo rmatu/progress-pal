@@ -44,7 +44,18 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
   const [repsInputErrors, setRepsInputErrors] = useState<string[]>([]);
   const [blockSave, setBlockSave] = useState(false);
 
-  const [exerciseSets, setExerciseSets] = useState(exercise.exerciseSet);
+  const populateAndChangeWeightToGrams = (sets: ExerciseSet[]) => {
+    const arr = sets.map(el => ({
+      ...el,
+      weight: gramsToKilograms(el.weight),
+    }));
+
+    return arr;
+  };
+
+  const [exerciseSets, setExerciseSets] = useState(
+    populateAndChangeWeightToGrams(exercise.exerciseSet),
+  );
   const [addedSets, setAddedSets] = useState<ExerciseSet[]>([]);
   const [updatedItemsIds, setUpdatedItemsIds] = useState<Set<string>>(
     new Set(),
@@ -207,7 +218,7 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
                 max={9999}
                 readOnly={!edit}
                 tabIndex={!edit ? -1 : 1}
-                value={el.weight ? gramsToKilograms(el.weight) : ""}
+                value={el.weight ? el.weight : ""}
               />
             </GridItem>
             <GridItem>

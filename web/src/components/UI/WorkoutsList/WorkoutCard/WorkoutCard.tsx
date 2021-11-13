@@ -71,7 +71,8 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout, setPopup }) => {
     history.push(`${WORKOUTS}/${workout.id}`);
   };
 
-  const handleDeleteWorkout = () => {
+  const handleDeleteWorkout = (e: any) => {
+    e.stopPropagation();
     if (!workout) return;
 
     deleteWorkout({

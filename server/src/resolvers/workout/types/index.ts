@@ -65,3 +65,21 @@ export class CreateWorkoutInput {
   @Field(() => [ExercisesInput])
   exercises: ExercisesInput[];
 }
+
+@InputType()
+export class GQLExerciseSet {
+  @Field(() => String)
+  id: string;
+
+  @Field(() => Number)
+  reps: number;
+
+  @Field(() => Number)
+  weight: number;
+}
+
+@InputType()
+export class UpdateExerciseSets {
+  @Field(() => [GQLExerciseSet])
+  exerciseSets: GQLExerciseSet[];
+}

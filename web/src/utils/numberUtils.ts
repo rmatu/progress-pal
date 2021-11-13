@@ -5,6 +5,5 @@ export const countDecimals = (value: number) => {
 };
 
 export const gramsToKilograms = (grams: number) => {
-  console.log(grams / 1000);
   return grams / 1000;
 };
