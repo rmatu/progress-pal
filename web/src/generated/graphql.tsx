@@ -329,7 +329,7 @@ export type GqlExerciseSet = {
 export type GqlNewExerciseSet = {
   id: Scalars['String'];
   set: Scalars['Float'];
-  workoutId: Scalars['String'];
+  workoutExerciseId: Scalars['String'];
   reps: Scalars['Float'];
   weight: Scalars['Float'];
 };

@@ -87,7 +87,7 @@ export class GQLNewExerciseSet {
   set: number;
 
   @Field(() => String)
-  workoutId: string;
+  workoutExerciseId: string;
 
   @Field(() => Number)
   reps: number;

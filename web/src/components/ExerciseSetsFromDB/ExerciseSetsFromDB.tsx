@@ -3,6 +3,7 @@ import { v4 } from "uuid";
 import {
   ExerciseSet,
   GetUserWorkoutQuery,
+  GqlNewExerciseSet,
   useUpdateExerciseSetsMutation,
   WorkoutExercise,
 } from "../../generated/graphql";
@@ -26,6 +27,7 @@ import {
 } from "./styles";
 import theme from "../../theme/theme";
 import { countDecimals, gramsToKilograms } from "../../utils/numberUtils";
+import { useParams } from "react-router";
 
 interface ExerciseSetsFromDBProps {
   exercise: WorkoutExercise;
@@ -35,20 +37,29 @@ interface ExerciseSetsFromDBProps {
   >;
 }
 
+interface ExtendedExerciseSet extends ExerciseSet {
+  newSet?: boolean;
+}
+
 const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
   exercise,
   fetchedWorkout,
   setFetchedWorkout,
 }) => {
+  const { id: workoutId } = useParams<{ id: string }>();
   const [updateExerciseSetsMutation, { data: udpateExerciseSetsData }] =
-    useUpdateExerciseSetsMutation();
+    useUpdateExerciseSetsMutation({
+      onCompleted: data => {
+        setEdit(false);
+      },
+    });
 
   const [edit, setEdit] = useState(false);
   const [kgInputErrors, setKgInputErrors] = useState<string[]>([]);
   const [repsInputErrors, setRepsInputErrors] = useState<string[]>([]);
   const [blockSave, setBlockSave] = useState(false);
 
-  const populateAndChangeWeightToGrams = (sets: ExerciseSet[]) => {
+  const populateAndChangeWeightToGrams = (sets: ExtendedExerciseSet[]) => {
     const arr = sets.map(el => ({
       ...el,
       weight: gramsToKilograms(el.weight),
@@ -66,10 +77,40 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
   );
 
   console.log({ exercise });
+  console.log({ exerciseSets });
 
   const handleSave = () => {
-    setEdit(false);
-    console.log({ exerciseSets });
+    const exportExerciseSets: { id: string; reps: number; weight: number }[] =
+      [];
+    const newExerciseSets: GqlNewExerciseSet[] = [];
+    if (!exerciseSets) return;
+
+    exerciseSets.forEach((el, idx) => {
+      if (el.newSet) {
+        newExerciseSets.push({
+          id: el.id,
+          set: idx + 1,
+          reps: el.reps,
+          weight: el.weight,
+          workoutExerciseId: exercise.id,
+        });
+      } else {
+        exportExerciseSets.push({
+          id: el.id,
+          reps: el.reps,
+          weight: el.weight,
+        });
+      }
+    });
+    updateExerciseSetsMutation({
+      variables: {
+        input: {
+          workoutId: workoutId,
+          exerciseSets: exportExerciseSets,
+          newExerciseSets: newExerciseSets,
+        },
+      },
+    });
   };
 
   const handleChange = (
