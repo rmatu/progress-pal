@@ -20,6 +20,7 @@ import {
   UpdateExerciseSets,
   YearlyWorkoutsAmountResponse,
 } from "./types";
+import e from "express";
 
 @Resolver(UserMetrics)
 export class WorkoutResolver {
@@ -412,31 +413,47 @@ export class WorkoutResolver {
       await queryRunner.startTransaction();
 
       const exerciseSetsRepo = await getRepository(ExerciseSet);
-      const workoutExerciseRepo = await getRepository(WorkoutExercise);
       const workoutRepo = await getRepository(Workout);
+
+      // Get user workout base by workoutID
+      // and check if user is owner of this workout
+      const workout = await workoutRepo.findOne({
+        relations: [
+          "workoutExercise",
+          "workoutExercise.commonExercise",
+          "workoutExercise.userExercise",
+          "workoutExercise.exerciseSet",
+        ],
+        order: {
+          updatedAt: "DESC",
+        },
+        where: { user: userId, id: input.workoutId },
+      });
+
+      if (!workout) return false;
+
+      // Push ids of sets associated with the workout
+      const ids: string[] = [];
+      //@ts-ignore
+      workout.workoutExercise.forEach(el => {
+        el.exerciseSet.forEach((set: ExerciseSet) => {
+          ids.push(set.id);
+        });
+      });
+
+      // Check if user is owner of input sets
+      let owner = true;
+      input.exerciseSets.every(el => {
+        owner = !!ids.find(id => id === el.id);
+        if (owner) return true;
+        return false;
+      });
+
+      if (!owner) return false;
 
       for (const inputSet of input.exerciseSets) {
         const exerciseSet = await exerciseSetsRepo.findOne({ id: inputSet.id });
         if (!exerciseSet) return;
-
-        console.log(exerciseSet);
-        //@ts-ignore
-        const workoutExercise = await workoutExerciseRepo.findOne({
-          id: exerciseSet.workoutExercise,
-        });
-
-        console.log(workoutExercise);
-        if (!workoutExercise) return;
-
-        //@ts-ignore
-        const workout = await workoutRepo.findOne({
-          id: workoutExercise.workout,
-        });
-
-        console.log(workout, "XDDDDDDDDD");
-
-        //@ts-ignore
-        if (workout.user !== userId) return;
 
         exerciseSet.reps = inputSet.reps;
         exerciseSet.weight = inputSet.weight * 1000;
@@ -454,5 +471,6 @@ export class WorkoutResolver {
     } finally {
       await queryRunner.release();
     }
+    return false;
   }
 }

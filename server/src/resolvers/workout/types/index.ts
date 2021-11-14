@@ -82,4 +82,7 @@ export class GQLExerciseSet {
 export class UpdateExerciseSets {
   @Field(() => [GQLExerciseSet])
   exerciseSets: GQLExerciseSet[];
+
+  @Field(() => String)
+  workoutId: string;
 }
