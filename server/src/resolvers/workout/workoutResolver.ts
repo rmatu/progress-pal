@@ -413,6 +413,7 @@ export class WorkoutResolver {
       await queryRunner.startTransaction();
 
       const exerciseSetsRepo = await getRepository(ExerciseSet);
+      const workoutExerciseRepo = await getRepository(WorkoutExercise);
       const workoutRepo = await getRepository(Workout);
 
       // Get user workout base by workoutID
@@ -459,6 +460,21 @@ export class WorkoutResolver {
         exerciseSet.weight = inputSet.weight * 1000;
 
         await queryRunner.manager.save(exerciseSet);
+      }
+
+      if (input.newExerciseSets) {
+        for (const inputSet of input.newExerciseSets) {
+          const exerciseSet = new ExerciseSet();
+
+          exerciseSet.set = inputSet.set;
+          exerciseSet.reps = inputSet.reps;
+          exerciseSet.weight = inputSet.weight * 1000;
+
+          //@ts-ignore
+          exerciseSet.workoutExercise = inputSet.workoutId;
+
+          await queryRunner.manager.save(exerciseSet);
+        }
       }
 
       // commit transaction now:

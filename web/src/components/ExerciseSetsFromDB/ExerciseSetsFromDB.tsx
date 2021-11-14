@@ -3,6 +3,7 @@ import { v4 } from "uuid";
 import {
   ExerciseSet,
   GetUserWorkoutQuery,
+  useUpdateExerciseSetsMutation,
   WorkoutExercise,
 } from "../../generated/graphql";
 import { sanitazeMuscleNameFromDB } from "../../utils/converters";
@@ -39,6 +40,9 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
   fetchedWorkout,
   setFetchedWorkout,
 }) => {
+  const [updateExerciseSetsMutation, { data: udpateExerciseSetsData }] =
+    useUpdateExerciseSetsMutation();
+
   const [edit, setEdit] = useState(false);
   const [kgInputErrors, setKgInputErrors] = useState<string[]>([]);
   const [repsInputErrors, setRepsInputErrors] = useState<string[]>([]);
@@ -60,6 +64,8 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
   const [updatedItemsIds, setUpdatedItemsIds] = useState<Set<string>>(
     new Set(),
   );
+
+  console.log({ exercise });
 
   const handleSave = () => {
     setEdit(false);
