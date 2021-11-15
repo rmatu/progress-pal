@@ -35,7 +35,9 @@ export class Workout extends BaseEntity {
 
   // Relations
   @Field(() => User)
-  @ManyToOne(() => User, (user: User) => user.workout, { onDelete: "CASCADE" })
+  @ManyToOne(() => User, (user: User) => user.workout, {
+    onDelete: "CASCADE",
+  })
   user: User;
 
   @Field(() => [WorkoutExercise])

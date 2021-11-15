@@ -22,6 +22,7 @@ import Privacy from "./pages/Privacy/Privacy";
 import PageNotFound from "./pages/PageNotFound/PageNotFound";
 import AddWorkout from "./pages/AddWorkout/AddWorkout";
 import Workouts from "./pages/Workouts/Workouts";
+import Workout from "./pages/Workouts/Workout/Workout";
 
 const App: React.FC = () => (
   <AnimatePresence>
@@ -103,6 +104,12 @@ const App: React.FC = () => (
         exact
         path={ROUTES.WORKOUTS}
         component={withAuth(Workouts)}
+      />
+      <Route
+        key={`${ROUTES.WORKOUTS}/:id`}
+        exact
+        path={`${ROUTES.WORKOUTS}/:id`}
+        component={withAuth(Workout)}
       />
       <Redirect to={ROUTES.PAGE_NOT_FOUND} />
     </Switch>

@@ -1,9 +1,11 @@
 import moment from "moment";
 import React from "react";
 import Model from "react-body-highlighter";
+import { useHistory } from "react-router";
 import { Button } from "../..";
 import { ReactComponent as TrashIcon } from "../../../../assets/svg/trash.svg";
 import { ReactComponent as WeightIcon } from "../../../../assets/svg/weight.svg";
+import { WORKOUTS } from "../../../../constants/routes";
 import {
   useDeleteWorkoutMutation,
   Workout,
@@ -15,6 +17,7 @@ import {
 } from "../../../../utils/converters";
 import { populateColorsForMuscleHeatmap } from "../../../../utils/cssHelpers";
 import { createRefetchQueriesArray } from "../../../../utils/graphQLHelpers";
+import { gramsToKilograms } from "../../../../utils/numberUtils";
 import {
   ExerciseSVG,
   LeftCardContent,
@@ -60,9 +63,16 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout, setPopup }) => {
     },
   });
 
-  const handleSelectWorkout = () => {};
+  const history = useHistory();
 
-  const handleDeleteWorkout = () => {
+  const handleSelectWorkout = () => {
+    if (!workout) return;
+
+    history.push(`${WORKOUTS}/${workout.id}`);
+  };
+
+  const handleDeleteWorkout = (e: any) => {
+    e.stopPropagation();
     if (!workout) return;
 
     deleteWorkout({
@@ -73,7 +83,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout, setPopup }) => {
   };
 
   return (
-    <WorkoutCardWrapper>
+    <WorkoutCardWrapper onClick={handleSelectWorkout}>
       <LeftCardContent>
         <WorkoutName>{workout?.name}</WorkoutName>
         <WorkoutDate>
@@ -82,7 +92,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout, setPopup }) => {
         <QuickInfoRow>
           <SVGWrapper>
             <WeightIcon />
-            {calculateVolume(workout as Workout)} kg
+            {gramsToKilograms(calculateVolume(workout as Workout))} kg
           </SVGWrapper>
         </QuickInfoRow>
       </LeftCardContent>

@@ -1,5 +1,5 @@
 import moment from "moment";
-import { MyContext } from "src/types";
+import { MyContext } from "../../types";
 import {
   Arg,
   Ctx,
@@ -17,6 +17,7 @@ import { isAuthenticated } from "../../middleware/isAuthenticated";
 import {
   CreateWorkoutInput,
   DataForMuscleHeatmap,
+  UpdateExerciseSets,
   YearlyWorkoutsAmountResponse,
 } from "./types";
 
@@ -342,8 +343,9 @@ export class WorkoutResolver {
 
         inputExercise.sets.forEach(async inputSet => {
           const set = new ExerciseSet();
+
           set.set = inputSet.set;
-          set.weight = inputSet.weight;
+          set.weight = inputSet.weight * 1000;
           set.reps = inputSet.reps;
           //@ts-ignore
           set.workoutExercise = savedExercise.id;
@@ -388,5 +390,148 @@ export class WorkoutResolver {
     }
 
     return true;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuthenticated)
+  async updateExerciseSets(
+    @Arg("input") input: UpdateExerciseSets,
+    @Ctx() { req }: MyContext,
+  ) {
+    // get a connection and create a new query runner
+    const connection = getConnection();
+    const queryRunner = connection.createQueryRunner();
+
+    try {
+      const { userId } = req.session;
+
+      // establish real database connection using our new query runner
+      await queryRunner.connect();
+
+      // lets now open a new transaction:
+      await queryRunner.startTransaction();
+
+      const exerciseSetsRepo = await getRepository(ExerciseSet);
+      const workoutRepo = await getRepository(Workout);
+
+      // Get user workout base by workoutID
+      // and check if user is owner of this workout
+      const workout = await workoutRepo.findOne({
+        relations: [
+          "workoutExercise",
+          "workoutExercise.commonExercise",
+          "workoutExercise.userExercise",
+          "workoutExercise.exerciseSet",
+        ],
+        order: {
+          updatedAt: "DESC",
+        },
+        where: { user: userId, id: input.workoutId },
+      });
+
+      if (!workout) return false;
+
+      // Push ids of sets associated with the workout
+      const ids: string[] = [];
+      //@ts-ignore
+      workout.workoutExercise.forEach(el => {
+        el.exerciseSet.forEach((set: ExerciseSet) => {
+          ids.push(set.id);
+        });
+      });
+
+      // Check if user is owner of input sets
+      let owner = true;
+      input.exerciseSets.every(el => {
+        owner = !!ids.find(id => id === el.id);
+        if (owner) return true;
+        return false;
+      });
+
+      if (!owner) return false;
+
+      for (const inputSet of input.exerciseSets) {
+        const exerciseSet = await exerciseSetsRepo.findOne({ id: inputSet.id });
+        if (!exerciseSet) return;
+
+        exerciseSet.reps = inputSet.reps;
+        exerciseSet.weight = inputSet.weight * 1000;
+
+        await queryRunner.manager.save(exerciseSet);
+      }
+
+      if (input.newExerciseSets) {
+        for (const inputSet of input.newExerciseSets) {
+          const exerciseSet = new ExerciseSet();
+
+          exerciseSet.set = inputSet.set;
+          exerciseSet.reps = inputSet.reps;
+          exerciseSet.weight = inputSet.weight * 1000;
+
+          //@ts-ignore
+          exerciseSet.workoutExercise = inputSet.workoutExerciseId;
+
+          await queryRunner.manager.save(exerciseSet);
+        }
+      }
+
+      // commit transaction now:
+      await queryRunner.commitTransaction();
+      return true;
+    } catch {
+      // since we have errors let's rollback changes we made
+      await queryRunner.rollbackTransaction();
+      return false;
+    } finally {
+      await queryRunner.release();
+    }
+    return false;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuthenticated)
+  async deleteWorkoutExercise(
+    @Arg("workoutExerciseId") workoutExerciseId: string,
+    @Arg("workoutId") workoutId: string,
+    @Ctx() { req }: MyContext,
+  ) {
+    const { userId } = req.session;
+
+    try {
+      const workoutRepo = await getRepository(Workout);
+      const workoutExerciseRepo = await getRepository(WorkoutExercise);
+
+      // Get user workout base by workoutID
+      // and check if user is owner of this workout
+      const workout = await workoutRepo.findOne({
+        relations: [
+          "workoutExercise",
+          "workoutExercise.commonExercise",
+          "workoutExercise.userExercise",
+          "workoutExercise.exerciseSet",
+        ],
+        order: {
+          updatedAt: "DESC",
+        },
+        where: { user: userId, id: workoutId },
+      });
+
+      if (!workout) return new Error("You are not authorized to do that");
+
+      // Check if requested workoutExercise belongs to the user that made the request
+      //@ts-ignore
+      const exist = workout.workoutExercise.find(
+        (el: WorkoutExercise) => el.id === workoutExerciseId,
+      );
+
+      if (!exist) return new Error("You are noth authorized to do that");
+
+      await workoutExerciseRepo.delete(workoutExerciseId);
+
+      return true;
+    } catch (e) {
+      console.log(e);
+      return new Error("Something went wrong");
+    }
   }
 }

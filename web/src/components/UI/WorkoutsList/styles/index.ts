@@ -10,8 +10,9 @@ export const MonthAndYear = styled.p`
   border-bottom: 1px solid ${({ theme }) => theme.colors.graySeparator};
 `;
 
-export const MonthAndYearWrapper = styled.div`
+export const MonthAndYearWrapper = styled.div<{ margin?: string }>`
   flex: 1 0 100%;
+  margin: ${({ margin }) => margin};
 `;
 
 export const WorkoutsWrapper = styled.div`
@@ -30,6 +31,10 @@ export const WorkoutsWrapper = styled.div`
   ::-webkit-scrollbar-thumb {
     background: #525861;
     border-radius: 8px 8px 8px 8px;
+  }
+
+  @media screen and (max-width: 1026px) {
+    max-height: 75vh;
   }
 `;
 

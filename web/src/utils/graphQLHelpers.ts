@@ -2,6 +2,7 @@ import {
   GetDataForMuscleHeatmapDocument,
   GetUserYearlyWorkoutDataDocument,
   GetUserWorkoutsDocument,
+  GetUserWorkoutDocument,
 } from "./../generated/graphql";
 import { DocumentNode } from "graphql";
 import moment from "moment";
@@ -10,9 +11,13 @@ import { getDateXMonthsBefore } from "./dateHelpers";
 type documentNames =
   | "getDataForMuscleHeatmap"
   | "getUserYearlyWorkout"
+  | "getUserWorkout"
   | "getUserWorkouts";
 
-export const createRefetchQueriesArray = (documents: documentNames[]) => {
+export const createRefetchQueriesArray = (
+  documents: documentNames[],
+  userVariables?: { [key: string]: any },
+) => {
   const refetchQueriesArray: {
     query: DocumentNode;
     variables: {};
@@ -43,6 +48,16 @@ export const createRefetchQueriesArray = (documents: documentNames[]) => {
             "YYYY-MM-DD",
           ),
           endDate: moment().format("YYYY-MM-DD"),
+        },
+      });
+    } else if (name === "getUserWorkout") {
+      if (!userVariables) return;
+      if (!userVariables.workoutId) return;
+
+      refetchQueriesArray.push({
+        query: GetUserWorkoutDocument,
+        variables: {
+          workoutId: userVariables.workoutId,
         },
       });
     }

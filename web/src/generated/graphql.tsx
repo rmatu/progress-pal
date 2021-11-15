@@ -181,6 +181,8 @@ export type Mutation = {
   finishOnboarding: UpdateOnboardingResponse;
   createWorkout?: Maybe<Workout>;
   deleteWorkout: Scalars['Boolean'];
+  updateExerciseSets: Scalars['Boolean'];
+  deleteWorkoutExercise: Scalars['Boolean'];
 };
 
 
@@ -255,6 +257,17 @@ export type MutationDeleteWorkoutArgs = {
   workoutId: Scalars['String'];
 };
 
+
+export type MutationUpdateExerciseSetsArgs = {
+  input: UpdateExerciseSets;
+};
+
+
+export type MutationDeleteWorkoutExerciseArgs = {
+  workoutId: Scalars['String'];
+  workoutExerciseId: Scalars['String'];
+};
+
 export type UserResponse = {
   __typename?: 'UserResponse';
   errors?: Maybe<Array<FieldError>>;
@@ -306,6 +319,26 @@ export type SetInput = {
   set: Scalars['Float'];
   weight: Scalars['Float'];
   reps: Scalars['Float'];
+};
+
+export type UpdateExerciseSets = {
+  exerciseSets: Array<GqlExerciseSet>;
+  newExerciseSets?: Maybe<Array<GqlNewExerciseSet>>;
+  workoutId: Scalars['String'];
+};
+
+export type GqlExerciseSet = {
+  id: Scalars['String'];
+  reps: Scalars['Float'];
+  weight: Scalars['Float'];
+};
+
+export type GqlNewExerciseSet = {
+  id: Scalars['String'];
+  set: Scalars['Float'];
+  workoutExerciseId: Scalars['String'];
+  reps: Scalars['Float'];
+  weight: Scalars['Float'];
 };
 
 export type RegularCommonExerciseFragment = (
@@ -444,6 +477,17 @@ export type DeleteWorkoutMutation = (
   & Pick<Mutation, 'deleteWorkout'>
 );
 
+export type DeleteWorkoutExerciseMutationVariables = Exact<{
+  workoutId: Scalars['String'];
+  workoutExerciseId: Scalars['String'];
+}>;
+
+
+export type DeleteWorkoutExerciseMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteWorkoutExercise'>
+);
+
 export type FinishOnboardingMutationVariables = Exact<{
   input: CreateUserMetricsInput;
 }>;
@@ -567,6 +611,16 @@ export type SignUpWithGoogleMutation = (
   ) }
 );
 
+export type UpdateExerciseSetsMutationVariables = Exact<{
+  input: UpdateExerciseSets;
+}>;
+
+
+export type UpdateExerciseSetsMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'updateExerciseSets'>
+);
+
 export type GetAllCommonExercisesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -606,6 +660,19 @@ export type GetDataForMuscleHeatmapQuery = (
       { __typename?: 'Muscles' }
       & Pick<Muscles, 'muscleName' | 'amount'>
     )>> }
+  )> }
+);
+
+export type GetUserWorkoutQueryVariables = Exact<{
+  workoutId: Scalars['String'];
+}>;
+
+
+export type GetUserWorkoutQuery = (
+  { __typename?: 'Query' }
+  & { getUserWorkout?: Maybe<(
+    { __typename?: 'Workout' }
+    & RegularWorkoutFragment
   )> }
 );
 
@@ -924,6 +991,40 @@ export function useDeleteWorkoutMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteWorkoutMutationHookResult = ReturnType<typeof useDeleteWorkoutMutation>;
 export type DeleteWorkoutMutationResult = Apollo.MutationResult<DeleteWorkoutMutation>;
 export type DeleteWorkoutMutationOptions = Apollo.BaseMutationOptions<DeleteWorkoutMutation, DeleteWorkoutMutationVariables>;
+export const DeleteWorkoutExerciseDocument = gql`
+    mutation DeleteWorkoutExercise($workoutId: String!, $workoutExerciseId: String!) {
+  deleteWorkoutExercise(
+    workoutId: $workoutId
+    workoutExerciseId: $workoutExerciseId
+  )
+}
+    `;
+export type DeleteWorkoutExerciseMutationFn = Apollo.MutationFunction<DeleteWorkoutExerciseMutation, DeleteWorkoutExerciseMutationVariables>;
+
+/**
+ * __useDeleteWorkoutExerciseMutation__
+ *
+ * To run a mutation, you first call `useDeleteWorkoutExerciseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteWorkoutExerciseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteWorkoutExerciseMutation, { data, loading, error }] = useDeleteWorkoutExerciseMutation({
+ *   variables: {
+ *      workoutId: // value for 'workoutId'
+ *      workoutExerciseId: // value for 'workoutExerciseId'
+ *   },
+ * });
+ */
+export function useDeleteWorkoutExerciseMutation(baseOptions?: Apollo.MutationHookOptions<DeleteWorkoutExerciseMutation, DeleteWorkoutExerciseMutationVariables>) {
+        return Apollo.useMutation<DeleteWorkoutExerciseMutation, DeleteWorkoutExerciseMutationVariables>(DeleteWorkoutExerciseDocument, baseOptions);
+      }
+export type DeleteWorkoutExerciseMutationHookResult = ReturnType<typeof useDeleteWorkoutExerciseMutation>;
+export type DeleteWorkoutExerciseMutationResult = Apollo.MutationResult<DeleteWorkoutExerciseMutation>;
+export type DeleteWorkoutExerciseMutationOptions = Apollo.BaseMutationOptions<DeleteWorkoutExerciseMutation, DeleteWorkoutExerciseMutationVariables>;
 export const FinishOnboardingDocument = gql`
     mutation FinishOnboarding($input: CreateUserMetricsInput!) {
   finishOnboarding(input: $input) {
@@ -1240,6 +1341,36 @@ export function useSignUpWithGoogleMutation(baseOptions?: Apollo.MutationHookOpt
 export type SignUpWithGoogleMutationHookResult = ReturnType<typeof useSignUpWithGoogleMutation>;
 export type SignUpWithGoogleMutationResult = Apollo.MutationResult<SignUpWithGoogleMutation>;
 export type SignUpWithGoogleMutationOptions = Apollo.BaseMutationOptions<SignUpWithGoogleMutation, SignUpWithGoogleMutationVariables>;
+export const UpdateExerciseSetsDocument = gql`
+    mutation UpdateExerciseSets($input: UpdateExerciseSets!) {
+  updateExerciseSets(input: $input)
+}
+    `;
+export type UpdateExerciseSetsMutationFn = Apollo.MutationFunction<UpdateExerciseSetsMutation, UpdateExerciseSetsMutationVariables>;
+
+/**
+ * __useUpdateExerciseSetsMutation__
+ *
+ * To run a mutation, you first call `useUpdateExerciseSetsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateExerciseSetsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateExerciseSetsMutation, { data, loading, error }] = useUpdateExerciseSetsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateExerciseSetsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateExerciseSetsMutation, UpdateExerciseSetsMutationVariables>) {
+        return Apollo.useMutation<UpdateExerciseSetsMutation, UpdateExerciseSetsMutationVariables>(UpdateExerciseSetsDocument, baseOptions);
+      }
+export type UpdateExerciseSetsMutationHookResult = ReturnType<typeof useUpdateExerciseSetsMutation>;
+export type UpdateExerciseSetsMutationResult = Apollo.MutationResult<UpdateExerciseSetsMutation>;
+export type UpdateExerciseSetsMutationOptions = Apollo.BaseMutationOptions<UpdateExerciseSetsMutation, UpdateExerciseSetsMutationVariables>;
 export const GetAllCommonExercisesDocument = gql`
     query GetAllCommonExercises {
   getAllCommonExercises {
@@ -1345,6 +1476,39 @@ export function useGetDataForMuscleHeatmapLazyQuery(baseOptions?: Apollo.LazyQue
 export type GetDataForMuscleHeatmapQueryHookResult = ReturnType<typeof useGetDataForMuscleHeatmapQuery>;
 export type GetDataForMuscleHeatmapLazyQueryHookResult = ReturnType<typeof useGetDataForMuscleHeatmapLazyQuery>;
 export type GetDataForMuscleHeatmapQueryResult = Apollo.QueryResult<GetDataForMuscleHeatmapQuery, GetDataForMuscleHeatmapQueryVariables>;
+export const GetUserWorkoutDocument = gql`
+    query GetUserWorkout($workoutId: String!) {
+  getUserWorkout(workoutId: $workoutId) {
+    ...RegularWorkout
+  }
+}
+    ${RegularWorkoutFragmentDoc}`;
+
+/**
+ * __useGetUserWorkoutQuery__
+ *
+ * To run a query within a React component, call `useGetUserWorkoutQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserWorkoutQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserWorkoutQuery({
+ *   variables: {
+ *      workoutId: // value for 'workoutId'
+ *   },
+ * });
+ */
+export function useGetUserWorkoutQuery(baseOptions: Apollo.QueryHookOptions<GetUserWorkoutQuery, GetUserWorkoutQueryVariables>) {
+        return Apollo.useQuery<GetUserWorkoutQuery, GetUserWorkoutQueryVariables>(GetUserWorkoutDocument, baseOptions);
+      }
+export function useGetUserWorkoutLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserWorkoutQuery, GetUserWorkoutQueryVariables>) {
+          return Apollo.useLazyQuery<GetUserWorkoutQuery, GetUserWorkoutQueryVariables>(GetUserWorkoutDocument, baseOptions);
+        }
+export type GetUserWorkoutQueryHookResult = ReturnType<typeof useGetUserWorkoutQuery>;
+export type GetUserWorkoutLazyQueryHookResult = ReturnType<typeof useGetUserWorkoutLazyQuery>;
+export type GetUserWorkoutQueryResult = Apollo.QueryResult<GetUserWorkoutQuery, GetUserWorkoutQueryVariables>;
 export const GetUserWorkoutsDocument = gql`
     query GetUserWorkouts($startDate: String!, $endDate: String!) {
   getUserWorkouts(startDate: $startDate, endDate: $endDate) {

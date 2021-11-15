@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -170,6 +171,7 @@ export class CommonExercise extends BaseEntity {
   createdAt: Date;
 
   @Field(() => [WorkoutExercise])
+  @JoinColumn()
   @OneToMany(
     () => WorkoutExercise,
     (workoutExercise: WorkoutExercise) => workoutExercise.commonExercise,

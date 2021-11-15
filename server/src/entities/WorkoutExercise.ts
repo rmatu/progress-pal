@@ -3,6 +3,7 @@ import {
   BaseEntity,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
