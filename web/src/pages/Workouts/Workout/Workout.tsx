@@ -5,6 +5,7 @@ import { useParams } from "react-router";
 import ExerciseSetsFromDB from "../../../components/ExerciseSetsFromDB/ExerciseSetsFromDB";
 import { Heading } from "../../../components/UI";
 import Loader from "../../../components/UI/Loader/Loader";
+import Popup from "../../../components/UI/Popup/Popup";
 import {
   GetUserWorkoutQuery,
   useGetUserWorkoutLazyQuery,
@@ -30,18 +31,19 @@ interface WorkoutProps {}
 //   -> Use setFetchedWorkout to update the DOM
 //   -> On each update pass that updated set to the setArray
 // Backend:
-//   -> Send only updated stuff to the backend
+//   -> Send only updated and new sets to the backend
 
 const Workout: React.FC<WorkoutProps> = () => {
   const { data: user } = useMeQuery();
   const [getWorkout, { data: workoutData }] = useGetUserWorkoutLazyQuery();
 
+  const { show, text, popupType } = useSelector(
+    (state: AppState) => state.popup,
+  );
   const { open } = useSelector((state: AppState) => state.dashboardNavbar);
   const { id } = useParams<{ id: string }>();
 
   const [fetchedWorkout, setFetchedWorkout] = useState<GetUserWorkoutQuery>();
-
-  console.log({ fetchedWorkout }, "All data from the backend");
 
   const dispatch = useDispatch();
 
@@ -96,12 +98,13 @@ const Workout: React.FC<WorkoutProps> = () => {
             <ExerciseSetsFromDB
               key={exercise.id}
               exercise={exercise as WorkoutExercise}
-              fetchedWorkout={fetchedWorkout}
-              setFetchedWorkout={setFetchedWorkout}
             />
           ))}
         </ContentWrapper>
       </RightContent>
+      <Popup showPopup={show} error={popupType === "error"}>
+        {text}
+      </Popup>
     </DashbordLayoutHOC>
   );
 };

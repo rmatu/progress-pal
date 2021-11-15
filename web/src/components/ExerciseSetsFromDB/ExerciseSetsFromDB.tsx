@@ -28,13 +28,11 @@ import {
 import theme from "../../theme/theme";
 import { countDecimals, gramsToKilograms } from "../../utils/numberUtils";
 import { useParams } from "react-router";
+import { useDispatch } from "react-redux";
+import * as popupActions from "../../redux/popup/popupActions";
 
 interface ExerciseSetsFromDBProps {
   exercise: WorkoutExercise;
-  fetchedWorkout: GetUserWorkoutQuery;
-  setFetchedWorkout: React.Dispatch<
-    React.SetStateAction<GetUserWorkoutQuery | undefined>
-  >;
 }
 
 interface ExtendedExerciseSet extends ExerciseSet {
@@ -43,21 +41,57 @@ interface ExtendedExerciseSet extends ExerciseSet {
 
 const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
   exercise,
-  fetchedWorkout,
-  setFetchedWorkout,
 }) => {
   const { id: workoutId } = useParams<{ id: string }>();
-  const [updateExerciseSetsMutation, { data: udpateExerciseSetsData }] =
-    useUpdateExerciseSetsMutation({
-      onCompleted: data => {
-        setEdit(false);
-      },
-    });
+  // TODO: This endopoint should return errors not boolean
+  const [updateExerciseSetsMutation] = useUpdateExerciseSetsMutation({
+    onCompleted: data => {
+      if (data.updateExerciseSets) {
+        dispatch(
+          popupActions.setPopupVisibility({
+            visibility: true,
+            text: "Sets udpated successfuly!",
+            popupType: "success",
+          }),
+        );
+        setTimeout(() => {
+          dispatch(
+            popupActions.setPopupVisibility({
+              visibility: false,
+              text: "Sets udpated successfuly!",
+              popupType: "success",
+            }),
+          );
+        }, 4000);
+      } else {
+        setExerciseSets(populateAndChangeWeightToGrams(exercise.exerciseSet));
+        dispatch(
+          popupActions.setPopupVisibility({
+            visibility: true,
+            text: "Something went wrong!",
+            popupType: "error",
+          }),
+        );
+        setTimeout(() => {
+          dispatch(
+            popupActions.setPopupVisibility({
+              visibility: false,
+              text: "Something went wrong!",
+              popupType: "success",
+            }),
+          );
+        }, 4000);
+      }
+      setEdit(false);
+    },
+  });
 
   const [edit, setEdit] = useState(false);
   const [kgInputErrors, setKgInputErrors] = useState<string[]>([]);
   const [repsInputErrors, setRepsInputErrors] = useState<string[]>([]);
   const [blockSave, setBlockSave] = useState(false);
+
+  const dispatch = useDispatch();
 
   const populateAndChangeWeightToGrams = (sets: ExtendedExerciseSet[]) => {
     const arr = sets.map(el => ({
@@ -71,13 +105,6 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
   const [exerciseSets, setExerciseSets] = useState(
     populateAndChangeWeightToGrams(exercise.exerciseSet),
   );
-  const [addedSets, setAddedSets] = useState<ExerciseSet[]>([]);
-  const [updatedItemsIds, setUpdatedItemsIds] = useState<Set<string>>(
-    new Set(),
-  );
-
-  console.log({ exercise });
-  console.log({ exerciseSets });
 
   const handleSave = () => {
     const exportExerciseSets: { id: string; reps: number; weight: number }[] =
@@ -135,8 +162,6 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
       arr[idx] = { ...arr[idx], reps: value };
     }
 
-    setUpdatedItemsIds(prev => prev.add(set.id));
-
     setExerciseSets(arr);
   };
 
@@ -164,8 +189,7 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
   };
 
   const handleCancel = () => {
-    setExerciseSets(exercise.exerciseSet);
-    setUpdatedItemsIds(new Set());
+    setExerciseSets(populateAndChangeWeightToGrams(exercise.exerciseSet));
     setEdit(false);
   };
 
