@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { v4 } from "uuid";
 import {
   ExerciseSet,
-  GetUserWorkoutQuery,
   GqlNewExerciseSet,
+  useDeleteWorkoutExerciseMutation,
   useUpdateExerciseSetsMutation,
   WorkoutExercise,
 } from "../../generated/graphql";
@@ -12,7 +12,7 @@ import { capitalizeFirstLetter } from "../../utils/stringUtils";
 import { ReactComponent as CancelIcon } from "../../assets/svg/bolderClose.svg";
 import { ReactComponent as TrashIconSVG } from "../../assets/svg/trash.svg";
 import { ReactComponent as PencilSVG } from "../../assets/svg/pencil.svg";
-import { Button } from "../UI";
+import { Button, Heading, Modal } from "../UI";
 import {
   EditButtonsWrapper,
   ExerciseName,
@@ -28,21 +28,35 @@ import {
 import theme from "../../theme/theme";
 import { countDecimals, gramsToKilograms } from "../../utils/numberUtils";
 import { useParams } from "react-router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as popupActions from "../../redux/popup/popupActions";
+import * as modalActions from "../../redux/modal/modalActions";
+import { AppState } from "../../redux/rootReducer";
+import { createRefetchQueriesArray } from "../../utils/graphQLHelpers";
 
-interface ExerciseSetsFromDBProps {
-  exercise: WorkoutExercise;
-}
+const populateAndChangeWeightToGrams = (sets: ExtendedExerciseSet[]) => {
+  const arr = sets.map(el => ({
+    ...el,
+    weight: gramsToKilograms(el.weight),
+  }));
+
+  return arr;
+};
 
 interface ExtendedExerciseSet extends ExerciseSet {
   newSet?: boolean;
+}
+
+interface ExerciseSetsFromDBProps {
+  exercise: WorkoutExercise;
 }
 
 const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
   exercise,
 }) => {
   const { id: workoutId } = useParams<{ id: string }>();
+  const { show: showModal } = useSelector((state: AppState) => state.modal);
+
   // TODO: This endopoint should return errors not boolean
   const [updateExerciseSetsMutation] = useUpdateExerciseSetsMutation({
     onCompleted: data => {
@@ -86,25 +100,73 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
     },
   });
 
+  const [deleteWorkoutExercise] = useDeleteWorkoutExerciseMutation({
+    onCompleted: ({ deleteWorkoutExercise }) => {
+      if (deleteWorkoutExercise) {
+        dispatch(
+          popupActions.setPopupVisibility({
+            visibility: true,
+            text: "Exercise deleted successfuly!",
+            popupType: "success",
+          }),
+        );
+        setTimeout(() => {
+          dispatch(
+            popupActions.setPopupVisibility({
+              visibility: false,
+              text: "Exercise deleted successfuly!",
+              popupType: "success",
+            }),
+          );
+        }, 4000);
+      }
+    },
+    onError: ApolloError => {
+      dispatch(
+        popupActions.setPopupVisibility({
+          visibility: true,
+          text: ApolloError.message,
+          popupType: "error",
+        }),
+      );
+      setTimeout(() => {
+        dispatch(
+          popupActions.setPopupVisibility({
+            visibility: false,
+            text: ApolloError.message,
+            popupType: "error",
+          }),
+        );
+      }, 4000);
+    },
+    refetchQueries: createRefetchQueriesArray(["getUserWorkout"], {
+      workoutId: workoutId,
+    }),
+  });
+
   const [edit, setEdit] = useState(false);
   const [kgInputErrors, setKgInputErrors] = useState<string[]>([]);
   const [repsInputErrors, setRepsInputErrors] = useState<string[]>([]);
   const [blockSave, setBlockSave] = useState(false);
-
-  const dispatch = useDispatch();
-
-  const populateAndChangeWeightToGrams = (sets: ExtendedExerciseSet[]) => {
-    const arr = sets.map(el => ({
-      ...el,
-      weight: gramsToKilograms(el.weight),
-    }));
-
-    return arr;
-  };
-
   const [exerciseSets, setExerciseSets] = useState(
     populateAndChangeWeightToGrams(exercise.exerciseSet),
   );
+
+  const dispatch = useDispatch();
+
+  const handleDeleteExercise = () => {
+    deleteWorkoutExercise({
+      variables: {
+        workoutExerciseId: exercise.id,
+        workoutId: workoutId,
+      },
+    });
+    dispatch(modalActions.closeModal());
+  };
+
+  const handleCancelIconClick = () => {
+    dispatch(modalActions.openModal());
+  };
 
   const handleSave = () => {
     const exportExerciseSets: { id: string; reps: number; weight: number }[] =
@@ -138,6 +200,10 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
         },
       },
     });
+  };
+
+  const handleModalClose = () => {
+    dispatch(modalActions.closeModal());
   };
 
   const handleChange = (
@@ -342,19 +408,31 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
           </EditButtonsWrapper>
         </>
       )}
+      {edit && <CancelIcon id="cancelIcon" onClick={handleCancelIconClick} />}
       {edit && (
-        <CancelIcon
-          id="cancelIcon"
-          // onClick={() => {
-          //   if (!handleDeleteExercise || !exercise) return;
-
-          //   if (setExerciseWithSets) {
-          //     setExerciseWithSets(prev =>
-          //       prev.filter(el => el.name !== exercise.name),
-          //     );
-          //   }
-          // }}
-        />
+        <Modal opened={showModal} close={handleModalClose} maxWidth={"40em"}>
+          <Heading size="h4">
+            Are you sure you want to delete this exercise from your workout?
+          </Heading>
+          <EditButtonsWrapper>
+            <Button
+              bColor={theme.colors.successTextColor}
+              fontSize="1rem"
+              type="button"
+              onClick={handleDeleteExercise}
+            >
+              Delete
+            </Button>
+            <Button
+              bColor={theme.colors.errorTextColor}
+              fontSize="1rem"
+              type="button"
+              onClick={handleModalClose}
+            >
+              Cancel
+            </Button>
+          </EditButtonsWrapper>
+        </Modal>
       )}
     </Wrapper>
   );

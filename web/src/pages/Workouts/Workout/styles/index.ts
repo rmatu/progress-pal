@@ -1,4 +1,5 @@
 import styled from "styled-components/macro";
+import { convertPxToRem } from "../../../../utils/cssHelpers";
 
 export const ContentWrapper = styled.div`
   padding: 0 1em;

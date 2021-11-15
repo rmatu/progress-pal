@@ -3,11 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import ExerciseSetsFromDB from "../../../components/ExerciseSetsFromDB/ExerciseSetsFromDB";
-import { Heading } from "../../../components/UI";
+import { Button, Heading, Modal } from "../../../components/UI";
 import Loader from "../../../components/UI/Loader/Loader";
 import Popup from "../../../components/UI/Popup/Popup";
 import {
   GetUserWorkoutQuery,
+  useDeleteWorkoutExerciseMutation,
   useGetUserWorkoutLazyQuery,
   useMeQuery,
   WorkoutExercise,
@@ -15,7 +16,10 @@ import {
 import DashbordLayoutHOC from "../../../hoc/DashbordLayoutHOC";
 import { RightContent } from "../../../hoc/styles";
 import * as navActions from "../../../redux/dashboardNavbar/dashboardNavbarActions";
+import * as modalActions from "../../../redux/modal/modalActions";
+import * as popupActions from "../../../redux/popup/popupActions";
 import { AppState } from "../../../redux/rootReducer";
+import { createRefetchQueriesArray } from "../../../utils/graphQLHelpers";
 import {
   ContentWrapper,
   Date,
@@ -34,6 +38,8 @@ interface WorkoutProps {}
 //   -> Send only updated and new sets to the backend
 
 const Workout: React.FC<WorkoutProps> = () => {
+  const { id } = useParams<{ id: string }>();
+
   const { data: user } = useMeQuery();
   const [getWorkout, { data: workoutData }] = useGetUserWorkoutLazyQuery();
 
@@ -41,7 +47,6 @@ const Workout: React.FC<WorkoutProps> = () => {
     (state: AppState) => state.popup,
   );
   const { open } = useSelector((state: AppState) => state.dashboardNavbar);
-  const { id } = useParams<{ id: string }>();
 
   const [fetchedWorkout, setFetchedWorkout] = useState<GetUserWorkoutQuery>();
 

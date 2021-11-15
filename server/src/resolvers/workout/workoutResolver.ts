@@ -20,7 +20,6 @@ import {
   UpdateExerciseSets,
   YearlyWorkoutsAmountResponse,
 } from "./types";
-import e from "express";
 
 @Resolver(UserMetrics)
 export class WorkoutResolver {
@@ -487,5 +486,52 @@ export class WorkoutResolver {
       await queryRunner.release();
     }
     return false;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuthenticated)
+  async deleteWorkoutExercise(
+    @Arg("workoutExerciseId") workoutExerciseId: string,
+    @Arg("workoutId") workoutId: string,
+    @Ctx() { req }: MyContext,
+  ) {
+    const { userId } = req.session;
+
+    try {
+      const workoutRepo = await getRepository(Workout);
+      const workoutExerciseRepo = await getRepository(WorkoutExercise);
+
+      // Get user workout base by workoutID
+      // and check if user is owner of this workout
+      const workout = await workoutRepo.findOne({
+        relations: [
+          "workoutExercise",
+          "workoutExercise.commonExercise",
+          "workoutExercise.userExercise",
+          "workoutExercise.exerciseSet",
+        ],
+        order: {
+          updatedAt: "DESC",
+        },
+        where: { user: userId, id: workoutId },
+      });
+
+      if (!workout) return new Error("You are not authorized to do that");
+
+      // Check if requested workoutExercise belongs to the user that made the request
+      //@ts-ignore
+      const exist = workout.workoutExercise.find(
+        (el: WorkoutExercise) => el.id === workoutExerciseId,
+      );
+
+      if (!exist) return new Error("You are noth authorized to do that");
+
+      await workoutExerciseRepo.delete(workoutExerciseId);
+
+      return true;
+    } catch (e) {
+      console.log(e);
+      return new Error("Something went wrong");
+    }
   }
 }

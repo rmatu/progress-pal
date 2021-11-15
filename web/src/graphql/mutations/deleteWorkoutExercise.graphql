@@ -1,0 +1,9 @@
+mutation DeleteWorkoutExercise(
+  $workoutId: String!
+  $workoutExerciseId: String!
+) {
+  deleteWorkoutExercise(
+    workoutId: $workoutId
+    workoutExerciseId: $workoutExerciseId
+  )
+}
