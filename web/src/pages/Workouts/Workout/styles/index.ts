@@ -43,3 +43,30 @@ export const ButtonsWrapper = styled.div<{ margin?: string }>`
     opacity: 0.7;
   }
 `;
+
+export const GeneralInfoWrapper = styled.div`
+  max-width: ${convertPxToRem(500)};
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  svg {
+    position: relative;
+    opacity: 0.6;
+    top: 0.5em;
+    height: ${convertPxToRem(23)};
+    width: ${convertPxToRem(23)};
+
+    :hover {
+      cursor: pointer;
+      opacity: 1;
+    }
+  }
+
+  #pencil {
+    height: ${convertPxToRem(16)};
+    width: ${convertPxToRem(16)};
+  }
+`;

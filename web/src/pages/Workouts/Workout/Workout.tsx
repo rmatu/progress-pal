@@ -4,8 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import ExerciseSets from "../../../components/ExerciseSets/ExerciseSets";
 import ExerciseSetsFromDB from "../../../components/ExerciseSetsFromDB/ExerciseSetsFromDB";
-import { Button, Heading } from "../../../components/UI";
+import { Button, Heading, Modal } from "../../../components/UI";
 import AddWorkoutModal from "../../../components/UI/AddWorkoutModal/AddWorkoutModal";
+import Calendar from "../../../components/UI/Date/Calendar/Calendar";
 import Loader from "../../../components/UI/Loader/Loader";
 import Popup from "../../../components/UI/Popup/Popup";
 import {
@@ -23,13 +24,17 @@ import { AppState } from "../../../redux/rootReducer";
 import theme from "../../../theme/theme";
 import { IExportedExercise } from "../../../utils/formSchemas";
 import { createRefetchQueriesArray } from "../../../utils/graphQLHelpers";
+import { ReactComponent as CalendarSVG } from "../../../assets/svg/calendar.svg";
+import { ReactComponent as PencilSVG } from "../../../assets/svg/pencil.svg";
 import {
   ButtonsWrapper,
   ContentWrapper,
   Date,
+  GeneralInfoWrapper,
   WorkoutHeading,
   WorkoutHeadingWrapper,
 } from "./styles";
+import CalendarWithTimeModal from "../../../components/UI/CalendarWithTimeModal/CalendarWithTimeModal";
 
 interface WorkoutProps {}
 
@@ -98,12 +103,25 @@ const Workout: React.FC<WorkoutProps> = () => {
   const { open } = useSelector((state: AppState) => state.dashboardNavbar);
 
   const [blockSubmit, setBlockSubmit] = useState<boolean>(true);
+  const [editGeneralInfo, setEditGeneralInfo] = useState<boolean>(false);
   const [fetchedWorkout, setFetchedWorkout] = useState<GetUserWorkoutQuery>();
-  const [showAddExercisesModal, setShowAddExercisesModal] = useState(false);
+  const [showAddExercisesModal, setShowAddExercisesModal] =
+    useState<boolean>(false);
+  const [showCalendar, setShowCalendar] = useState<boolean>(false);
+  const [dateWithTime, setDateWithTime] = useState<
+    | {
+        startTime: string;
+        endTime: string;
+        date: Date;
+      }
+    | undefined
+  >();
   const [selectedExercises, setSelectedExercises] = useState<[]>([]);
   const [exerciseWithSets, setExerciseWithSets] = useState<IExportedExercise[]>(
     [],
   );
+
+  console.log({ dateWithTime });
 
   const dispatch = useDispatch();
 
@@ -129,6 +147,18 @@ const Workout: React.FC<WorkoutProps> = () => {
     }
 
     setExerciseWithSets(prev => prev.filter(el => el.id !== exercise.id));
+  };
+
+  const handleCalendarClick = () => {
+    setShowCalendar(true);
+  };
+
+  const handlePencilClick = () => {
+    setEditGeneralInfo(true);
+  };
+
+  const handleCancelChangeGeneralInfo = () => {
+    setEditGeneralInfo(false);
   };
 
   const handleSaveNewExercises = () => {
@@ -210,18 +240,50 @@ const Workout: React.FC<WorkoutProps> = () => {
     );
   }
 
+  console.log({ workoutData });
+
   return (
     <DashbordLayoutHOC user={user?.me}>
       <RightContent open={open}>
         <ContentWrapper>
-          <Heading size="h2" textAlign="left" padding="0">
-            {fetchedWorkout?.getUserWorkout?.name}{" "}
-          </Heading>
-          <Date>
-            {moment(fetchedWorkout?.getUserWorkout?.updatedAt, "x").format(
-              "DD MMMM YYYY - HH:MM",
+          <GeneralInfoWrapper>
+            <Heading size="h2" textAlign="left" padding="0">
+              {fetchedWorkout?.getUserWorkout?.name}{" "}
+            </Heading>
+            {!editGeneralInfo && (
+              <PencilSVG id="pencil" onClick={handlePencilClick} />
             )}
-          </Date>
+          </GeneralInfoWrapper>
+          <GeneralInfoWrapper>
+            <Date>
+              {!dateWithTime?.date &&
+                moment(fetchedWorkout?.getUserWorkout?.updatedAt, "x").format(
+                  "DD MMMM YYYY - HH:MM",
+                )}
+              {dateWithTime?.date &&
+                moment(dateWithTime.date).format("DD MMMM YYYY - HH:MM")}
+            </Date>
+            {editGeneralInfo && <CalendarSVG onClick={handleCalendarClick} />}
+          </GeneralInfoWrapper>
+          {editGeneralInfo && (
+            <ButtonsWrapper margin="2em 0 0 0">
+              <Button
+                bColor={theme.colors.successTextColor}
+                fontSize="1rem"
+                type="button"
+              >
+                Save
+              </Button>
+              <Button
+                bColor={theme.colors.errorTextColor}
+                fontSize="1rem"
+                type="button"
+                onClick={handleCancelChangeGeneralInfo}
+              >
+                Cancel
+              </Button>
+            </ButtonsWrapper>
+          )}
 
           <WorkoutHeadingWrapper margin="2em 0">
             <WorkoutHeading>Exercises</WorkoutHeading>
@@ -281,6 +343,13 @@ const Workout: React.FC<WorkoutProps> = () => {
           handleClose={() => setShowAddExercisesModal(false)}
           handleSelectedItem={handleSelectedItem}
           selectedExercises={selectedExercises}
+        />
+      )}
+      {showCalendar && (
+        <CalendarWithTimeModal
+          setDateWithTime={setDateWithTime}
+          opened={showCalendar}
+          close={() => setShowCalendar(false)}
         />
       )}
     </DashbordLayoutHOC>

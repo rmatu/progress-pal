@@ -232,6 +232,7 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
   };
 
   const handleDeleteSet = (set: ExerciseSet) => {
+    if (exerciseSets.length === 1) return;
     setExerciseSets(prev => prev.filter(el => el.id !== set.id));
   };
 
