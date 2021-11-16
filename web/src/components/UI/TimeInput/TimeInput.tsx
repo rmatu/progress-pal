@@ -30,9 +30,13 @@ const TimeInput: React.FC<TimeInputProps> = ({
   const getSecondsFromHHMMSS = (value: any) => {
     const [str1, str2, str3] = value.split(":");
 
-    const val1 = Number(str1);
+    let val1 = Number(str1);
     const val2 = Number(str2);
     const val3 = Number(str3);
+
+    if (val1 > 23) {
+      val1 = 23;
+    }
 
     if (!isNaN(val1) && isNaN(val2) && isNaN(val3)) {
       return val1;

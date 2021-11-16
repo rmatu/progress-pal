@@ -2,11 +2,14 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
+import { ReactComponent as CalendarSVG } from "../../../assets/svg/calendar.svg";
+import { ReactComponent as PencilSVG } from "../../../assets/svg/pencil.svg";
 import ExerciseSets from "../../../components/ExerciseSets/ExerciseSets";
 import ExerciseSetsFromDB from "../../../components/ExerciseSetsFromDB/ExerciseSetsFromDB";
-import { Button, Heading, Modal } from "../../../components/UI";
+import { Button, Heading } from "../../../components/UI";
 import AddWorkoutModal from "../../../components/UI/AddWorkoutModal/AddWorkoutModal";
-import Calendar from "../../../components/UI/Date/Calendar/Calendar";
+import CalendarWithTimeModal from "../../../components/UI/CalendarWithTimeModal/CalendarWithTimeModal";
+import InputWithIcon from "../../../components/UI/InputWithIcon/InputWithIcon";
 import Loader from "../../../components/UI/Loader/Loader";
 import Popup from "../../../components/UI/Popup/Popup";
 import {
@@ -24,8 +27,6 @@ import { AppState } from "../../../redux/rootReducer";
 import theme from "../../../theme/theme";
 import { IExportedExercise } from "../../../utils/formSchemas";
 import { createRefetchQueriesArray } from "../../../utils/graphQLHelpers";
-import { ReactComponent as CalendarSVG } from "../../../assets/svg/calendar.svg";
-import { ReactComponent as PencilSVG } from "../../../assets/svg/pencil.svg";
 import {
   ButtonsWrapper,
   ContentWrapper,
@@ -34,7 +35,6 @@ import {
   WorkoutHeading,
   WorkoutHeadingWrapper,
 } from "./styles";
-import CalendarWithTimeModal from "../../../components/UI/CalendarWithTimeModal/CalendarWithTimeModal";
 
 interface WorkoutProps {}
 
@@ -50,7 +50,13 @@ const Workout: React.FC<WorkoutProps> = () => {
   const { id } = useParams<{ id: string }>();
 
   const { data: user } = useMeQuery();
-  const [getWorkout, { data: workoutData }] = useGetUserWorkoutLazyQuery();
+  const [getWorkout, { data: workoutData }] = useGetUserWorkoutLazyQuery({
+    onCompleted: ({ getUserWorkout }) => {
+      if (getUserWorkout && getUserWorkout.name) {
+        setNewWorkoutName(getUserWorkout.name);
+      }
+    },
+  });
   const [addNewExercisesToTheWorkout] = useAddNewExercisesToTheWorkoutMutation({
     onCompleted: ({ addNewExercisesToTheWorkout }) => {
       if (addNewExercisesToTheWorkout) {
@@ -116,6 +122,7 @@ const Workout: React.FC<WorkoutProps> = () => {
       }
     | undefined
   >();
+  const [newWorkoutName, setNewWorkoutName] = useState<string>();
   const [selectedExercises, setSelectedExercises] = useState<[]>([]);
   const [exerciseWithSets, setExerciseWithSets] = useState<IExportedExercise[]>(
     [],
@@ -127,6 +134,10 @@ const Workout: React.FC<WorkoutProps> = () => {
 
   const handleAddExercise = () => {
     setShowAddExercisesModal(true);
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewWorkoutName(e.target.value);
   };
 
   const handleSelectedItem = (exercise: any) => {
@@ -240,16 +251,27 @@ const Workout: React.FC<WorkoutProps> = () => {
     );
   }
 
-  console.log({ workoutData });
-
   return (
     <DashbordLayoutHOC user={user?.me}>
       <RightContent open={open}>
         <ContentWrapper>
           <GeneralInfoWrapper>
-            <Heading size="h2" textAlign="left" padding="0">
-              {fetchedWorkout?.getUserWorkout?.name}{" "}
-            </Heading>
+            {!editGeneralInfo && (
+              <Heading size="h2" textAlign="left" padding="0">
+                {fetchedWorkout?.getUserWorkout?.name}{" "}
+              </Heading>
+            )}
+            {editGeneralInfo && (
+              <InputWithIcon
+                name="search"
+                onChange={handleNameChange}
+                placeholder="Search"
+                type="text"
+                value={newWorkoutName}
+                width="200px"
+                error={newWorkoutName!.length <= 0 ? "Empty" : ""}
+              />
+            )}
             {!editGeneralInfo && (
               <PencilSVG id="pencil" onClick={handlePencilClick} />
             )}
@@ -261,7 +283,10 @@ const Workout: React.FC<WorkoutProps> = () => {
                   "DD MMMM YYYY - HH:MM",
                 )}
               {dateWithTime?.date &&
-                moment(dateWithTime.date).format("DD MMMM YYYY - HH:MM")}
+                moment(dateWithTime.date).format("DD MMMM YYYY")}
+              {dateWithTime?.date && " - "}
+              {dateWithTime?.endTime &&
+                moment(dateWithTime.endTime, "H:m").format("HH:mm")}
             </Date>
             {editGeneralInfo && <CalendarSVG onClick={handleCalendarClick} />}
           </GeneralInfoWrapper>

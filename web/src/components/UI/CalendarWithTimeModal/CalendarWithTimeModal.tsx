@@ -50,13 +50,13 @@ const CalendarWithTimeModal: React.FC<CalendarWithTimeModalProps> = ({
     <Modal opened={opened} close={close} maxWidth="50em">
       <TimeInputWrapper>
         <TimeInput
-          placeholder={"hh:mm | hh:mm:ss"}
+          placeholder={"H:m or H:m:s"}
           heading={"Start time"}
           value={startTime}
           setValue={setStartTime}
         />
         <TimeInput
-          placeholder={"hh:mm | hh:mm:ss"}
+          placeholder={"H:m or H:m:s"}
           heading={"End time"}
           value={endTime}
           setValue={setEndTime}
