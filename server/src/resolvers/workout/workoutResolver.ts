@@ -15,8 +15,10 @@ import { Workout } from "../../entities/Workout";
 import { WorkoutExercise } from "../../entities/WorkoutExercise";
 import { isAuthenticated } from "../../middleware/isAuthenticated";
 import {
+  AddNewExercisesToTheWorkoutInput,
   CreateWorkoutInput,
   DataForMuscleHeatmap,
+  ExercisesInput,
   UpdateExerciseSets,
   YearlyWorkoutsAmountResponse,
 } from "./types";
@@ -365,6 +367,84 @@ export class WorkoutResolver {
     }
 
     return workout;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuthenticated)
+  async addNewExercisesToTheWorkout(
+    @Arg("input") input: AddNewExercisesToTheWorkoutInput,
+    @Arg("workoutId") workoutId: string,
+    @Ctx() { req }: MyContext,
+  ) {
+    const { userId } = req.session;
+
+    // get a connection and create a new query runner
+    const connection = getConnection();
+    const queryRunner = connection.createQueryRunner();
+
+    // establish real database connection using our new query runner
+    await queryRunner.connect();
+
+    // lets now open a new transaction:
+    await queryRunner.startTransaction();
+
+    try {
+      const workoutRepo = await getRepository(Workout);
+
+      const workout = await workoutRepo.findOne({
+        relations: [
+          "workoutExercise",
+          "workoutExercise.commonExercise",
+          "workoutExercise.userExercise",
+          "workoutExercise.exerciseSet",
+        ],
+        order: {
+          updatedAt: "DESC",
+        },
+        where: { user: userId, id: workoutId },
+      });
+
+      if (!workout) return new Error("You are not authorized to do that");
+
+      for (const inputExercise of input.exercises) {
+        const workoutExercise = new WorkoutExercise();
+
+        if (inputExercise.isCommonExercise) {
+          // @ts-ignore
+          workoutExercise.commonExercise = inputExercise.id;
+        } else {
+          // @ts-ignore
+          workoutExercise.userExercise = inputExercise.id;
+        }
+
+        // @ts-ignore
+        workoutExercise.workout = workout.id;
+        const savedExercise = await queryRunner.manager.save(workoutExercise);
+
+        inputExercise.sets.forEach(async inputSet => {
+          const set = new ExerciseSet();
+
+          set.set = inputSet.set;
+          set.weight = inputSet.weight * 1000;
+          set.reps = inputSet.reps;
+          //@ts-ignore
+          set.workoutExercise = savedExercise.id;
+
+          await queryRunner.manager.save(set);
+        });
+      }
+
+      // commit transaction now:
+      await queryRunner.commitTransaction();
+
+      return true;
+    } catch (err) {
+      // since we have errors let's rollback changes we made
+      await queryRunner.rollbackTransaction();
+      return false;
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   @Mutation(() => Boolean)
