@@ -112,4 +112,7 @@ export class UpdateExerciseSets {
 export class AddNewExercisesToTheWorkoutInput {
   @Field(() => [ExercisesInput])
   exercises: ExercisesInput[];
+
+  @Field(() => String)
+  workoutId: string;
 }

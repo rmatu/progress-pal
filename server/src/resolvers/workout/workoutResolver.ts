@@ -18,7 +18,6 @@ import {
   AddNewExercisesToTheWorkoutInput,
   CreateWorkoutInput,
   DataForMuscleHeatmap,
-  ExercisesInput,
   UpdateExerciseSets,
   YearlyWorkoutsAmountResponse,
 } from "./types";
@@ -92,7 +91,12 @@ export class WorkoutResolver {
 
   @Query(() => Workout, { nullable: true })
   @UseMiddleware(isAuthenticated)
-  async getUserWorkout(@Arg("workoutId") workoutId: string) {
+  async getUserWorkout(
+    @Arg("workoutId") workoutId: string,
+    @Ctx() { req }: MyContext,
+  ) {
+    const { userId } = req.session;
+
     const workoutRepo = await getRepository(Workout);
 
     const workout = await workoutRepo.findOne({
@@ -102,12 +106,28 @@ export class WorkoutResolver {
         "workoutExercise.userExercise",
         "workoutExercise.exerciseSet",
       ],
-      where: { id: workoutId },
+      where: { id: workoutId, user: userId },
     });
 
     if (!workout) {
       return null;
     }
+
+    // Sorting nested relations in typeORM is super hard, so I'm sorting it on the server
+    // Sort ASC
+    // The newest
+    workout.workoutExercise = workout?.workoutExercise
+      //@ts-ignore
+      .map(el => el)
+      .sort((a: WorkoutExercise, b: WorkoutExercise) => {
+        if (moment(a.updatedAt).unix() > moment(b.updatedAt).unix()) {
+          return 1;
+        }
+        if (moment(a.updatedAt).unix() < moment(b.updatedAt).unix()) {
+          return -1;
+        }
+        return 0;
+      });
 
     return workout;
   }
@@ -373,7 +393,6 @@ export class WorkoutResolver {
   @UseMiddleware(isAuthenticated)
   async addNewExercisesToTheWorkout(
     @Arg("input") input: AddNewExercisesToTheWorkoutInput,
-    @Arg("workoutId") workoutId: string,
     @Ctx() { req }: MyContext,
   ) {
     const { userId } = req.session;
@@ -401,7 +420,7 @@ export class WorkoutResolver {
         order: {
           updatedAt: "DESC",
         },
-        where: { user: userId, id: workoutId },
+        where: { user: userId, id: input.workoutId },
       });
 
       if (!workout) return new Error("You are not authorized to do that");

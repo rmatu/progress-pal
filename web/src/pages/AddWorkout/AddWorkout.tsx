@@ -10,19 +10,15 @@ import { FlexWrapperDiv } from "../../components/FlexElements";
 import { Button, Heading, Popup } from "../../components/UI";
 import AddWorkoutModal from "../../components/UI/AddWorkoutModal/AddWorkoutModal";
 import InputWithIcon from "../../components/UI/InputWithIcon/InputWithIcon";
-import {
-  GetDataForMuscleHeatmapDocument,
-  GetUserWorkoutsDocument,
-  useCreateWorkoutMutation,
-  useMeQuery,
-} from "../../generated/graphql";
+import { ADD_WORKOUT, MAIN_PAGE } from "../../constants/routes";
+import { useCreateWorkoutMutation, useMeQuery } from "../../generated/graphql";
 import DashbordLayoutHOC from "../../hoc/DashbordLayoutHOC";
 import { RightContent } from "../../hoc/styles";
 import * as navActions from "../../redux/dashboardNavbar/dashboardNavbarActions";
-import { MAIN_PAGE, ADD_WORKOUT } from "../../constants/routes";
 import { AppState } from "../../redux/rootReducer";
 import theme from "../../theme/theme";
 import { AddWorkoutSchema, IExportedExercise } from "../../utils/formSchemas";
+import { createRefetchQueriesArray } from "../../utils/graphQLHelpers";
 import {
   ButtonWrapper,
   ExercisesList,
@@ -30,8 +26,6 @@ import {
   SuccessWorkoutWrapper,
   WorkoutForm,
 } from "./styles";
-import { getDateXMonthsBefore } from "../../utils/dateHelpers";
-import { createRefetchQueriesArray } from "../../utils/graphQLHelpers";
 
 export interface IWorkout {
   name: string;

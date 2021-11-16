@@ -24,3 +24,22 @@ export const WorkoutHeading = styled.p`
   margin-bottom: 0.5em;
   border-bottom: 1px solid ${({ theme }) => theme.colors.graySeparator};
 `;
+
+export const ButtonsWrapper = styled.div<{ margin?: string }>`
+  max-width: ${convertPxToRem(500)};
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin: 4em 0;
+  margin: ${({ margin }) => margin};
+  justify-content: center;
+
+  button {
+    margin: 0;
+    border-radius: 0.5em;
+    padding: 0.2em 0.5em;
+    width: ${convertPxToRem(150)};
+    margin: 0 0.4em;
+    opacity: 0.7;
+  }
+`;

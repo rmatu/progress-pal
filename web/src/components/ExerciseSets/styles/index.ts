@@ -1,23 +1,6 @@
 import styled, { css } from "styled-components/macro";
 import { convertPxToRem } from "../../../utils/cssHelpers";
 
-export const Wrapper = styled.div`
-  padding: 1em;
-  max-width: ${convertPxToRem(400)};
-  width: 100%;
-  position: relative;
-
-  #cancelIcon {
-    cursor: pointer;
-    top: 1.6em;
-    right: 1em;
-    height: 10px;
-    position: absolute;
-    color: #fff;
-    fill: #fff;
-  }
-`;
-
 export const ExerciseName = styled.h3``;
 
 export const PrimaryMuscles = styled.div`
@@ -113,4 +96,40 @@ export const TrashIcon = styled.div`
     height: ${convertPxToRem(16)};
     width: ${convertPxToRem(16)};
   }
+`;
+
+export const Wrapper = styled.div<{ matchExerciseSetsFromDBStyle?: boolean }>`
+  padding: 1em;
+  max-width: ${convertPxToRem(400)};
+  max-width: ${({ matchExerciseSetsFromDBStyle }) =>
+    matchExerciseSetsFromDBStyle && convertPxToRem(500)};
+  width: 100%;
+  position: relative;
+
+  #cancelIcon {
+    cursor: pointer;
+    top: 1.6em;
+    right: 1em;
+    height: 10px;
+    position: absolute;
+    color: #fff;
+    fill: #fff;
+  }
+
+  ${({ matchExerciseSetsFromDBStyle }) =>
+    matchExerciseSetsFromDBStyle &&
+    css`
+      button {
+        margin: 0;
+        border-radius: 0.5em;
+        padding: 0.2em 0.5em;
+        width: ${convertPxToRem(100)};
+        margin: 0 0.4em;
+        opacity: 0.7;
+      }
+
+      ${Grid} {
+        grid-template-columns: 1fr 1fr 1fr 0.5fr;
+      }
+    `}
 `;
