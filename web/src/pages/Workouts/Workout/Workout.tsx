@@ -17,6 +17,7 @@ import {
   useAddNewExercisesToTheWorkoutMutation,
   useGetUserWorkoutLazyQuery,
   useMeQuery,
+  useUpdateGeneralWorkoutInfoMutation,
   WorkoutExercise,
 } from "../../../generated/graphql";
 import DashbordLayoutHOC from "../../../hoc/DashbordLayoutHOC";
@@ -50,12 +51,29 @@ const Workout: React.FC<WorkoutProps> = () => {
   const { id } = useParams<{ id: string }>();
 
   const { data: user } = useMeQuery();
-  const [getWorkout, { data: workoutData }] = useGetUserWorkoutLazyQuery({
-    onCompleted: ({ getUserWorkout }) => {
-      if (getUserWorkout && getUserWorkout.name) {
-        setNewWorkoutName(getUserWorkout.name);
-      }
+  const [getWorkout, { data: workoutData }] = useGetUserWorkoutLazyQuery();
+  const [updateGeneralWorkoutInfo] = useUpdateGeneralWorkoutInfoMutation({
+    onCompleted: () => {
+      setEditGeneralInfo(false);
+      setDateWithTime(undefined);
+      dispatch(
+        popupActions.setPopupVisibility({
+          visibility: true,
+          text: "Updated successfuly!",
+          popupType: "success",
+        }),
+      );
+      setTimeout(() => {
+        dispatch(
+          popupActions.setPopupVisibility({
+            visibility: false,
+            text: "Updated successfuly!",
+            popupType: "success",
+          }),
+        );
+      }, 4000);
     },
+    refetchQueries: createRefetchQueriesArray(["getUserWorkout"]),
   });
   const [addNewExercisesToTheWorkout] = useAddNewExercisesToTheWorkoutMutation({
     onCompleted: ({ addNewExercisesToTheWorkout }) => {
@@ -128,8 +146,6 @@ const Workout: React.FC<WorkoutProps> = () => {
     [],
   );
 
-  console.log({ dateWithTime });
-
   const dispatch = useDispatch();
 
   const handleAddExercise = () => {
@@ -170,6 +186,46 @@ const Workout: React.FC<WorkoutProps> = () => {
 
   const handleCancelChangeGeneralInfo = () => {
     setEditGeneralInfo(false);
+  };
+
+  const handlSaveGeneralInfoButtonClick = () => {
+    if (!workoutData) return;
+    if (!workoutData.getUserWorkout) return;
+
+    const variables: {
+      input: {
+        date?: Date;
+        endTime?: Date;
+        startTime?: Date;
+        workoutName?: string;
+        workoutId: string;
+      };
+    } = {
+      input: {
+        workoutId: workoutData.getUserWorkout.id,
+      },
+    };
+
+    if (dateWithTime?.endTime) {
+      variables.input.endTime = moment(dateWithTime?.endTime, "H:m:s").toDate();
+    }
+
+    if (dateWithTime?.startTime) {
+      variables.input.startTime = moment(
+        dateWithTime?.startTime,
+        "H:m:s",
+      ).toDate();
+    }
+
+    if (dateWithTime?.date) {
+      variables.input.date = dateWithTime?.date;
+    }
+
+    if (newWorkoutName) {
+      variables.input.workoutName = newWorkoutName;
+    }
+
+    updateGeneralWorkoutInfo({ variables });
   };
 
   const handleSaveNewExercises = () => {
@@ -267,9 +323,11 @@ const Workout: React.FC<WorkoutProps> = () => {
                 onChange={handleNameChange}
                 placeholder="Search"
                 type="text"
-                value={newWorkoutName}
+                value={newWorkoutName || fetchedWorkout?.getUserWorkout?.name}
                 width="200px"
-                error={newWorkoutName!.length <= 0 ? "Empty" : ""}
+                error={
+                  newWorkoutName && newWorkoutName?.length <= 0 ? "Empty" : ""
+                }
               />
             )}
             {!editGeneralInfo && (
@@ -279,14 +337,19 @@ const Workout: React.FC<WorkoutProps> = () => {
           <GeneralInfoWrapper>
             <Date>
               {!dateWithTime?.date &&
-                moment(fetchedWorkout?.getUserWorkout?.updatedAt, "x").format(
-                  "DD MMMM YYYY - HH:MM",
+                moment(fetchedWorkout?.getUserWorkout?.createdAt, "x").format(
+                  "DD MMMM YYYY - HH:mm",
                 )}
               {dateWithTime?.date &&
+                !dateWithTime.endTime &&
+                moment(dateWithTime.date).format("DD MMMM YYYY - HH:mm")}
+              {dateWithTime?.date &&
+                dateWithTime.endTime &&
                 moment(dateWithTime.date).format("DD MMMM YYYY")}
-              {dateWithTime?.date && " - "}
+
+              {dateWithTime?.endTime && " - "}
               {dateWithTime?.endTime &&
-                moment(dateWithTime.endTime, "H:m").format("HH:mm")}
+                moment(dateWithTime.endTime, "H:m:s").format("HH:mm")}
             </Date>
             {editGeneralInfo && <CalendarSVG onClick={handleCalendarClick} />}
           </GeneralInfoWrapper>
@@ -296,6 +359,7 @@ const Workout: React.FC<WorkoutProps> = () => {
                 bColor={theme.colors.successTextColor}
                 fontSize="1rem"
                 type="button"
+                onClick={handlSaveGeneralInfoButtonClick}
               >
                 Save
               </Button>

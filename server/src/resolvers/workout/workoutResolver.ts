@@ -19,6 +19,7 @@ import {
   CreateWorkoutInput,
   DataForMuscleHeatmap,
   UpdateExerciseSets,
+  UpdateGeneralWorkoutInfoInput,
   YearlyWorkoutsAmountResponse,
 } from "./types";
 
@@ -585,6 +586,70 @@ export class WorkoutResolver {
       await queryRunner.release();
     }
     return false;
+  }
+
+  @Mutation(() => Workout)
+  @UseMiddleware(isAuthenticated)
+  async updateGeneralWorkoutInfo(
+    @Arg("input") input: UpdateGeneralWorkoutInfoInput,
+    @Ctx() { req }: MyContext,
+  ) {
+    const { userId } = req.session;
+
+    try {
+      const workoutRepo = await getRepository(Workout);
+
+      const workout = await workoutRepo.findOne({
+        relations: [
+          "workoutExercise",
+          "workoutExercise.commonExercise",
+          "workoutExercise.userExercise",
+          "workoutExercise.exerciseSet",
+        ],
+        where: { user: userId, id: input.workoutId },
+      });
+
+      if (!workout) return new Error("You are not authorized to do that");
+
+      if (input.workoutName) {
+        workout.name = input.workoutName;
+      }
+
+      if (input.date) {
+        workout.createdAt = input.date;
+      }
+
+      if (input.startTime) {
+        workout.startTime = input.startTime;
+      }
+
+      if (input.endTime) {
+        workout.endTime = input.endTime;
+      }
+
+      const savedWorkout = await Workout.save(workout);
+
+      // Sorting nested relations in typeORM is super hard, so I'm sorting it on the server
+      // Sort ASC
+      // The newest
+      savedWorkout.workoutExercise = workout?.workoutExercise
+        //@ts-ignore
+        .map(el => el)
+        .sort((a: WorkoutExercise, b: WorkoutExercise) => {
+          if (moment(a.updatedAt).unix() > moment(b.updatedAt).unix()) {
+            return 1;
+          }
+          if (moment(a.updatedAt).unix() < moment(b.updatedAt).unix()) {
+            return -1;
+          }
+          return 0;
+        });
+
+      return savedWorkout;
+    } catch (e) {
+      console.log(e);
+      return new Error("Something went wrong");
+    }
   }
 
   @Mutation(() => Boolean)

@@ -25,6 +25,14 @@ export class Workout extends BaseEntity {
   @Column({ default: moment().format(`[Workout] DD-MM-YYYY`) })
   name: string;
 
+  @Field(() => Date, { nullable: true })
+  @Column({ default: null, type: "timestamp with time zone" })
+  startTime: Date;
+
+  @Field(() => Date)
+  @Column({ default: moment(), type: "timestamp with time zone" })
+  endTime: Date;
+
   @Field(() => String)
   @UpdateDateColumn({ type: "timestamp with time zone" })
   updatedAt: Date;

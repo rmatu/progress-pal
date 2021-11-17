@@ -116,3 +116,21 @@ export class AddNewExercisesToTheWorkoutInput {
   @Field(() => String)
   workoutId: string;
 }
+
+@InputType()
+export class UpdateGeneralWorkoutInfoInput {
+  @Field(() => String)
+  workoutId: string;
+
+  @Field(() => String, { nullable: true })
+  workoutName?: string;
+
+  @Field(() => Date, { nullable: true })
+  date?: Date;
+
+  @Field(() => Date, { nullable: true })
+  startTime?: Date;
+
+  @Field(() => Date, { nullable: true })
+  endTime?: Date;
+}

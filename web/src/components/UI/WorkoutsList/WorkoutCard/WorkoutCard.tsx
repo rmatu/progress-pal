@@ -87,7 +87,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout, setPopup }) => {
       <LeftCardContent>
         <WorkoutName>{workout?.name}</WorkoutName>
         <WorkoutDate>
-          {moment(workout?.updatedAt, "x").format("DD MMMM - HH:MM")}
+          {moment(workout?.createdAt, "x").format("DD MMMM - HH:mm")}
         </WorkoutDate>
         <QuickInfoRow>
           <SVGWrapper>

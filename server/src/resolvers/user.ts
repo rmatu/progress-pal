@@ -523,7 +523,7 @@ export class UserResolver {
 
     user.onboardingStep = step;
 
-    User.save(user);
+    await User.save(user);
 
     return user;
   }

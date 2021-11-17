@@ -30,20 +30,40 @@ const CalendarWithTimeModal: React.FC<CalendarWithTimeModalProps> = ({
 }) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [date, setDate] = useState(moment().toDate());
+  const [date, setDate] = useState(new Date());
 
   const handleFinish = () => {
-    setDateWithTime({
-      date,
-      startTime,
-      endTime,
-    });
+    if (endTime) {
+      const hours = moment(endTime, "H:m:s").get("hours");
+      const minutes = moment(endTime, "H:m:s").get("minutes");
+      const seconds = moment(endTime, "H:m:s").get("seconds");
+
+      const newDate = moment(date).set({ hours, minutes, seconds }).toDate();
+
+      setDateWithTime({
+        date: newDate,
+        startTime,
+        endTime,
+      });
+    } else {
+      setDateWithTime({
+        date,
+        startTime,
+        endTime,
+      });
+    }
 
     close();
   };
 
   const handleChange = (date: Date) => {
-    setDate(date);
+    const m = moment();
+    const hours = m.get("hours");
+    const minutes = m.get("minutes");
+    const seconds = m.get("seconds");
+
+    const newDate = moment(date).set({ hours, minutes, seconds }).toDate();
+    setDate(newDate);
   };
 
   return (
