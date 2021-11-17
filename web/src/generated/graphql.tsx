@@ -427,7 +427,7 @@ export type RegularUserResponseFragment = (
 
 export type RegularWorkoutFragment = (
   { __typename?: 'Workout' }
-  & Pick<Workout, 'id' | 'name' | 'updatedAt' | 'createdAt'>
+  & Pick<Workout, 'id' | 'name' | 'startTime' | 'endTime' | 'updatedAt' | 'createdAt'>
   & { workoutExercise: Array<(
     { __typename?: 'WorkoutExercise' }
     & RegularWorkoutExerciseFragment
@@ -882,6 +882,8 @@ export const RegularWorkoutFragmentDoc = gql`
     fragment RegularWorkout on Workout {
   id
   name
+  startTime
+  endTime
   updatedAt
   createdAt
   workoutExercise {

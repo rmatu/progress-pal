@@ -1,6 +1,8 @@
 fragment RegularWorkout on Workout {
   id
   name
+  startTime
+  endTime
   updatedAt
   createdAt
   workoutExercise {
