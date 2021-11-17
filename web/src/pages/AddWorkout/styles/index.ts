@@ -10,6 +10,11 @@ export const ButtonWrapper = styled.div`
   align-items: center;
 
   button {
+    margin: 0;
+    border-radius: 0.5em;
+    padding: 0.2em 0.5em;
+    width: ${convertPxToRem(150)};
+    margin: 0 0.4em;
     margin-right: 1em;
   }
 
@@ -61,4 +66,30 @@ export const NoExercisesText = styled.p`
   margin-top: 1.5em;
   font-size: 2rem;
   opacity: 0.1;
+`;
+
+export const CalendarWrapper = styled.div`
+  margin-left: 1em;
+  position: relative;
+  top: -0.2em;
+  opacity: 0.7;
+  transition: all 0.1s ease-in-out;
+
+  :hover {
+    opacity: 1;
+    cursor: pointer;
+  }
+
+  svg {
+    width: ${convertPxToRem(24)};
+    height: ${convertPxToRem(24)};
+  }
+`;
+
+export const DateH = styled.h4<{ margin?: string }>`
+  margin: 0;
+  opacity: 0.5;
+  font-weight: normal;
+
+  margin: ${({ margin }) => margin};
 `;

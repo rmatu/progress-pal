@@ -59,6 +59,12 @@ export class CreateWorkoutInput {
   @Field(() => String)
   date: string;
 
+  @Field(() => Date, { nullable: true })
+  startTime?: Date;
+
+  @Field(() => Date, { nullable: true })
+  endTime?: Date;
+
   @Field(() => String)
   name: string;
 

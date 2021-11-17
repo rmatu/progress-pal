@@ -4,11 +4,13 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { ReactComponent as PencilIcon } from "../../assets/svg/pencil.svg";
+import { ReactComponent as CalendarSVG } from "../../assets/svg/calendar.svg";
 import { ReactComponent as SuccessfulWorkoutCreationSVG2 } from "../../assets/svg/successfulWorkoutCreation2.svg";
 import ExerciseSets from "../../components/ExerciseSets/ExerciseSets";
 import { FlexWrapperDiv } from "../../components/FlexElements";
 import { Button, Heading, Popup } from "../../components/UI";
 import AddWorkoutModal from "../../components/UI/AddWorkoutModal/AddWorkoutModal";
+import CalendarWithTimeModal from "../../components/UI/CalendarWithTimeModal/CalendarWithTimeModal";
 import InputWithIcon from "../../components/UI/InputWithIcon/InputWithIcon";
 import { ADD_WORKOUT, MAIN_PAGE } from "../../constants/routes";
 import { useCreateWorkoutMutation, useMeQuery } from "../../generated/graphql";
@@ -21,6 +23,8 @@ import { AddWorkoutSchema, IExportedExercise } from "../../utils/formSchemas";
 import { createRefetchQueriesArray } from "../../utils/graphQLHelpers";
 import {
   ButtonWrapper,
+  CalendarWrapper,
+  DateH,
   ExercisesList,
   NoExercisesText,
   SuccessWorkoutWrapper,
@@ -69,6 +73,7 @@ const AddWorkout = () => {
     [],
   );
   const [workout, setWorkout] = useState<IWorkout>();
+  const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [showAddExercisesModal, setShowAddExercisesModal] =
     useState<boolean>(true);
   const [blockSubmit, setBlockSubmit] = useState<boolean>(true);
@@ -78,6 +83,14 @@ const AddWorkout = () => {
     showPopup: false,
     text: "",
   });
+  const [dateWithTime, setDateWithTime] = useState<
+    | {
+        startTime: string;
+        endTime: string;
+        date: Date;
+      }
+    | undefined
+  >();
   const { open } = useSelector((state: AppState) => state.dashboardNavbar);
 
   const workoutFormik = useFormik({
@@ -108,6 +121,8 @@ const AddWorkout = () => {
     setExerciseWithSets(prev => prev.filter(el => el.id !== exercise.id));
   };
 
+  const handleCalendarClick = () => setShowCalendar(true);
+
   const handleFinishWorkout = () => {
     if (blockSubmit) return;
 
@@ -127,6 +142,16 @@ const AddWorkout = () => {
 
     if (!updatedWorkout) return;
 
+    const variables: { startTime?: string; endTime?: string } = {};
+
+    if (dateWithTime?.startTime) {
+      variables.startTime = moment(dateWithTime?.startTime, "H:m:s").toString();
+    }
+
+    if (dateWithTime?.endTime) {
+      variables.endTime = moment(dateWithTime?.endTime, "H:m:s").toString();
+    }
+
     createWorkout({
       variables: {
         input: {
@@ -134,6 +159,7 @@ const AddWorkout = () => {
           date: updatedWorkout.date,
           //@ts-ignore
           exercises: updatedWorkout.exercises,
+          ...variables,
         },
       },
     });
@@ -159,9 +185,15 @@ const AddWorkout = () => {
   };
 
   useEffect(() => {
+    let date = new Date().toString();
+
+    if (dateWithTime) {
+      date = dateWithTime.date.toString();
+    }
+
     setWorkout({
       name: workoutFormik.values.name,
-      date: new Date().toISOString(),
+      date,
       exercises: exerciseWithSets,
     });
 
@@ -185,6 +217,16 @@ const AddWorkout = () => {
 
     if (!exerciseWithSets) setBlockSubmit(true);
   }, [exerciseWithSets]);
+
+  useEffect(() => {
+    if (dateWithTime) {
+      setWorkout({
+        name: workoutFormik.values.name,
+        date: dateWithTime.date.toString(),
+        exercises: exerciseWithSets,
+      });
+    }
+  }, [dateWithTime]);
 
   useEffect(() => {
     dispatch(navActions.changeItem(ADD_WORKOUT));
@@ -244,7 +286,7 @@ const AddWorkout = () => {
           exit={{ y: -50, opacity: 0 }}
         >
           <Heading size="h2">Add Workout</Heading>
-          <FlexWrapperDiv justifyContent="center">
+          <FlexWrapperDiv justifyContent="center" alignItems="center">
             <InputWithIcon
               name="name"
               value={workoutFormik.values.name}
@@ -254,6 +296,29 @@ const AddWorkout = () => {
               width="13em"
               error={workoutFormik.errors.name}
             />
+            <CalendarWrapper>
+              <CalendarSVG onClick={handleCalendarClick} />
+            </CalendarWrapper>
+          </FlexWrapperDiv>
+          <FlexWrapperDiv justifyContent="center" alignItems="center">
+            <DateH>{moment(workout?.date).format("DD MMMM YYYY")}</DateH>
+          </FlexWrapperDiv>
+          <FlexWrapperDiv
+            justifyContent="center"
+            alignItems="center"
+            margin="0 0 2em 0"
+          >
+            {dateWithTime?.startTime && (
+              <DateH>
+                {moment(dateWithTime.startTime, "H:m:s").format("HH:mm")}
+                {" -"}
+              </DateH>
+            )}
+            {dateWithTime?.endTime && (
+              <DateH margin="0 0.3em">
+                {moment(dateWithTime.endTime, "H:m:s").format("HH:mm")}
+              </DateH>
+            )}
           </FlexWrapperDiv>
           <ButtonWrapper>
             <Button
@@ -277,17 +342,19 @@ const AddWorkout = () => {
             </Button>
           </ButtonWrapper>
           {selectedExercises.length > 0 && (
-            <Button
-              marginTop="2em"
-              padding="0.2em 2em"
-              fontSize="1.125rem"
-              bColor="#3cdfff"
-              onClick={handleFinishWorkout}
-              type="button"
-              disabled={blockSubmit}
-            >
-              Finish Workout
-            </Button>
+            <ButtonWrapper>
+              <Button
+                marginTop="2em"
+                padding="0.2em 2em"
+                fontSize="1.125rem"
+                bColor={theme.colors.successTextColor}
+                onClick={handleFinishWorkout}
+                type="button"
+                disabled={blockSubmit}
+              >
+                Finish Workout
+              </Button>
+            </ButtonWrapper>
           )}
 
           {selectedExercises.length <= 0 && (
@@ -319,6 +386,13 @@ const AddWorkout = () => {
         />
       )}
       <Popup showPopup={popup.showPopup}>{popup.text}</Popup>
+      {showCalendar && (
+        <CalendarWithTimeModal
+          setDateWithTime={setDateWithTime}
+          opened={showCalendar}
+          close={() => setShowCalendar(false)}
+        />
+      )}
     </DashbordLayoutHOC>
   );
 };

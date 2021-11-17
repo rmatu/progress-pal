@@ -321,6 +321,8 @@ export type CreateUserMetricsInput = {
 
 export type CreateWorkoutInput = {
   date: Scalars['String'];
+  startTime?: Maybe<Scalars['DateTime']>;
+  endTime?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   exercises: Array<ExercisesInput>;
 };

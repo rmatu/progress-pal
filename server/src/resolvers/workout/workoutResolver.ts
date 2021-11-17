@@ -347,6 +347,16 @@ export class WorkoutResolver {
       workout.user = userId;
       workout.name = input.name || moment().format(`[Workout] DD-MM-YYYY`);
 
+      workout.createdAt = moment(input.date).toDate();
+
+      if (input.endTime) {
+        workout.endTime = input.endTime;
+      }
+
+      if (input.startTime) {
+        workout.startTime = input.startTime;
+      }
+
       const savedWorkout = await queryRunner.manager.save(workout);
 
       for (const inputExercise of input.exercises) {
