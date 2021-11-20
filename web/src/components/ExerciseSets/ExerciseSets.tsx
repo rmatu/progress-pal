@@ -53,8 +53,6 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
     ],
   });
 
-  console.log(exercise);
-
   const [kgInputErrors, setKgInputErrors] = useState<number[]>([]);
   const [repsInputErrors, setRepsInputErrors] = useState<number[]>([]);
   const [openInfoModal, setOpenInfoModal] = useState(false);
