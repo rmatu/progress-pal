@@ -4,6 +4,7 @@ import React, { createRef, useEffect } from "react";
 import styled from "styled-components/macro";
 import { convertPxToRem } from "../../../utils/cssHelpers";
 import { ReactComponent as CancelIcon } from "../../../assets/svg/bolderClose.svg";
+import { motion } from "framer-motion";
 
 interface ModalProps {
   autoScroll?: boolean;
@@ -111,7 +112,7 @@ const StyledSection = styled.section`
     maxSectionHeight ? maxSectionHeight : ""};
 `;
 
-const ModalMain = styled.div`
+const ModalMain = styled(motion.div)`
   position: relative;
   top: 50%;
   left: 50%;
@@ -138,10 +139,9 @@ const ModalMain = styled.div`
   border-radius: 1em;
 
   .cancel {
-    position: -webkit-sticky;
-    position: sticky;
+    position: absolute;
     height: 1em;
-    top: 0.2em;
+    top: 1em;
     right: 1em;
     fill: #fff;
 

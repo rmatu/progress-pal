@@ -5,6 +5,7 @@ import { v4 } from "uuid";
 import { ReactComponent as CancelIcon } from "../../assets/svg/bolderClose.svg";
 import { ReactComponent as PencilSVG } from "../../assets/svg/pencil.svg";
 import { ReactComponent as TrashIconSVG } from "../../assets/svg/trash.svg";
+import { ReactComponent as InfoSVG } from "../../assets/svg/info.svg";
 import {
   ExerciseSet,
   GqlNewExerciseSet,
@@ -26,6 +27,7 @@ import {
   ExerciseName,
   Grid,
   GridItem,
+  InfoSVGWrapper,
   Input,
   PrimaryMuscle,
   PrimaryMuscles,
@@ -33,6 +35,7 @@ import {
   TrashIcon,
   Wrapper,
 } from "./styles";
+import WorkoutInstructionModal from "../UI/WorkoutInstructionModal/WorkoutInstructionModal";
 
 const populateAndChangeWeightToGrams = (sets: ExtendedExerciseSet[]) => {
   const arr = sets.map(el => ({
@@ -148,6 +151,7 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
   const [kgInputErrors, setKgInputErrors] = useState<string[]>([]);
   const [repsInputErrors, setRepsInputErrors] = useState<string[]>([]);
   const [blockSave, setBlockSave] = useState(false);
+  const [openInfoModal, setOpenInfoModal] = useState(false);
   const [exerciseSets, setExerciseSets] = useState(
     populateAndChangeWeightToGrams(exercise.exerciseSet),
   );
@@ -310,6 +314,9 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
     <Wrapper>
       <ExerciseName>
         {exercise?.userExercise?.name || exercise?.commonExercise?.name}
+        <InfoSVGWrapper>
+          <InfoSVG onClick={() => setOpenInfoModal(true)} />
+        </InfoSVGWrapper>
       </ExerciseName>
       <PrimaryMuscles>
         {exercise?.commonExercise?.primaryMuscles?.map((name, idx) => (
@@ -411,6 +418,13 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
       )}
 
       {edit && <CancelIcon id="cancelIcon" onClick={handleCancelIconClick} />}
+      {openInfoModal && (
+        <WorkoutInstructionModal
+          opened={openInfoModal}
+          exercise={exercise}
+          close={() => setOpenInfoModal(false)}
+        />
+      )}
       {edit && (
         <Modal opened={showModal} close={handleModalClose} maxWidth={"40em"}>
           <Heading size="h4">
