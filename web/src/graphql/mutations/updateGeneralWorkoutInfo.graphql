@@ -1,0 +1,5 @@
+mutation UpdateGeneralWorkoutInfo($input: UpdateGeneralWorkoutInfoInput!) {
+  updateGeneralWorkoutInfo(input: $input) {
+    ...RegularWorkout
+  }
+}

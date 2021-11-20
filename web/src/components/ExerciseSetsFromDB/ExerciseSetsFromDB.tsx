@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router";
 import { v4 } from "uuid";
+import { ReactComponent as CancelIcon } from "../../assets/svg/bolderClose.svg";
+import { ReactComponent as PencilSVG } from "../../assets/svg/pencil.svg";
+import { ReactComponent as TrashIconSVG } from "../../assets/svg/trash.svg";
 import {
   ExerciseSet,
   GqlNewExerciseSet,
@@ -7,11 +12,14 @@ import {
   useUpdateExerciseSetsMutation,
   WorkoutExercise,
 } from "../../generated/graphql";
+import * as modalActions from "../../redux/modal/modalActions";
+import * as popupActions from "../../redux/popup/popupActions";
+import { AppState } from "../../redux/rootReducer";
+import theme from "../../theme/theme";
 import { sanitazeMuscleNameFromDB } from "../../utils/converters";
+import { createRefetchQueriesArray } from "../../utils/graphQLHelpers";
+import { countDecimals, gramsToKilograms } from "../../utils/numberUtils";
 import { capitalizeFirstLetter } from "../../utils/stringUtils";
-import { ReactComponent as CancelIcon } from "../../assets/svg/bolderClose.svg";
-import { ReactComponent as TrashIconSVG } from "../../assets/svg/trash.svg";
-import { ReactComponent as PencilSVG } from "../../assets/svg/pencil.svg";
 import { Button, Heading, Modal } from "../UI";
 import {
   EditButtonsWrapper,
@@ -25,14 +33,6 @@ import {
   TrashIcon,
   Wrapper,
 } from "./styles";
-import theme from "../../theme/theme";
-import { countDecimals, gramsToKilograms } from "../../utils/numberUtils";
-import { useParams } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
-import * as popupActions from "../../redux/popup/popupActions";
-import * as modalActions from "../../redux/modal/modalActions";
-import { AppState } from "../../redux/rootReducer";
-import { createRefetchQueriesArray } from "../../utils/graphQLHelpers";
 
 const populateAndChangeWeightToGrams = (sets: ExtendedExerciseSet[]) => {
   const arr = sets.map(el => ({
@@ -232,6 +232,7 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
   };
 
   const handleDeleteSet = (set: ExerciseSet) => {
+    if (exerciseSets.length === 1) return;
     setExerciseSets(prev => prev.filter(el => el.id !== set.id));
   };
 
@@ -408,6 +409,7 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
           </EditButtonsWrapper>
         </>
       )}
+
       {edit && <CancelIcon id="cancelIcon" onClick={handleCancelIconClick} />}
       {edit && (
         <Modal opened={showModal} close={handleModalClose} maxWidth={"40em"}>

@@ -1,0 +1,5 @@
+mutation AddNewExercisesToTheWorkout(
+  $input: AddNewExercisesToTheWorkoutInput!
+) {
+  addNewExercisesToTheWorkout(input: $input)
+}

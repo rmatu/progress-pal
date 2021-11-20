@@ -15,9 +15,11 @@ import { Workout } from "../../entities/Workout";
 import { WorkoutExercise } from "../../entities/WorkoutExercise";
 import { isAuthenticated } from "../../middleware/isAuthenticated";
 import {
+  AddNewExercisesToTheWorkoutInput,
   CreateWorkoutInput,
   DataForMuscleHeatmap,
   UpdateExerciseSets,
+  UpdateGeneralWorkoutInfoInput,
   YearlyWorkoutsAmountResponse,
 } from "./types";
 
@@ -90,7 +92,12 @@ export class WorkoutResolver {
 
   @Query(() => Workout, { nullable: true })
   @UseMiddleware(isAuthenticated)
-  async getUserWorkout(@Arg("workoutId") workoutId: string) {
+  async getUserWorkout(
+    @Arg("workoutId") workoutId: string,
+    @Ctx() { req }: MyContext,
+  ) {
+    const { userId } = req.session;
+
     const workoutRepo = await getRepository(Workout);
 
     const workout = await workoutRepo.findOne({
@@ -100,12 +107,28 @@ export class WorkoutResolver {
         "workoutExercise.userExercise",
         "workoutExercise.exerciseSet",
       ],
-      where: { id: workoutId },
+      where: { id: workoutId, user: userId },
     });
 
     if (!workout) {
       return null;
     }
+
+    // Sorting nested relations in typeORM is super hard, so I'm sorting it on the server
+    // Sort ASC
+    // The newest
+    workout.workoutExercise = workout?.workoutExercise
+      //@ts-ignore
+      .map(el => el)
+      .sort((a: WorkoutExercise, b: WorkoutExercise) => {
+        if (moment(a.updatedAt).unix() > moment(b.updatedAt).unix()) {
+          return 1;
+        }
+        if (moment(a.updatedAt).unix() < moment(b.updatedAt).unix()) {
+          return -1;
+        }
+        return 0;
+      });
 
     return workout;
   }
@@ -324,6 +347,16 @@ export class WorkoutResolver {
       workout.user = userId;
       workout.name = input.name || moment().format(`[Workout] DD-MM-YYYY`);
 
+      workout.createdAt = moment(input.date).toDate();
+
+      if (input.endTime) {
+        workout.endTime = input.endTime;
+      }
+
+      if (input.startTime) {
+        workout.startTime = input.startTime;
+      }
+
       const savedWorkout = await queryRunner.manager.save(workout);
 
       for (const inputExercise of input.exercises) {
@@ -365,6 +398,83 @@ export class WorkoutResolver {
     }
 
     return workout;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuthenticated)
+  async addNewExercisesToTheWorkout(
+    @Arg("input") input: AddNewExercisesToTheWorkoutInput,
+    @Ctx() { req }: MyContext,
+  ) {
+    const { userId } = req.session;
+
+    // get a connection and create a new query runner
+    const connection = getConnection();
+    const queryRunner = connection.createQueryRunner();
+
+    // establish real database connection using our new query runner
+    await queryRunner.connect();
+
+    // lets now open a new transaction:
+    await queryRunner.startTransaction();
+
+    try {
+      const workoutRepo = await getRepository(Workout);
+
+      const workout = await workoutRepo.findOne({
+        relations: [
+          "workoutExercise",
+          "workoutExercise.commonExercise",
+          "workoutExercise.userExercise",
+          "workoutExercise.exerciseSet",
+        ],
+        order: {
+          updatedAt: "DESC",
+        },
+        where: { user: userId, id: input.workoutId },
+      });
+
+      if (!workout) return new Error("You are not authorized to do that");
+
+      for (const inputExercise of input.exercises) {
+        const workoutExercise = new WorkoutExercise();
+
+        if (inputExercise.isCommonExercise) {
+          // @ts-ignore
+          workoutExercise.commonExercise = inputExercise.id;
+        } else {
+          // @ts-ignore
+          workoutExercise.userExercise = inputExercise.id;
+        }
+
+        // @ts-ignore
+        workoutExercise.workout = workout.id;
+        const savedExercise = await queryRunner.manager.save(workoutExercise);
+
+        inputExercise.sets.forEach(async inputSet => {
+          const set = new ExerciseSet();
+
+          set.set = inputSet.set;
+          set.weight = inputSet.weight * 1000;
+          set.reps = inputSet.reps;
+          //@ts-ignore
+          set.workoutExercise = savedExercise.id;
+
+          await queryRunner.manager.save(set);
+        });
+      }
+
+      // commit transaction now:
+      await queryRunner.commitTransaction();
+
+      return true;
+    } catch (err) {
+      // since we have errors let's rollback changes we made
+      await queryRunner.rollbackTransaction();
+      return false;
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   @Mutation(() => Boolean)
@@ -486,6 +596,70 @@ export class WorkoutResolver {
       await queryRunner.release();
     }
     return false;
+  }
+
+  @Mutation(() => Workout)
+  @UseMiddleware(isAuthenticated)
+  async updateGeneralWorkoutInfo(
+    @Arg("input") input: UpdateGeneralWorkoutInfoInput,
+    @Ctx() { req }: MyContext,
+  ) {
+    const { userId } = req.session;
+
+    try {
+      const workoutRepo = await getRepository(Workout);
+
+      const workout = await workoutRepo.findOne({
+        relations: [
+          "workoutExercise",
+          "workoutExercise.commonExercise",
+          "workoutExercise.userExercise",
+          "workoutExercise.exerciseSet",
+        ],
+        where: { user: userId, id: input.workoutId },
+      });
+
+      if (!workout) return new Error("You are not authorized to do that");
+
+      if (input.workoutName) {
+        workout.name = input.workoutName;
+      }
+
+      if (input.date) {
+        workout.createdAt = input.date;
+      }
+
+      if (input.startTime) {
+        workout.startTime = input.startTime;
+      }
+
+      if (input.endTime) {
+        workout.endTime = input.endTime;
+      }
+
+      const savedWorkout = await Workout.save(workout);
+
+      // Sorting nested relations in typeORM is super hard, so I'm sorting it on the server
+      // Sort ASC
+      // The newest
+      savedWorkout.workoutExercise = workout?.workoutExercise
+        //@ts-ignore
+        .map(el => el)
+        .sort((a: WorkoutExercise, b: WorkoutExercise) => {
+          if (moment(a.updatedAt).unix() > moment(b.updatedAt).unix()) {
+            return 1;
+          }
+          if (moment(a.updatedAt).unix() < moment(b.updatedAt).unix()) {
+            return -1;
+          }
+          return 0;
+        });
+
+      return savedWorkout;
+    } catch (e) {
+      console.log(e);
+      return new Error("Something went wrong");
+    }
   }
 
   @Mutation(() => Boolean)

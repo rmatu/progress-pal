@@ -9,6 +9,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
+  DateTime: any;
 };
 
 export type Query = {
@@ -113,11 +115,14 @@ export type Workout = {
   __typename?: 'Workout';
   id: Scalars['String'];
   name: Scalars['String'];
+  startTime?: Maybe<Scalars['DateTime']>;
+  endTime: Scalars['DateTime'];
   updatedAt: Scalars['String'];
   createdAt: Scalars['String'];
   user: User;
   workoutExercise: Array<WorkoutExercise>;
 };
+
 
 export type ExerciseSet = {
   __typename?: 'ExerciseSet';
@@ -180,8 +185,10 @@ export type Mutation = {
   changeOnboardingStep: User;
   finishOnboarding: UpdateOnboardingResponse;
   createWorkout?: Maybe<Workout>;
+  addNewExercisesToTheWorkout: Scalars['Boolean'];
   deleteWorkout: Scalars['Boolean'];
   updateExerciseSets: Scalars['Boolean'];
+  updateGeneralWorkoutInfo: Workout;
   deleteWorkoutExercise: Scalars['Boolean'];
 };
 
@@ -253,6 +260,11 @@ export type MutationCreateWorkoutArgs = {
 };
 
 
+export type MutationAddNewExercisesToTheWorkoutArgs = {
+  input: AddNewExercisesToTheWorkoutInput;
+};
+
+
 export type MutationDeleteWorkoutArgs = {
   workoutId: Scalars['String'];
 };
@@ -260,6 +272,11 @@ export type MutationDeleteWorkoutArgs = {
 
 export type MutationUpdateExerciseSetsArgs = {
   input: UpdateExerciseSets;
+};
+
+
+export type MutationUpdateGeneralWorkoutInfoArgs = {
+  input: UpdateGeneralWorkoutInfoInput;
 };
 
 
@@ -304,6 +321,8 @@ export type CreateUserMetricsInput = {
 
 export type CreateWorkoutInput = {
   date: Scalars['String'];
+  startTime?: Maybe<Scalars['DateTime']>;
+  endTime?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   exercises: Array<ExercisesInput>;
 };
@@ -319,6 +338,11 @@ export type SetInput = {
   set: Scalars['Float'];
   weight: Scalars['Float'];
   reps: Scalars['Float'];
+};
+
+export type AddNewExercisesToTheWorkoutInput = {
+  exercises: Array<ExercisesInput>;
+  workoutId: Scalars['String'];
 };
 
 export type UpdateExerciseSets = {
@@ -339,6 +363,14 @@ export type GqlNewExerciseSet = {
   workoutExerciseId: Scalars['String'];
   reps: Scalars['Float'];
   weight: Scalars['Float'];
+};
+
+export type UpdateGeneralWorkoutInfoInput = {
+  workoutId: Scalars['String'];
+  workoutName?: Maybe<Scalars['String']>;
+  date?: Maybe<Scalars['DateTime']>;
+  startTime?: Maybe<Scalars['DateTime']>;
+  endTime?: Maybe<Scalars['DateTime']>;
 };
 
 export type RegularCommonExerciseFragment = (
@@ -395,7 +427,7 @@ export type RegularUserResponseFragment = (
 
 export type RegularWorkoutFragment = (
   { __typename?: 'Workout' }
-  & Pick<Workout, 'id' | 'name' | 'updatedAt' | 'createdAt'>
+  & Pick<Workout, 'id' | 'name' | 'startTime' | 'endTime' | 'updatedAt' | 'createdAt'>
   & { workoutExercise: Array<(
     { __typename?: 'WorkoutExercise' }
     & RegularWorkoutExerciseFragment
@@ -415,6 +447,16 @@ export type RegularWorkoutExerciseFragment = (
     { __typename?: 'CommonExercise' }
     & RegularCommonExerciseFragment
   )> }
+);
+
+export type AddNewExercisesToTheWorkoutMutationVariables = Exact<{
+  input: AddNewExercisesToTheWorkoutInput;
+}>;
+
+
+export type AddNewExercisesToTheWorkoutMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'addNewExercisesToTheWorkout'>
 );
 
 export type ChangeOnboardingStepMutationVariables = Exact<{
@@ -619,6 +661,19 @@ export type UpdateExerciseSetsMutationVariables = Exact<{
 export type UpdateExerciseSetsMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'updateExerciseSets'>
+);
+
+export type UpdateGeneralWorkoutInfoMutationVariables = Exact<{
+  input: UpdateGeneralWorkoutInfoInput;
+}>;
+
+
+export type UpdateGeneralWorkoutInfoMutation = (
+  { __typename?: 'Mutation' }
+  & { updateGeneralWorkoutInfo: (
+    { __typename?: 'Workout' }
+    & RegularWorkoutFragment
+  ) }
 );
 
 export type GetAllCommonExercisesQueryVariables = Exact<{ [key: string]: never; }>;
@@ -827,6 +882,8 @@ export const RegularWorkoutFragmentDoc = gql`
     fragment RegularWorkout on Workout {
   id
   name
+  startTime
+  endTime
   updatedAt
   createdAt
   workoutExercise {
@@ -834,6 +891,36 @@ export const RegularWorkoutFragmentDoc = gql`
   }
 }
     ${RegularWorkoutExerciseFragmentDoc}`;
+export const AddNewExercisesToTheWorkoutDocument = gql`
+    mutation AddNewExercisesToTheWorkout($input: AddNewExercisesToTheWorkoutInput!) {
+  addNewExercisesToTheWorkout(input: $input)
+}
+    `;
+export type AddNewExercisesToTheWorkoutMutationFn = Apollo.MutationFunction<AddNewExercisesToTheWorkoutMutation, AddNewExercisesToTheWorkoutMutationVariables>;
+
+/**
+ * __useAddNewExercisesToTheWorkoutMutation__
+ *
+ * To run a mutation, you first call `useAddNewExercisesToTheWorkoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddNewExercisesToTheWorkoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addNewExercisesToTheWorkoutMutation, { data, loading, error }] = useAddNewExercisesToTheWorkoutMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddNewExercisesToTheWorkoutMutation(baseOptions?: Apollo.MutationHookOptions<AddNewExercisesToTheWorkoutMutation, AddNewExercisesToTheWorkoutMutationVariables>) {
+        return Apollo.useMutation<AddNewExercisesToTheWorkoutMutation, AddNewExercisesToTheWorkoutMutationVariables>(AddNewExercisesToTheWorkoutDocument, baseOptions);
+      }
+export type AddNewExercisesToTheWorkoutMutationHookResult = ReturnType<typeof useAddNewExercisesToTheWorkoutMutation>;
+export type AddNewExercisesToTheWorkoutMutationResult = Apollo.MutationResult<AddNewExercisesToTheWorkoutMutation>;
+export type AddNewExercisesToTheWorkoutMutationOptions = Apollo.BaseMutationOptions<AddNewExercisesToTheWorkoutMutation, AddNewExercisesToTheWorkoutMutationVariables>;
 export const ChangeOnboardingStepDocument = gql`
     mutation ChangeOnboardingStep($step: Float!) {
   changeOnboardingStep(step: $step) {
@@ -1371,6 +1458,38 @@ export function useUpdateExerciseSetsMutation(baseOptions?: Apollo.MutationHookO
 export type UpdateExerciseSetsMutationHookResult = ReturnType<typeof useUpdateExerciseSetsMutation>;
 export type UpdateExerciseSetsMutationResult = Apollo.MutationResult<UpdateExerciseSetsMutation>;
 export type UpdateExerciseSetsMutationOptions = Apollo.BaseMutationOptions<UpdateExerciseSetsMutation, UpdateExerciseSetsMutationVariables>;
+export const UpdateGeneralWorkoutInfoDocument = gql`
+    mutation UpdateGeneralWorkoutInfo($input: UpdateGeneralWorkoutInfoInput!) {
+  updateGeneralWorkoutInfo(input: $input) {
+    ...RegularWorkout
+  }
+}
+    ${RegularWorkoutFragmentDoc}`;
+export type UpdateGeneralWorkoutInfoMutationFn = Apollo.MutationFunction<UpdateGeneralWorkoutInfoMutation, UpdateGeneralWorkoutInfoMutationVariables>;
+
+/**
+ * __useUpdateGeneralWorkoutInfoMutation__
+ *
+ * To run a mutation, you first call `useUpdateGeneralWorkoutInfoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateGeneralWorkoutInfoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateGeneralWorkoutInfoMutation, { data, loading, error }] = useUpdateGeneralWorkoutInfoMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateGeneralWorkoutInfoMutation(baseOptions?: Apollo.MutationHookOptions<UpdateGeneralWorkoutInfoMutation, UpdateGeneralWorkoutInfoMutationVariables>) {
+        return Apollo.useMutation<UpdateGeneralWorkoutInfoMutation, UpdateGeneralWorkoutInfoMutationVariables>(UpdateGeneralWorkoutInfoDocument, baseOptions);
+      }
+export type UpdateGeneralWorkoutInfoMutationHookResult = ReturnType<typeof useUpdateGeneralWorkoutInfoMutation>;
+export type UpdateGeneralWorkoutInfoMutationResult = Apollo.MutationResult<UpdateGeneralWorkoutInfoMutation>;
+export type UpdateGeneralWorkoutInfoMutationOptions = Apollo.BaseMutationOptions<UpdateGeneralWorkoutInfoMutation, UpdateGeneralWorkoutInfoMutationVariables>;
 export const GetAllCommonExercisesDocument = gql`
     query GetAllCommonExercises {
   getAllCommonExercises {

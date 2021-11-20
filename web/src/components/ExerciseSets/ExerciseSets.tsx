@@ -26,11 +26,13 @@ interface ExerciseSetsProps {
     React.SetStateAction<IExportedExercise[]>
   >;
   exerciseWithSets: IExportedExercise[];
+  matchExerciseSetsFromDBStyle?: boolean;
 }
 
 const ExerciseSets: React.FC<ExerciseSetsProps> = ({
   exercise,
   exerciseWithSets,
+  matchExerciseSetsFromDBStyle,
   handleDeleteExercise,
   setExerciseWithSets,
 }) => {
@@ -137,7 +139,7 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
   }, [exportedExercise]);
 
   return (
-    <Wrapper>
+    <Wrapper matchExerciseSetsFromDBStyle={matchExerciseSetsFromDBStyle}>
       <ExerciseName>{exercise?.name}</ExerciseName>
       <PrimaryMuscles>
         {exercise?.primaryMuscles?.map((name, idx) => (

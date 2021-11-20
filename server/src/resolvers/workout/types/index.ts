@@ -59,6 +59,12 @@ export class CreateWorkoutInput {
   @Field(() => String)
   date: string;
 
+  @Field(() => Date, { nullable: true })
+  startTime?: Date;
+
+  @Field(() => Date, { nullable: true })
+  endTime?: Date;
+
   @Field(() => String)
   name: string;
 
@@ -106,4 +112,31 @@ export class UpdateExerciseSets {
 
   @Field(() => String)
   workoutId: string;
+}
+
+@InputType()
+export class AddNewExercisesToTheWorkoutInput {
+  @Field(() => [ExercisesInput])
+  exercises: ExercisesInput[];
+
+  @Field(() => String)
+  workoutId: string;
+}
+
+@InputType()
+export class UpdateGeneralWorkoutInfoInput {
+  @Field(() => String)
+  workoutId: string;
+
+  @Field(() => String, { nullable: true })
+  workoutName?: string;
+
+  @Field(() => Date, { nullable: true })
+  date?: Date;
+
+  @Field(() => Date, { nullable: true })
+  startTime?: Date;
+
+  @Field(() => Date, { nullable: true })
+  endTime?: Date;
 }

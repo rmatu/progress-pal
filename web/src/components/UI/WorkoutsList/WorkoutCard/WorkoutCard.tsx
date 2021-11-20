@@ -2,9 +2,9 @@ import moment from "moment";
 import React from "react";
 import Model from "react-body-highlighter";
 import { useHistory } from "react-router";
-import { Button } from "../..";
 import { ReactComponent as TrashIcon } from "../../../../assets/svg/trash.svg";
 import { ReactComponent as WeightIcon } from "../../../../assets/svg/weight.svg";
+import { ReactComponent as TimerIcon } from "../../../../assets/svg/timer.svg";
 import { WORKOUTS } from "../../../../constants/routes";
 import {
   useDeleteWorkoutMutation,
@@ -14,6 +14,7 @@ import {
   calculateVolume,
   getMusclesFromWorkout,
   getThemostTraineMuscleAmountFromWorkout,
+  getTimeBetweenTwoDates,
 } from "../../../../utils/converters";
 import { populateColorsForMuscleHeatmap } from "../../../../utils/cssHelpers";
 import { createRefetchQueriesArray } from "../../../../utils/graphQLHelpers";
@@ -82,17 +83,25 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout, setPopup }) => {
     });
   };
 
+  getTimeBetweenTwoDates(workout?.startTime, workout?.endTime);
+
   return (
     <WorkoutCardWrapper onClick={handleSelectWorkout}>
       <LeftCardContent>
         <WorkoutName>{workout?.name}</WorkoutName>
         <WorkoutDate>
-          {moment(workout?.updatedAt, "x").format("DD MMMM - HH:MM")}
+          {moment(workout?.createdAt, "x").format("DD MMMM - HH:mm")}
         </WorkoutDate>
         <QuickInfoRow>
           <SVGWrapper>
             <WeightIcon />
             {gramsToKilograms(calculateVolume(workout as Workout))} kg
+          </SVGWrapper>
+        </QuickInfoRow>
+        <QuickInfoRow>
+          <SVGWrapper>
+            <TimerIcon />
+            {getTimeBetweenTwoDates(workout?.startTime, workout?.endTime)}
           </SVGWrapper>
         </QuickInfoRow>
       </LeftCardContent>

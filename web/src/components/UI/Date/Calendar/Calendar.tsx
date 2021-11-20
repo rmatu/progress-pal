@@ -4,11 +4,12 @@ import { Calendar as PackageCalendar } from "react-date-range";
 import { ReactComponent as Close } from "../../../../assets/svg/cancel.svg";
 import { Wrapper, CloseWrapper } from "./styles";
 import { enGB } from "date-fns/locale";
+import theme from "../../../../theme/theme";
 
 interface CalendarProps {
   position?: string;
   selectedDate?: Date;
-  changeDate: (currDate: Date) => void;
+  changeDate: (currDate: any) => void;
   handleClose: () => void;
   setFieldValue?: (
     field: string,
@@ -39,6 +40,8 @@ const Calendar: React.FC<CalendarProps> = ({
         onChange={handleSelect}
         maxDate={moment().toDate()}
         locale={enGB}
+        //@ts-ignore
+        color={theme.colors.orange}
       />
       <CloseWrapper onClick={handleClose}>
         <Close />

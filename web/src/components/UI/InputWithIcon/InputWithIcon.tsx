@@ -7,7 +7,7 @@ interface InputWithIconProps {
   borderRadius?: string;
   disabled?: boolean;
   error?: string | undefined;
-  iconComp: React.ReactNode;
+  iconComp?: React.ReactNode;
   id?: string;
   margin?: string;
   name: string;

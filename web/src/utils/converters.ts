@@ -1,3 +1,4 @@
+import moment from "moment";
 import { IExerciseData } from "react-body-highlighter";
 import { GetDataForMuscleHeatmapQuery, Workout } from "../generated/graphql";
 
@@ -235,4 +236,12 @@ export const calculateVolume = (workout: Workout) => {
   });
 
   return volume;
+};
+
+export const getTimeBetweenTwoDates = (startDate: Date, endDate: Date) => {
+  const duration = moment(endDate).diff(startDate);
+
+  if (Number.isNaN(duration)) return "0h 00m ";
+
+  return moment.utc(duration).format("H[h] mm[m]");
 };
