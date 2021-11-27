@@ -33,9 +33,11 @@ const ExerciseInstructionModal: React.FC<ExerciseInstructionModalProps> = ({
   const exerciseInfo2 = exactExercise;
   const exerciseInfo = exerciseInfo1 || exerciseInfo2;
 
+  console.log(exerciseInfo);
+
   return (
     <ModalScroll show={opened} handleClose={close}>
-      <Heading size="h2" marginB="0.3em">
+      <Heading size="h2" marginB="0.6em">
         {exerciseInfo?.name}
       </Heading>
       <Row>
@@ -52,12 +54,30 @@ const ExerciseInstructionModal: React.FC<ExerciseInstructionModalProps> = ({
             </Heading>
             <GridValue>{exerciseInfo?.category}</GridValue>
           </GridItem>
-          <GridItem>
-            <Heading size="h4" textAlign="left" padding="0">
-              Force:
-            </Heading>
-            <GridValue>{exerciseInfo?.force}</GridValue>
-          </GridItem>
+          {exerciseInfo?.force && (
+            <GridItem>
+              <Heading size="h4" textAlign="left" padding="0">
+                Force:
+              </Heading>
+              <GridValue>{exerciseInfo?.force}</GridValue>
+            </GridItem>
+          )}
+          {exerciseInfo?.mechanic && (
+            <GridItem>
+              <Heading size="h4" textAlign="left" padding="0">
+                Mechanic:
+              </Heading>
+              <GridValue>{exerciseInfo.mechanic}</GridValue>
+            </GridItem>
+          )}
+          {exerciseInfo?.equipment && (
+            <GridItem>
+              <Heading size="h4" textAlign="left" padding="0">
+                Equipment:
+              </Heading>
+              <GridValue>{exerciseInfo.equipment}</GridValue>
+            </GridItem>
+          )}
         </Grid>
         <ExerciseSVG
           muscles={convertMusclesToSVGNames(
@@ -66,6 +86,7 @@ const ExerciseInstructionModal: React.FC<ExerciseInstructionModalProps> = ({
           secondaryMuscles={convertMusclesToSVGNames(
             exerciseInfo?.secondaryMuscles as string[],
           )}
+          mobileCenter
         >
           <HumanFrontSVG />
           <HumanBackSVG />

@@ -49,6 +49,12 @@ export const GridItem = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+
+  @media screen and (max-width: 670px) {
+    h4 {
+      font-size: 1.3rem;
+    }
+  }
 `;
 
 export const GridValue = styled.div<{
@@ -77,16 +83,22 @@ export const GridValue = styled.div<{
     css`
       color: ${theme.colors.errorTextColor};
     `}
+
+    @media screen and (max-width: 670px) {
+    font-size: 1.2rem;
+  }
 `;
 
 export const ExerciseSVG = styled.div<{
   muscles: string[];
   secondaryMuscles: string[];
+  mobileCenter: boolean;
 }>`
   display: flex;
   flex-direction: row;
   padding: 0.5em 0;
   margin-left: 1em;
+  align-self: center;
 
   svg {
     height: 140px;
@@ -102,6 +114,10 @@ export const ExerciseSVG = styled.div<{
     if (!muscles || muscles.length === 0) return;
     return createCSS(muscles, theme.colors.modelPrimaryMuslces);
   }}
+
+  @media screen and (max-width: 670px) {
+    margin: 1em 0;
+  }
 `;
 
 export const Row = styled.div`
@@ -110,4 +126,9 @@ export const Row = styled.div`
   align-items: center;
   margin-bottom: 1em;
   justify-content: center;
+
+  @media screen and (max-width: 670px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;

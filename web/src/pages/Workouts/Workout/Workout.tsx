@@ -12,6 +12,7 @@ import CalendarWithTimeModal from "../../../components/UI/CalendarWithTimeModal/
 import InputWithIcon from "../../../components/UI/InputWithIcon/InputWithIcon";
 import Loader from "../../../components/UI/Loader/Loader";
 import Popup from "../../../components/UI/Popup/Popup";
+import ExerciseInstructionModal from "../../../components/UI/WorkoutInstructionModal/ExerciseInstructionModal";
 import {
   GetUserWorkoutQuery,
   useAddNewExercisesToTheWorkoutMutation,
@@ -141,6 +142,8 @@ const Workout: React.FC<WorkoutProps> = () => {
     | undefined
   >();
   const [newWorkoutName, setNewWorkoutName] = useState<string>();
+  const [selectedExercise, setSelectedExercise] = useState();
+  const [openInfoModal, setOpenInfoModal] = useState(false);
   const [selectedExercises, setSelectedExercises] = useState<[]>([]);
   const [exerciseWithSets, setExerciseWithSets] = useState<IExportedExercise[]>(
     [],
@@ -186,6 +189,11 @@ const Workout: React.FC<WorkoutProps> = () => {
 
   const handleCancelChangeGeneralInfo = () => {
     setEditGeneralInfo(false);
+  };
+
+  const handleOpenInfoModal = (exercise: any) => {
+    setSelectedExercise(exercise);
+    setOpenInfoModal(true);
   };
 
   const handlSaveGeneralInfoButtonClick = () => {
@@ -431,7 +439,15 @@ const Workout: React.FC<WorkoutProps> = () => {
           minHeight="40vh"
           handleClose={() => setShowAddExercisesModal(false)}
           handleSelectedItem={handleSelectedItem}
+          handleOpenInfoModal={handleOpenInfoModal}
           selectedExercises={selectedExercises}
+        />
+      )}
+      {openInfoModal && selectedExercise && (
+        <ExerciseInstructionModal
+          opened={openInfoModal}
+          exactExercise={selectedExercise}
+          close={() => setOpenInfoModal(false)}
         />
       )}
       {showCalendar && (

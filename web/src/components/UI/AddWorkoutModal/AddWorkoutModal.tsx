@@ -4,6 +4,7 @@ import { Button } from "..";
 import { ReactComponent as GreenCheckmark } from "../../../assets/svg/green-checkmark.svg";
 import { ReactComponent as HumanBackSVG } from "../../../assets/svg/humanBack.svg";
 import { ReactComponent as HumanFrontSVG } from "../../../assets/svg/humanFront.svg";
+import { ReactComponent as InfoSVG } from "../../../assets/svg/info.svg";
 import { ReactComponent as SearchIcon } from "../../../assets/svg/search.svg";
 import { IExercise, Muscle } from "../../../constants/exercises";
 import { useGetAllCommonExercisesQuery } from "../../../generated/graphql";
@@ -18,10 +19,12 @@ import {
   capitalizeFirstLetter,
   lowerCaseFirstLetter,
 } from "../../../utils/stringUtils";
+import { InfoSVGWrapper } from "../../ExerciseSetsFromDB/styles";
 import InputWithIcon from "../InputWithIcon/InputWithIcon";
 import Loader from "../Loader/Loader";
 import ModalScroll from "../ModalScroll/ModalScroll";
 import Select from "../Select/Select";
+
 import {
   AlphabetLetter,
   Circle,
@@ -42,6 +45,7 @@ import {
 interface AddWorkoutModalProps {
   handleClose: () => void;
   handleSelectedItem: (exercise: any) => void;
+  handleOpenInfoModal?: (exercise: any) => void;
   minHeight?: string;
   selectedExercises: [];
   show: boolean;
@@ -52,14 +56,15 @@ const AMOUNT_TO_ADD = 25;
 const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
   handleClose,
   handleSelectedItem,
+  handleOpenInfoModal,
   minHeight,
   selectedExercises,
   show,
 }) => {
   const { data: exercises, loading } = useGetAllCommonExercisesQuery();
-
   const [fetchedExercises, setFetchedExercises] = useState<any[]>([]);
   const [finishedLoadingData, setFinishedLoadingData] = useState(false);
+
   const [startSlice, setStartSlice] = useState(0);
   const [endSlice, setEndSlice] = useState(AMOUNT_TO_ADD);
 
@@ -267,6 +272,16 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
                 <ExerciseInfo>
                   <ExerciseName>
                     {capitalizeFirstLetter(exercise.name)}
+                    <InfoSVGWrapper>
+                      <InfoSVG
+                        onClick={e => {
+                          e.stopPropagation();
+                          if (handleOpenInfoModal) {
+                            handleOpenInfoModal(exercise);
+                          }
+                        }}
+                      />
+                    </InfoSVGWrapper>
                   </ExerciseName>
                   <ExercisePrimaryMuscle>
                     {capitalizeFirstLetter(

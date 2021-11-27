@@ -21,7 +21,6 @@ import {
   TrashIcon,
   Wrapper,
 } from "./styles";
-import { WorkoutExercise } from "../../generated/graphql";
 
 interface ExerciseSetsProps {
   exercise: IExercise;
