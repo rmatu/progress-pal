@@ -16,14 +16,14 @@ import {
 } from "./styles";
 import { IExercise } from "../../../constants/exercises";
 
-interface WorkoutInstructionModalProps {
+interface ExerciseInstructionModalProps {
   opened: boolean;
   close: () => void;
   exercise?: WorkoutExercise;
   exactExercise?: IExercise;
 }
 
-const WorkoutInstructionModal: React.FC<WorkoutInstructionModalProps> = ({
+const ExerciseInstructionModal: React.FC<ExerciseInstructionModalProps> = ({
   opened,
   exercise,
   exactExercise,
@@ -82,4 +82,4 @@ const WorkoutInstructionModal: React.FC<WorkoutInstructionModalProps> = ({
     </ModalScroll>
   );
 };
-export default WorkoutInstructionModal;
+export default ExerciseInstructionModal;

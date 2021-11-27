@@ -78,7 +78,7 @@ export class WorkoutResolver {
         "workoutExercise.exerciseSet",
       ],
       order: {
-        updatedAt: "DESC",
+        createdAt: "DESC",
       },
       where: { user: userId, updatedAt: Between(cStartDate, cEndDate) },
     });

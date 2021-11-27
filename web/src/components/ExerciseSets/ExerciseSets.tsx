@@ -9,7 +9,7 @@ import { countDecimals } from "../../utils/numberUtils";
 import { capitalizeFirstLetter } from "../../utils/stringUtils";
 import { InfoSVGWrapper } from "../ExerciseSetsFromDB/styles";
 import { Button } from "../UI";
-import WorkoutInstructionModal from "../UI/WorkoutInstructionModal/WorkoutInstructionModal";
+import ExerciseInstructionModal from "../UI/WorkoutInstructionModal/ExerciseInstructionModal";
 import {
   ExerciseName,
   Grid,
@@ -223,7 +223,7 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
         }}
       />
       {openInfoModal && (
-        <WorkoutInstructionModal
+        <ExerciseInstructionModal
           opened={openInfoModal}
           exactExercise={exercise}
           close={() => setOpenInfoModal(false)}

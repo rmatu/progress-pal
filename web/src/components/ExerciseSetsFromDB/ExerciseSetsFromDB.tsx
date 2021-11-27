@@ -35,7 +35,7 @@ import {
   TrashIcon,
   Wrapper,
 } from "./styles";
-import WorkoutInstructionModal from "../UI/WorkoutInstructionModal/WorkoutInstructionModal";
+import ExerciseInstructionModal from "../UI/WorkoutInstructionModal/ExerciseInstructionModal";
 
 const populateAndChangeWeightToGrams = (sets: ExtendedExerciseSet[]) => {
   const arr = sets.map(el => ({
@@ -419,7 +419,7 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
 
       {edit && <CancelIcon id="cancelIcon" onClick={handleCancelIconClick} />}
       {openInfoModal && (
-        <WorkoutInstructionModal
+        <ExerciseInstructionModal
           opened={openInfoModal}
           exercise={exercise}
           close={() => setOpenInfoModal(false)}
