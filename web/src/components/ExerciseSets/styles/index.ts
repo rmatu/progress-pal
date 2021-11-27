@@ -1,7 +1,11 @@
 import styled, { css } from "styled-components/macro";
 import { convertPxToRem } from "../../../utils/cssHelpers";
 
-export const ExerciseName = styled.h3``;
+export const ExerciseName = styled.h3`
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+`;
 
 export const PrimaryMuscles = styled.div`
   display: flex;

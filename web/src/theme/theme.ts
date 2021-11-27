@@ -11,6 +11,7 @@ const theme = {
     graySeparator: "#3f3f3f",
     backgroundDarkerGray: "#212121",
     errorTextColor: "#ff5757",
+    warningColor: "#ffcc00",
     successTextColor: "#70a514",
     white: "#fff",
 

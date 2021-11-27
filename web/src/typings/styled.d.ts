@@ -13,6 +13,7 @@ declare module "styled-components" {
       backgroundGrayDimmer: string;
       backgroundDarkerGray: string;
       errorTextColor: string;
+      warningColor: string;
       successTextColor: string;
       modalBackground: string;
       white: string;

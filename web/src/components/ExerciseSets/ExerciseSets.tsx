@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { ReactComponent as CancelIcon } from "../../assets/svg/bolderClose.svg";
 import { ReactComponent as TrashIconSVG } from "../../assets/svg/trash.svg";
+import { ReactComponent as InfoSVG } from "../../assets/svg/info.svg";
 import { IExercise } from "../../constants/exercises";
 import { sanitazeMuscleNameFromDB } from "../../utils/converters";
 import { IExportedExercise, ISet } from "../../utils/formSchemas";
 import { countDecimals } from "../../utils/numberUtils";
 import { capitalizeFirstLetter } from "../../utils/stringUtils";
+import { InfoSVGWrapper } from "../ExerciseSetsFromDB/styles";
 import { Button } from "../UI";
+import ExerciseInstructionModal from "../UI/WorkoutInstructionModal/ExerciseInstructionModal";
 import {
   ExerciseName,
   Grid,
@@ -51,6 +54,7 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
 
   const [kgInputErrors, setKgInputErrors] = useState<number[]>([]);
   const [repsInputErrors, setRepsInputErrors] = useState<number[]>([]);
+  const [openInfoModal, setOpenInfoModal] = useState(false);
 
   const handleAddSet = () => {
     const latestItem = exportedExercise.sets[exportedExercise.sets.length - 1];
@@ -140,7 +144,12 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
 
   return (
     <Wrapper matchExerciseSetsFromDBStyle={matchExerciseSetsFromDBStyle}>
-      <ExerciseName>{exercise?.name}</ExerciseName>
+      <ExerciseName>
+        {exercise?.name}
+        <InfoSVGWrapper>
+          <InfoSVG onClick={() => setOpenInfoModal(true)} />
+        </InfoSVGWrapper>
+      </ExerciseName>
       <PrimaryMuscles>
         {exercise?.primaryMuscles?.map((name, idx) => (
           <PrimaryMuscle key={name}>
@@ -212,6 +221,13 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
           }
         }}
       />
+      {openInfoModal && (
+        <ExerciseInstructionModal
+          opened={openInfoModal}
+          exactExercise={exercise}
+          close={() => setOpenInfoModal(false)}
+        />
+      )}
     </Wrapper>
   );
 };

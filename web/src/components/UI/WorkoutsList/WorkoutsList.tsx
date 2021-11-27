@@ -43,6 +43,8 @@ const WorkoutsList: React.FC<WorkoutsListProps> = ({
     }
   };
 
+  console.log(workoutsData);
+
   return (
     <WorkoutsWrapper onScroll={handleScroll}>
       {workoutsData?.slice(startSlice, endSlice).map((el, idx) => (

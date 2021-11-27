@@ -507,6 +507,8 @@ export const ExerciseInfo = styled.div`
 
 export const ExerciseName = styled.h3`
   margin: 0;
+  display: flex;
+  flex-direction: row;
 `;
 
 export const ExercisePrimaryMuscle = styled.p`

@@ -30,6 +30,7 @@ import {
   SuccessWorkoutWrapper,
   WorkoutForm,
 } from "./styles";
+import ExerciseInstructionModal from "../../components/UI/WorkoutInstructionModal/ExerciseInstructionModal";
 
 export interface IWorkout {
   name: string;
@@ -67,7 +68,8 @@ const AddWorkout = () => {
       "getUserYearlyWorkout",
     ]),
   });
-
+  const [selectedExercise, setSelectedExercise] = useState();
+  const [openInfoModal, setOpenInfoModal] = useState(false);
   const [selectedExercises, setSelectedExercises] = useState<[]>([]);
   const [exerciseWithSets, setExerciseWithSets] = useState<IExportedExercise[]>(
     [],
@@ -169,6 +171,11 @@ const AddWorkout = () => {
     setSelectedExercises([]);
     setExerciseWithSets([]);
     setWorkout(undefined);
+  };
+
+  const handleOpenInfoModal = (exercise: any) => {
+    setSelectedExercise(exercise);
+    setOpenInfoModal(true);
   };
 
   const handleGoToDashboard = () => {
@@ -381,8 +388,16 @@ const AddWorkout = () => {
           show={showAddExercisesModal}
           minHeight="40vh"
           handleClose={() => setShowAddExercisesModal(false)}
+          handleOpenInfoModal={handleOpenInfoModal}
           handleSelectedItem={handleSelectedItem}
           selectedExercises={selectedExercises}
+        />
+      )}
+      {openInfoModal && selectedExercise && (
+        <ExerciseInstructionModal
+          opened={openInfoModal}
+          exactExercise={selectedExercise}
+          close={() => setOpenInfoModal(false)}
         />
       )}
       <Popup showPopup={popup.showPopup}>{popup.text}</Popup>

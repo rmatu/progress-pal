@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components/macro";
+import theme from "../../../theme/theme";
 import { convertPxToRem } from "../../../utils/cssHelpers";
 
 export const Wrapper = styled.div`
@@ -18,7 +19,11 @@ export const Wrapper = styled.div`
   }
 `;
 
-export const ExerciseName = styled.h3``;
+export const ExerciseName = styled.h3`
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+`;
 
 export const PrimaryMuscles = styled.div`
   display: flex;
@@ -141,5 +146,23 @@ export const EditButtonsWrapper = styled.div<{ margin?: string }>`
     width: ${convertPxToRem(100)};
     margin: 0 0.4em;
     opacity: 0.7;
+  }
+`;
+
+export const InfoSVGWrapper = styled.div`
+  margin-left: 0.5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.85;
+
+  :hover {
+    opacity: 1;
+    cursor: pointer;
+  }
+
+  svg {
+    width: ${convertPxToRem(14)};
+    height: ${convertPxToRem(14)};
   }
 `;

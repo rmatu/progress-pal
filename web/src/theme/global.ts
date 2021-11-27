@@ -119,6 +119,7 @@ html{
   --backgroundDarkerGray: ${props => props.theme.colors.backgroundDarkerGray}
   --backgroundGrayDimmer: ${props => props.theme.colors.backgroundGrayDimmer}
   --errorTextColor: ${props => props.theme.colors.errorTextColor}
+  --warningColor: ${props => props.theme.colors.warningColor}
   --successTextColor: ${props => props.theme.colors.successTextColor}
   --modalBackground: ${props => props.theme.colors.modalBackground}
   --white: ${props => props.theme.colors.white}
