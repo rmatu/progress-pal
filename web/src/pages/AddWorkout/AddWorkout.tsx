@@ -75,6 +75,7 @@ const AddWorkout = () => {
   const [exerciseWithSets, setExerciseWithSets] = useState<IExportedExercise[]>(
     [],
   );
+  const [timerSeconds, setTimerSeconds] = useState(0);
   const [workout, setWorkout] = useState<IWorkout>();
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [showAddExercisesModal, setShowAddExercisesModal] =
@@ -146,6 +147,11 @@ const AddWorkout = () => {
     if (!updatedWorkout) return;
 
     const variables: { startTime?: string; endTime?: string } = {};
+
+    variables.startTime = moment(new Date(), "H:m:s")
+      .subtract(timerSeconds, "seconds")
+      .toString();
+    variables.endTime = moment(new Date(), "H:m:s").toString();
 
     if (dateWithTime?.startTime) {
       variables.startTime = moment(dateWithTime?.startTime, "H:m:s").toString();
@@ -315,19 +321,19 @@ const AddWorkout = () => {
             <FlexWrapperDiv justifyContent="center" alignItems="center">
               {dateWithTime?.startTime && (
                 <DateH>
-                  {moment(dateWithTime.startTime, "H:m:s").format("HH:mm")}
-                  {" -"}
+                  {moment(dateWithTime.startTime, "H:m:s").format("HH:mm")} -
                 </DateH>
               )}
               {dateWithTime?.endTime && (
                 <DateH>
+                  &nbsp;
                   {moment(dateWithTime.endTime, "H:m:s").format("HH:mm")}
                 </DateH>
               )}
             </FlexWrapperDiv>
           )}
           <FlexWrapperDiv justifyContent="center" alignItems="center">
-            <Timer />
+            <Timer setTimerSeconds={setTimerSeconds} />
           </FlexWrapperDiv>
           <ButtonWrapper>
             <Button

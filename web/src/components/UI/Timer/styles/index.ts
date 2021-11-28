@@ -1,4 +1,5 @@
 import styled from "styled-components/macro";
+import { convertPxToRem } from "../../../../utils/cssHelpers";
 
 export const TimerWrapper = styled.div`
   display: flex;
@@ -81,5 +82,25 @@ export const PlayButton = styled.button`
   background: transparent;
   :hover {
     background-color: ${({ theme }) => theme.colors.backgroundGray};
+  }
+`;
+
+export const ButtonsWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    margin: 0;
+    border-radius: 0.5em;
+    padding: 0.2em 0.5em;
+    width: ${convertPxToRem(150)};
+    margin: 0 0.4em;
+    margin-right: 1em;
+  }
+
+  @media screen and (max-width: 476px) {
+    flex-direction: column;
+    margin-right: 0;
   }
 `;

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { Button, Heading, Modal } from "..";
 import { ReactComponent as PauseSVG } from "../../../assets/svg/pause.svg";
 import { ReactComponent as PlaySVG } from "../../../assets/svg/play.svg";
 import { ReactComponent as ResetSVG } from "../../../assets/svg/reset.svg";
+import theme from "../../../theme/theme";
 import {
   Buttons,
+  ButtonsWrapper,
   PauseButton,
   PlayButton,
   ResetButton,
@@ -13,16 +16,18 @@ import {
 
 interface TimerProps {
   startTime?: Date;
+  setTimerSeconds?: any;
 }
 
 const prefix = (n: number) => {
   return n < 10 ? `0${n}` : n;
 };
 
-const Timer: React.FC<TimerProps> = ({ startTime }) => {
+const Timer: React.FC<TimerProps> = ({ startTime, setTimerSeconds }) => {
   const [seconds, setSeconds] = useState(0);
   const [rInterval, setRInterval] = useState<number>();
   const [paused, setPaused] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const getTimeToString = () => {
     const s = seconds % 60;
@@ -36,6 +41,7 @@ const Timer: React.FC<TimerProps> = ({ startTime }) => {
     clearInterval(rInterval);
     setSeconds(0);
     setPaused(true);
+    setOpenModal(false);
   };
 
   const handlePlay = () => {
@@ -61,11 +67,15 @@ const Timer: React.FC<TimerProps> = ({ startTime }) => {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    setTimerSeconds(seconds);
+  }, [seconds]);
+
   return (
     <TimerWrapper>
       <Time>{getTimeToString()}</Time>
       <Buttons>
-        <ResetButton onClick={handleReset}>
+        <ResetButton onClick={() => setOpenModal(true)}>
           <ResetSVG id="reset" />
         </ResetButton>
         <PauseButton paused={paused} onClick={handlePause}>
@@ -75,6 +85,32 @@ const Timer: React.FC<TimerProps> = ({ startTime }) => {
           <PlaySVG id="play" />
         </PlayButton>
       </Buttons>
+      <Modal opened={openModal} close={() => setOpenModal(false)}>
+        <Heading size="h3" marginB="0.5em">
+          Are you sure you want to reset the time?
+        </Heading>
+        <ButtonsWrapper>
+          <Button
+            marginTop="1em"
+            padding="0.2em 2em"
+            fontSize="1.125rem"
+            type="button"
+            onClick={handleReset}
+          >
+            Reset
+          </Button>
+          <Button
+            marginTop="1em"
+            padding="0.2em 2em"
+            fontSize="1.125rem"
+            bColor={theme.colors.errorTextColor}
+            type="button"
+            onClick={() => setOpenModal(false)}
+          >
+            Cancel
+          </Button>
+        </ButtonsWrapper>
+      </Modal>
     </TimerWrapper>
   );
 };
