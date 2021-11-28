@@ -31,6 +31,7 @@ import {
   WorkoutForm,
 } from "./styles";
 import ExerciseInstructionModal from "../../components/UI/WorkoutInstructionModal/ExerciseInstructionModal";
+import Timer from "../../components/UI/Timer/Timer";
 
 export interface IWorkout {
   name: string;
@@ -310,22 +311,23 @@ const AddWorkout = () => {
           <FlexWrapperDiv justifyContent="center" alignItems="center">
             <DateH>{moment(workout?.date).format("DD MMMM YYYY")}</DateH>
           </FlexWrapperDiv>
-          <FlexWrapperDiv
-            justifyContent="center"
-            alignItems="center"
-            margin="0 0 2em 0"
-          >
-            {dateWithTime?.startTime && (
-              <DateH>
-                {moment(dateWithTime.startTime, "H:m:s").format("HH:mm")}
-                {" -"}
-              </DateH>
-            )}
-            {dateWithTime?.endTime && (
-              <DateH margin="0 0.3em">
-                {moment(dateWithTime.endTime, "H:m:s").format("HH:mm")}
-              </DateH>
-            )}
+          {dateWithTime && (
+            <FlexWrapperDiv justifyContent="center" alignItems="center">
+              {dateWithTime?.startTime && (
+                <DateH>
+                  {moment(dateWithTime.startTime, "H:m:s").format("HH:mm")}
+                  {" -"}
+                </DateH>
+              )}
+              {dateWithTime?.endTime && (
+                <DateH>
+                  {moment(dateWithTime.endTime, "H:m:s").format("HH:mm")}
+                </DateH>
+              )}
+            </FlexWrapperDiv>
+          )}
+          <FlexWrapperDiv justifyContent="center" alignItems="center">
+            <Timer />
           </FlexWrapperDiv>
           <ButtonWrapper>
             <Button
