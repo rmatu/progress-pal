@@ -31,6 +31,7 @@ import {
   WorkoutForm,
 } from "./styles";
 import ExerciseInstructionModal from "../../components/UI/WorkoutInstructionModal/ExerciseInstructionModal";
+import Timer from "../../components/UI/Timer/Timer";
 
 export interface IWorkout {
   name: string;
@@ -74,6 +75,7 @@ const AddWorkout = () => {
   const [exerciseWithSets, setExerciseWithSets] = useState<IExportedExercise[]>(
     [],
   );
+  const [timerSeconds, setTimerSeconds] = useState(0);
   const [workout, setWorkout] = useState<IWorkout>();
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [showAddExercisesModal, setShowAddExercisesModal] =
@@ -145,6 +147,11 @@ const AddWorkout = () => {
     if (!updatedWorkout) return;
 
     const variables: { startTime?: string; endTime?: string } = {};
+
+    variables.startTime = moment(new Date(), "H:m:s")
+      .subtract(timerSeconds, "seconds")
+      .toString();
+    variables.endTime = moment(new Date(), "H:m:s").toString();
 
     if (dateWithTime?.startTime) {
       variables.startTime = moment(dateWithTime?.startTime, "H:m:s").toString();
@@ -310,22 +317,23 @@ const AddWorkout = () => {
           <FlexWrapperDiv justifyContent="center" alignItems="center">
             <DateH>{moment(workout?.date).format("DD MMMM YYYY")}</DateH>
           </FlexWrapperDiv>
-          <FlexWrapperDiv
-            justifyContent="center"
-            alignItems="center"
-            margin="0 0 2em 0"
-          >
-            {dateWithTime?.startTime && (
-              <DateH>
-                {moment(dateWithTime.startTime, "H:m:s").format("HH:mm")}
-                {" -"}
-              </DateH>
-            )}
-            {dateWithTime?.endTime && (
-              <DateH margin="0 0.3em">
-                {moment(dateWithTime.endTime, "H:m:s").format("HH:mm")}
-              </DateH>
-            )}
+          {dateWithTime && (
+            <FlexWrapperDiv justifyContent="center" alignItems="center">
+              {dateWithTime?.startTime && (
+                <DateH>
+                  {moment(dateWithTime.startTime, "H:m:s").format("HH:mm")} -
+                </DateH>
+              )}
+              {dateWithTime?.endTime && (
+                <DateH>
+                  &nbsp;
+                  {moment(dateWithTime.endTime, "H:m:s").format("HH:mm")}
+                </DateH>
+              )}
+            </FlexWrapperDiv>
+          )}
+          <FlexWrapperDiv justifyContent="center" alignItems="center">
+            <Timer setTimerSeconds={setTimerSeconds} />
           </FlexWrapperDiv>
           <ButtonWrapper>
             <Button

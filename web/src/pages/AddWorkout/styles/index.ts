@@ -86,7 +86,7 @@ export const CalendarWrapper = styled.div`
   }
 `;
 
-export const DateH = styled.h4<{ margin?: string }>`
+export const DateH = styled.h3<{ margin?: string }>`
   margin: 0;
   opacity: 0.5;
   font-weight: normal;
