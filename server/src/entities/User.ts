@@ -11,6 +11,7 @@ import {
 import { UserExercise } from "./UserExercise";
 import { UserMetrics } from "./UserMetrics";
 import { Workout } from "./Workout";
+import { WorkoutExercise } from "./WorkoutExercise";
 
 @ObjectType()
 @Entity()
@@ -91,6 +92,14 @@ export class User extends BaseEntity {
     { onDelete: "CASCADE" },
   )
   userExercise: UserExercise;
+
+  @Field(() => [WorkoutExercise])
+  @OneToMany(
+    () => WorkoutExercise,
+    (workoutExercise: WorkoutExercise) => workoutExercise.user,
+    { onDelete: "CASCADE" },
+  )
+  workoutExercise: WorkoutExercise[];
 
   @Field(() => [Workout])
   @OneToMany(() => Workout, (workout: Workout) => workout.user, {

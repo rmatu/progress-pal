@@ -372,6 +372,8 @@ export class WorkoutResolver {
 
         // @ts-ignore
         workoutExercise.workout = savedWorkout.id;
+        workoutExercise.user = userId;
+
         const savedExercise = await queryRunner.manager.save(workoutExercise);
 
         inputExercise.sets.forEach(async inputSet => {
