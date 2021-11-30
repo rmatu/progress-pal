@@ -35,7 +35,7 @@ export class WorkoutExerciseResolver {
       const workoutExercises = await workoutExerciseRepo.find({
         relations: ["exerciseSet", "commonExercise", "userExercise"],
         order: {
-          updatedAt: "DESC",
+          updatedAt: "ASC",
         },
         where: [
           {
@@ -59,8 +59,6 @@ export class WorkoutExerciseResolver {
         let volume = 0;
         let maxWeight = 0;
         const unOrganizedSets: { set: number; weight: number }[] = [];
-
-        console.log(exercise);
 
         //@ts-ignore
         exercise.exerciseSet.forEach(set => {
