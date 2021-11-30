@@ -1,4 +1,4 @@
-export const data = [
+export const mockData = [
   {
     name: "10/11/2021",
     uv: 4000,

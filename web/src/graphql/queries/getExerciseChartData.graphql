@@ -1,0 +1,5 @@
+query GetExerciseChartData($input: GetExerciseChartDataInput!) {
+  getExerciseChartData(input: $input) {
+    ...RegularGetExerciseChartDataResponse
+  }
+}

@@ -1,0 +1,14 @@
+fragment RegularGetExerciseChartDataResponse on GetExerciseChartDataResponse {
+  volumeChartData {
+    date
+    volume
+  }
+  maxWeightChartData {
+    date
+    maxWeight
+  }
+  weightSetChartData {
+    date
+    sets
+  }
+}
