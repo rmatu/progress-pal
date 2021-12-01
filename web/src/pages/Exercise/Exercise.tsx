@@ -2,6 +2,7 @@ import moment from "moment";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
+import MaxWeightChart from "../../components/Charts/MaxWeightChart/MaxWeightChart";
 import WeightSetChart from "../../components/Charts/WeightSetChart/WeightSetChart";
 
 import {
@@ -39,12 +40,19 @@ const Exercise: React.FC<ExerciseProps> = ({}) => {
     });
   }, [exerciseId]);
 
+  console.log(exerciseChartData);
+
   return (
     <DashbordLayoutHOC user={userData?.me}>
       <RightContent open={open}>
         <WeightSetChart
           data={
             exerciseChartData?.getExerciseChartData.weightSetChartData as any
+          }
+        />
+        <MaxWeightChart
+          data={
+            exerciseChartData?.getExerciseChartData.maxWeightChartData as any
           }
         />
       </RightContent>

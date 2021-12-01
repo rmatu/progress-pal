@@ -361,6 +361,8 @@ export class WorkoutResolver {
 
       for (const inputExercise of input.exercises) {
         const workoutExercise = new WorkoutExercise();
+        workoutExercise.createdAt = moment(input.date).toDate();
+        workoutExercise.updatedAt = moment(input.date).toDate();
 
         if (inputExercise.isCommonExercise) {
           // @ts-ignore
