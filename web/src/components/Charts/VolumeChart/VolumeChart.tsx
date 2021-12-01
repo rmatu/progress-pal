@@ -7,22 +7,22 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import theme from "../../../theme/theme";
 import { Heading } from "../../UI";
 import Loader from "../../UI/Loader/Loader";
+import { getStrokeColor } from "../strokeColors";
 import { Wrapper } from "../styles";
 import {} from "./styles";
 
-interface MaxWeightChartProps {
+interface VolumeChartProps {
   data: [
     {
       date: string;
-      maxWeight: number;
+      volume: number;
     },
   ];
 }
 
-const MaxWeightChart: React.FC<MaxWeightChartProps> = ({ data }) => {
+const VolumeChart: React.FC<VolumeChartProps> = ({ data }) => {
   const [size, setSize] = useState({
     width: 500,
     height: 300,
@@ -39,7 +39,7 @@ const MaxWeightChart: React.FC<MaxWeightChartProps> = ({ data }) => {
   return (
     <Wrapper width={size.width}>
       <Heading size="h3" marginB="0.5em">
-        Max Weight
+        Volume
       </Heading>
       <LineChart width={size.width} height={size.height} data={data}>
         <XAxis dataKey="date" />
@@ -59,8 +59,8 @@ const MaxWeightChart: React.FC<MaxWeightChartProps> = ({ data }) => {
         />
         <Line
           type="monotone"
-          dataKey="maxWeight"
-          stroke={theme.colors.orange}
+          dataKey="volume"
+          stroke={getStrokeColor(6)}
           strokeWidth={3}
         />
 
@@ -69,4 +69,4 @@ const MaxWeightChart: React.FC<MaxWeightChartProps> = ({ data }) => {
     </Wrapper>
   );
 };
-export default MaxWeightChart;
+export default VolumeChart;

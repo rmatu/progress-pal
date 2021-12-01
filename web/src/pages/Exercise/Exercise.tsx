@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import MaxWeightChart from "../../components/Charts/MaxWeightChart/MaxWeightChart";
+import VolumeChart from "../../components/Charts/VolumeChart/VolumeChart";
 import WeightSetChart from "../../components/Charts/WeightSetChart/WeightSetChart";
 
 import {
@@ -54,6 +55,9 @@ const Exercise: React.FC<ExerciseProps> = ({}) => {
           data={
             exerciseChartData?.getExerciseChartData.maxWeightChartData as any
           }
+        />
+        <VolumeChart
+          data={exerciseChartData?.getExerciseChartData.volumeChartData as any}
         />
       </RightContent>
     </DashbordLayoutHOC>
