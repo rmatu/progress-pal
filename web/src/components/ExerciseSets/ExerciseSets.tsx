@@ -21,6 +21,8 @@ import {
   TrashIcon,
   Wrapper,
 } from "./styles";
+import { useHistory } from "react-router";
+import { EXERCISE } from "../../constants/routes";
 
 interface ExerciseSetsProps {
   exercise: IExercise;
@@ -39,6 +41,7 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
   handleDeleteExercise,
   setExerciseWithSets,
 }) => {
+  const history = useHistory();
   const [exportedExercise, setSetsAmount] = useState<IExportedExercise>({
     id: exercise.id,
     name: exercise.name,
@@ -55,6 +58,10 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
   const [kgInputErrors, setKgInputErrors] = useState<number[]>([]);
   const [repsInputErrors, setRepsInputErrors] = useState<number[]>([]);
   const [openInfoModal, setOpenInfoModal] = useState(false);
+
+  const handleChangePage = () => {
+    history.push(`${EXERCISE}/${exercise.id}`);
+  };
 
   const handleAddSet = () => {
     const latestItem = exportedExercise.sets[exportedExercise.sets.length - 1];
@@ -144,7 +151,7 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
 
   return (
     <Wrapper matchExerciseSetsFromDBStyle={matchExerciseSetsFromDBStyle}>
-      <ExerciseName>
+      <ExerciseName onClick={handleChangePage}>
         {exercise?.name}
         <InfoSVGWrapper>
           <InfoSVG onClick={() => setOpenInfoModal(true)} />

@@ -33,7 +33,7 @@ export class ExerciseSet extends BaseEntity {
   @ManyToOne(
     () => WorkoutExercise,
     (workoutExercise: WorkoutExercise) => workoutExercise.exerciseSet,
-    { onDelete: "CASCADE" },
+    { onDelete: "CASCADE", orphanedRowAction: "delete" },
   )
   workoutExercise: WorkoutExercise;
 }

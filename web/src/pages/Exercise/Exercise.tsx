@@ -33,7 +33,7 @@ const Exercise: React.FC<ExerciseProps> = ({}) => {
         input: {
           exerciseId,
           endTime: moment().toString(),
-          startTime: moment().subtract({ days: 30 }).toString(),
+          startTime: moment().subtract({ days: 60 }).toString(),
         },
       },
     });

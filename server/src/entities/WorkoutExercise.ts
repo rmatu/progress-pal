@@ -35,6 +35,7 @@ export class WorkoutExercise extends BaseEntity {
   @Field(() => Workout)
   @ManyToOne(() => Workout, (workout: Workout) => workout.workoutExercise, {
     onDelete: "CASCADE",
+    orphanedRowAction: "delete",
   })
   workout: Workout;
 

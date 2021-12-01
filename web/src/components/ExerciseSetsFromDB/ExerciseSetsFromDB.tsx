@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { v4 } from "uuid";
 import { ReactComponent as CancelIcon } from "../../assets/svg/bolderClose.svg";
 import { ReactComponent as PencilSVG } from "../../assets/svg/pencil.svg";
@@ -36,6 +36,7 @@ import {
   Wrapper,
 } from "./styles";
 import ExerciseInstructionModal from "../UI/WorkoutInstructionModal/ExerciseInstructionModal";
+import { EXERCISE } from "../../constants/routes";
 
 const populateAndChangeWeightToGrams = (sets: ExtendedExerciseSet[]) => {
   const arr = sets.map(el => ({
@@ -59,6 +60,8 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
 }) => {
   const { id: workoutId } = useParams<{ id: string }>();
   const { show: showModal } = useSelector((state: AppState) => state.modal);
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   // TODO: This endopoint should return errors not boolean
   const [updateExerciseSetsMutation] = useUpdateExerciseSetsMutation({
@@ -156,7 +159,11 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
     populateAndChangeWeightToGrams(exercise.exerciseSet),
   );
 
-  const dispatch = useDispatch();
+  const handleChangePage = () => {
+    const workoutId =
+      exercise?.userExercise?.id || exercise?.commonExercise?.id;
+    history.push(`${EXERCISE}/${workoutId}`);
+  };
 
   const handleDeleteExercise = () => {
     deleteWorkoutExercise({
@@ -312,7 +319,7 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
 
   return (
     <Wrapper>
-      <ExerciseName>
+      <ExerciseName onClick={handleChangePage}>
         {exercise?.userExercise?.name || exercise?.commonExercise?.name}
         <InfoSVGWrapper>
           <InfoSVG onClick={() => setOpenInfoModal(true)} />

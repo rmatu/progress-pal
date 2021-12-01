@@ -5,6 +5,12 @@ export const ExerciseName = styled.h3`
   display: flex;
   align-items: center;
   flex-direction: row;
+  transition: all 0.1s ease-in-out;
+
+  :hover {
+    text-decoration-line: underline;
+    cursor: pointer;
+  }
 `;
 
 export const PrimaryMuscles = styled.div`

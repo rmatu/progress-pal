@@ -13,7 +13,7 @@ import {
 } from "../../../utils/converters";
 import { Heading } from "../../UI";
 import Loader from "../../UI/Loader/Loader";
-import { getStrokeColor, strokeColors } from "./strokeColors";
+import { getStrokeColor } from "./strokeColors";
 import { Wrapper } from "./styles";
 
 interface WeightSetChartProps {
