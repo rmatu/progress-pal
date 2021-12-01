@@ -70,7 +70,7 @@ export class WorkoutExerciseResolver {
             maxWeight = set.weight;
           }
 
-          unOrganizedSets.push({ set: set.set, weight: set.weight });
+          unOrganizedSets.push({ set: set.set, weight: set.weight / 1000 });
         });
 
         const organized = unOrganizedSets.sort((a, b) => a.set - b.set);

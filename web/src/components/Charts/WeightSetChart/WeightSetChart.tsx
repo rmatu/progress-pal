@@ -1,7 +1,19 @@
-import React from "react";
-import { Area, AreaChart, Tooltip, XAxis, YAxis } from "recharts";
-import { mockData } from "../../../pages/Exercise/mockdata";
+import React, { useEffect, useState } from "react";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import {
+  convertToWeightSetChartData,
+  getHighestAmountOfSets,
+} from "../../../utils/converters";
+import { Heading } from "../../UI";
 import Loader from "../../UI/Loader/Loader";
+import { getStrokeColor, strokeColors } from "./strokeColors";
 import { Wrapper } from "./styles";
 
 interface WeightSetChartProps {
@@ -14,47 +26,72 @@ interface WeightSetChartProps {
 }
 
 const WeightSetChart: React.FC<WeightSetChartProps> = ({ data }) => {
-  if (!data) {
+  const [convertedDataForGraph, setConvertedDataForGraph] =
+    useState<{ [key: string]: any }[]>();
+  const [size, setSize] = useState({
+    width: 500,
+    height: 300,
+  });
+
+  useEffect(() => {
+    if (!data) return;
+    setConvertedDataForGraph(convertToWeightSetChartData(data));
+  }, [data]);
+
+  if (!data || !convertedDataForGraph?.length) {
     return (
-      <Wrapper>
+      <Wrapper width={size.width}>
         <Loader />
       </Wrapper>
     );
   }
 
-  console.log(data);
-
-  // {
-  //   name: "29/11/2021",
-  //   uv: 3000,
-  //   pv: 1398,
-  //   amt: 2210,
-  // },
+  const createLines = () => {
+    const setAmount = getHighestAmountOfSets(convertedDataForGraph);
+    const lines = [];
+    for (let i = 0; i < setAmount; i++) {
+      lines.push(
+        <Line
+          key={`set${i + 1}`}
+          type="monotone"
+          dataKey={`set${i + 1}`}
+          stroke={getStrokeColor(i + 1)}
+          strokeWidth={3}
+        />,
+      );
+    }
+    return lines;
+  };
 
   return (
-    <AreaChart
-      width={730}
-      height={250}
-      data={mockData}
-      margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-    >
-      <defs>
-        <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-          <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
-        </linearGradient>
-      </defs>
-      <XAxis dataKey="date" />
-      <YAxis />
-      <Tooltip />
-      <Area
-        type="monotone"
-        dataKey="pv"
-        stroke="#82ca9d"
-        fillOpacity={1}
-        fill="url(#colorPv)"
-      />
-    </AreaChart>
+    <Wrapper width={size.width}>
+      <Heading size="h3" marginB="0.5em">
+        Weight with Set
+      </Heading>
+      <LineChart
+        width={size.width}
+        height={size.height}
+        data={convertedDataForGraph}
+      >
+        <XAxis dataKey="date" />
+        <CartesianGrid
+          vertical
+          horizontal
+          verticalFill={["#444444"]}
+          fillOpacity={0.2}
+        />
+        <YAxis
+          label={{
+            value: "in kilograms",
+            angle: -90,
+            position: "insideLeft",
+            fill: "#666",
+          }}
+        />
+        {createLines()}
+        <Tooltip />
+      </LineChart>
+    </Wrapper>
   );
 };
 export default WeightSetChart;
