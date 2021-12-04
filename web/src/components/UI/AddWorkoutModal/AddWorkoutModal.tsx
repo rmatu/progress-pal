@@ -26,7 +26,6 @@ import InputWithIcon from "../InputWithIcon/InputWithIcon";
 import Loader from "../Loader/Loader";
 import ModalScroll from "../ModalScroll/ModalScroll";
 import Select from "../Select/Select";
-
 import {
   AlphabetLetter,
   Circle,
@@ -117,6 +116,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
 
     setEndSlice(AMOUNT_TO_ADD);
     const bodyCategory = e.target.value;
+
     if (bodyCategory === "Any Body Category") {
       setFetchedExercises(exercises.getAllCommonExercises);
     } else {
@@ -180,7 +180,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
             placeholder="Search"
             type="text"
             value={searchFormik.values.search}
-            width="fit-content"
+            width="20em"
             margin="1em 1em 0 0"
           />
           <Select
@@ -190,16 +190,6 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
             name="bodyCategory"
             disabled={true}
           />
-          <Button
-            padding="0.2em 1.5em"
-            fontSize="1.125rem"
-            type="button"
-            borderRadius="0.5em"
-            disabled={true}
-            onClick={handleClose}
-          >
-            Add
-          </Button>
         </TopSearchWrapper>
         <Legend>
           <Circle color={theme.colors.modelPrimaryMuslces} />
