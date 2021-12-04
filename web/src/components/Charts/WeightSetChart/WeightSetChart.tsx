@@ -7,14 +7,16 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import theme from "../../../theme/theme";
 import {
   convertToWeightSetChartData,
   getHighestAmountOfSets,
 } from "../../../utils/converters";
 import { Heading } from "../../UI";
 import Loader from "../../UI/Loader/Loader";
+import { chartSize } from "../consts";
 import { getStrokeColor } from "../strokeColors";
-import { Wrapper } from "../styles";
+import { LoaderWrapper, Wrapper } from "../styles";
 
 interface WeightSetChartProps {
   data: [
@@ -28,10 +30,7 @@ interface WeightSetChartProps {
 const WeightSetChart: React.FC<WeightSetChartProps> = ({ data }) => {
   const [convertedDataForGraph, setConvertedDataForGraph] =
     useState<{ [key: string]: any }[]>();
-  const [size, setSize] = useState({
-    width: 500,
-    height: 300,
-  });
+  const [size, setSize] = useState({ ...chartSize.DESKTOP });
 
   useEffect(() => {
     if (!data) return;
@@ -40,9 +39,9 @@ const WeightSetChart: React.FC<WeightSetChartProps> = ({ data }) => {
 
   if (!data || !convertedDataForGraph?.length) {
     return (
-      <Wrapper width={size.width}>
+      <LoaderWrapper width={size.WIDTH} height={size.HEIGHT}>
         <Loader />
-      </Wrapper>
+      </LoaderWrapper>
     );
   }
 
@@ -60,17 +59,18 @@ const WeightSetChart: React.FC<WeightSetChartProps> = ({ data }) => {
         />,
       );
     }
+
     return lines;
   };
 
   return (
-    <Wrapper width={size.width}>
+    <Wrapper width={size.WIDTH}>
       <Heading size="h3" marginB="0.5em">
         Weight with Set
       </Heading>
       <LineChart
-        width={size.width}
-        height={size.height}
+        width={size.WIDTH}
+        height={size.HEIGHT}
         data={convertedDataForGraph}
       >
         <XAxis dataKey="date" />
@@ -89,7 +89,22 @@ const WeightSetChart: React.FC<WeightSetChartProps> = ({ data }) => {
           }}
         />
         {createLines()}
-        <Tooltip />
+        <Tooltip
+          contentStyle={{
+            borderRadius: "0.5em",
+            padding: "0.5em 3em",
+            backgroundColor: theme.colors.backgroundGray,
+            borderColor: theme.colors.grayText,
+            fontWeight: "bolder",
+          }}
+          labelStyle={{
+            display: "none",
+          }}
+          formatter={(value: number, name: string) => {
+            const setNumber = name.slice(3, name.length);
+            return [`${value} kg`, `Set ${setNumber}`];
+          }}
+        />
       </LineChart>
     </Wrapper>
   );

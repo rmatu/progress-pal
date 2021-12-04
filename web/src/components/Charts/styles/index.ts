@@ -11,3 +11,12 @@ export const Wrapper = styled.div<{ width: number }>`
     margin-left: 2em;
   }
 `;
+
+export const LoaderWrapper = styled.div<{ width: number; height: number }>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: ${({ width }) => width}px;
+  height: ${({ height }) => height}px;
+`;

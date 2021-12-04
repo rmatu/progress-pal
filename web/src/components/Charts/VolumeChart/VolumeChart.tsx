@@ -7,10 +7,12 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import theme from "../../../theme/theme";
 import { Heading } from "../../UI";
 import Loader from "../../UI/Loader/Loader";
+import { chartSize } from "../consts";
 import { getStrokeColor } from "../strokeColors";
-import { Wrapper } from "../styles";
+import { LoaderWrapper, Wrapper } from "../styles";
 import {} from "./styles";
 
 interface VolumeChartProps {
@@ -23,25 +25,22 @@ interface VolumeChartProps {
 }
 
 const VolumeChart: React.FC<VolumeChartProps> = ({ data }) => {
-  const [size, setSize] = useState({
-    width: 500,
-    height: 300,
-  });
+  const [size, setSize] = useState({ ...chartSize.DESKTOP });
 
   if (!data) {
     return (
-      <Wrapper width={size.width}>
+      <LoaderWrapper width={size.WIDTH} height={size.HEIGHT}>
         <Loader />
-      </Wrapper>
+      </LoaderWrapper>
     );
   }
 
   return (
-    <Wrapper width={size.width}>
+    <Wrapper width={size.WIDTH}>
       <Heading size="h3" marginB="0.5em">
         Volume
       </Heading>
-      <LineChart width={size.width} height={size.height} data={data}>
+      <LineChart width={size.WIDTH} height={size.HEIGHT} data={data}>
         <XAxis dataKey="date" />
         <CartesianGrid
           vertical
@@ -63,8 +62,21 @@ const VolumeChart: React.FC<VolumeChartProps> = ({ data }) => {
           stroke={getStrokeColor(6)}
           strokeWidth={3}
         />
-
-        <Tooltip />
+        <Tooltip
+          contentStyle={{
+            borderRadius: "0.5em",
+            padding: "0.5em 3em",
+            backgroundColor: theme.colors.backgroundGray,
+            borderColor: theme.colors.grayText,
+            fontWeight: "bolder",
+          }}
+          labelStyle={{
+            display: "none",
+          }}
+          formatter={(value: number) => {
+            return [`${value} kg`, `Volume`];
+          }}
+        />
       </LineChart>
     </Wrapper>
   );

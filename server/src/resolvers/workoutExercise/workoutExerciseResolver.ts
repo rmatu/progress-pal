@@ -82,17 +82,17 @@ export class WorkoutExerciseResolver {
 
         maxWeightChartData.push({
           maxWeight,
-          date: moment(exercise.updatedAt).format("DD-MM-YYYY"),
+          date: moment(exercise.updatedAt).format("DD-MM-YY"),
         });
 
         volumeChartData.push({
           volume,
-          date: moment(exercise.updatedAt).format("DD-MM-YYYY"),
+          date: moment(exercise.updatedAt).format("DD-MM-YY"),
         });
 
         weightSetChartData.push({
           sets,
-          date: moment(exercise.updatedAt).format("DD-MM-YYYY"),
+          date: moment(exercise.updatedAt).format("DD-MM-YY"),
         });
       });
 

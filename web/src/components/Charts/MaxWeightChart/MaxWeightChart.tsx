@@ -10,7 +10,8 @@ import {
 import theme from "../../../theme/theme";
 import { Heading } from "../../UI";
 import Loader from "../../UI/Loader/Loader";
-import { Wrapper } from "../styles";
+import { chartSize } from "../consts";
+import { LoaderWrapper, Wrapper } from "../styles";
 import {} from "./styles";
 
 interface MaxWeightChartProps {
@@ -23,25 +24,22 @@ interface MaxWeightChartProps {
 }
 
 const MaxWeightChart: React.FC<MaxWeightChartProps> = ({ data }) => {
-  const [size, setSize] = useState({
-    width: 500,
-    height: 300,
-  });
+  const [size, setSize] = useState({ ...chartSize.DESKTOP });
 
   if (!data) {
     return (
-      <Wrapper width={size.width}>
+      <LoaderWrapper width={size.WIDTH} height={size.HEIGHT}>
         <Loader />
-      </Wrapper>
+      </LoaderWrapper>
     );
   }
 
   return (
-    <Wrapper width={size.width}>
+    <Wrapper width={size.WIDTH}>
       <Heading size="h3" marginB="0.5em">
         Max Weight
       </Heading>
-      <LineChart width={size.width} height={size.height} data={data}>
+      <LineChart width={size.WIDTH} height={size.HEIGHT} data={data}>
         <XAxis dataKey="date" />
         <CartesianGrid
           vertical
@@ -64,7 +62,21 @@ const MaxWeightChart: React.FC<MaxWeightChartProps> = ({ data }) => {
           strokeWidth={3}
         />
 
-        <Tooltip />
+        <Tooltip
+          contentStyle={{
+            borderRadius: "0.5em",
+            padding: "0.5em 3em",
+            backgroundColor: theme.colors.backgroundGray,
+            borderColor: theme.colors.grayText,
+            fontWeight: "bolder",
+          }}
+          labelStyle={{
+            display: "none",
+          }}
+          formatter={(value: number) => {
+            return [`${value} kg`, `Max weight`];
+          }}
+        />
       </LineChart>
     </Wrapper>
   );
