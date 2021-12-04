@@ -1,5 +1,6 @@
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import { Button } from "..";
 import { ReactComponent as GreenCheckmark } from "../../../assets/svg/green-checkmark.svg";
 import { ReactComponent as HumanBackSVG } from "../../../assets/svg/humanBack.svg";
@@ -7,6 +8,7 @@ import { ReactComponent as HumanFrontSVG } from "../../../assets/svg/humanFront.
 import { ReactComponent as InfoSVG } from "../../../assets/svg/info.svg";
 import { ReactComponent as SearchIcon } from "../../../assets/svg/search.svg";
 import { IExercise, Muscle } from "../../../constants/exercises";
+import { EXERCISE } from "../../../constants/routes";
 import { useGetAllCommonExercisesQuery } from "../../../generated/graphql";
 import theme from "../../../theme/theme";
 import {
@@ -47,6 +49,7 @@ interface AddWorkoutModalProps {
   handleSelectedItem: (exercise: any) => void;
   handleOpenInfoModal?: (exercise: any) => void;
   minHeight?: string;
+  noModal?: boolean;
   selectedExercises: [];
   show: boolean;
 }
@@ -57,6 +60,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
   handleClose,
   handleSelectedItem,
   handleOpenInfoModal,
+  noModal,
   minHeight,
   selectedExercises,
   show,
@@ -67,6 +71,8 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
 
   const [startSlice, setStartSlice] = useState(0);
   const [endSlice, setEndSlice] = useState(AMOUNT_TO_ADD);
+
+  const history = useHistory();
 
   const searchFormik = useFormik({
     initialValues: {
@@ -156,6 +162,140 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({
       setFinishedLoadingData(true);
     }
   }, [exercises, loading]);
+
+  if (
+    noModal &&
+    (loading || fetchedExercises.length === 0) &&
+    !finishedLoadingData
+  ) {
+    return (
+      <Form onSubmit={searchFormik.handleSubmit}>
+        <TopSearchWrapper>
+          <InputWithIcon
+            id="searchInput"
+            error={searchFormik.errors.search}
+            iconComp={<SearchIcon />}
+            name="search"
+            onChange={handleSearchChange}
+            placeholder="Search"
+            type="text"
+            value={searchFormik.values.search}
+            width="fit-content"
+            margin="1em 1em 0 0"
+          />
+          <Select
+            options={[...Object.values(Muscle)]}
+            formik={searchFormik}
+            handleSelectChange={handleSelectChange}
+            name="bodyCategory"
+            disabled={true}
+          />
+          <Button
+            padding="0.2em 1.5em"
+            fontSize="1.125rem"
+            type="button"
+            borderRadius="0.5em"
+            disabled={true}
+            onClick={handleClose}
+          >
+            Add
+          </Button>
+        </TopSearchWrapper>
+        <Legend>
+          <Circle color={theme.colors.modelPrimaryMuslces} />
+          <LegendText>Primary Muscles</LegendText>
+          <Circle color={theme.colors.modelSecondaryMuscles} />
+          <LegendText>Secondary Muscles</LegendText>
+        </Legend>
+        <LoaderWrapper>
+          <Loader />
+        </LoaderWrapper>
+      </Form>
+    );
+  }
+
+  if (noModal) {
+    return (
+      <Form onSubmit={searchFormik.handleSubmit}>
+        <TopSearchWrapper>
+          <InputWithIcon
+            id="searchInput"
+            error={searchFormik.errors.search}
+            iconComp={<SearchIcon />}
+            name="search"
+            onChange={handleSearchChange}
+            placeholder="Search"
+            type="text"
+            value={searchFormik.values.search}
+            width="20em"
+            margin="1em 1em 0 0"
+          />
+          <Select
+            options={[...Object.values(Muscle)]}
+            formik={searchFormik}
+            handleSelectChange={handleSelectChange}
+            name="bodyCategory"
+          />
+        </TopSearchWrapper>
+        <Legend>
+          <Circle color={theme.colors.modelPrimaryMuslces} />
+          <LegendText>Primary Muscles</LegendText>
+          <Circle color={theme.colors.modelSecondaryMuscles} />
+          <LegendText>Secondary Muscles</LegendText>
+        </Legend>
+        <ExercisesAmmount>
+          Found {fetchedExercises.length} exercises
+        </ExercisesAmmount>
+
+        <ExercisesWrapper onScroll={handleScroll} exercisePage>
+          {fetchedExercises.slice(startSlice, endSlice).map((exercise, idx) => (
+            <React.Fragment key={exercise.name}>
+              {displayFirstLetter(exercise, idx)}
+              <Exercise
+                onClick={() => history.push(`${EXERCISE}/${exercise.id}`)}
+                selected={
+                  !!selectedExercises.find(
+                    (el: any) => el.name === exercise.name,
+                  )
+                }
+              >
+                <ExerciseSVG
+                  muscles={convertMusclesToSVGNames(exercise.primaryMuscles)}
+                  secondaryMuscles={convertMusclesToSVGNames(
+                    exercise.secondaryMuscles,
+                  )}
+                >
+                  <HumanFrontSVG />
+                  <HumanBackSVG />
+                </ExerciseSVG>
+                <ExerciseInfo>
+                  <ExerciseName>
+                    {capitalizeFirstLetter(exercise.name)}
+                    <InfoSVGWrapper>
+                      <InfoSVG
+                        onClick={e => {
+                          e.stopPropagation();
+                          if (handleOpenInfoModal) {
+                            handleOpenInfoModal(exercise);
+                          }
+                        }}
+                      />
+                    </InfoSVGWrapper>
+                  </ExerciseName>
+                  <ExercisePrimaryMuscle>
+                    {capitalizeFirstLetter(
+                      sanitazeMuscleNameFromDB(exercise.primaryMuscles),
+                    )}
+                  </ExercisePrimaryMuscle>
+                </ExerciseInfo>
+                <GreenCheckmark id="checkmark" />
+              </Exercise>
+            </React.Fragment>
+          ))}
+        </ExercisesWrapper>
+      </Form>
+    );
+  }
 
   if ((loading || fetchedExercises.length === 0) && !finishedLoadingData) {
     return (

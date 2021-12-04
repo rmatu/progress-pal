@@ -2,25 +2,25 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import MaxWeightChart from "../../components/Charts/MaxWeightChart/MaxWeightChart";
-import VolumeChart from "../../components/Charts/VolumeChart/VolumeChart";
-import WeightSetChart from "../../components/Charts/WeightSetChart/WeightSetChart";
-import * as navActions from "../../redux/dashboardNavbar/dashboardNavbarActions";
-import { ReactComponent as CalendarSVG } from "../../assets/svg/calendar.svg";
+import MaxWeightChart from "../../../components/Charts/MaxWeightChart/MaxWeightChart";
+import VolumeChart from "../../../components/Charts/VolumeChart/VolumeChart";
+import WeightSetChart from "../../../components/Charts/WeightSetChart/WeightSetChart";
+import * as navActions from "../../../redux/dashboardNavbar/dashboardNavbarActions";
+import { ReactComponent as CalendarSVG } from "../../../assets/svg/calendar.svg";
 import {
   useGetExerciseChartDataLazyQuery,
   useGetExerciseInfoLazyQuery,
   useMeQuery,
-} from "../../generated/graphql";
-import DashbordLayoutHOC from "../../hoc/DashbordLayoutHOC";
-import { RightContent } from "../../hoc/styles";
-import { AppState } from "../../redux/rootReducer";
+} from "../../../generated/graphql";
+import DashbordLayoutHOC from "../../../hoc/DashbordLayoutHOC";
+import { RightContent } from "../../../hoc/styles";
+import { AppState } from "../../../redux/rootReducer";
 import { CalendarWrapper, ChartWrapper, DateWrapper } from "./styles";
-import Loader from "../../components/UI/Loader/Loader";
-import { Heading } from "../../components/UI";
-import DateRangePickerModal from "../../components/UI/DateRangePickerModal/DateRangePickerModal";
-import { getDateXMonthsBefore } from "../../utils/dateHelpers";
-import { EXERCISE } from "../../constants/routes";
+import Loader from "../../../components/UI/Loader/Loader";
+import { Heading } from "../../../components/UI";
+import DateRangePickerModal from "../../../components/UI/DateRangePickerModal/DateRangePickerModal";
+import { getDateXMonthsBefore } from "../../../utils/dateHelpers";
+import { EXERCISE } from "../../../constants/routes";
 
 interface ExerciseProps {}
 

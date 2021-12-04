@@ -1,5 +1,5 @@
 import styled from "styled-components/macro";
-import { convertPxToRem } from "../../../utils/cssHelpers";
+import { convertPxToRem } from "../../../../utils/cssHelpers";
 
 export const ChartWrapper = styled.div`
   display: flex;
