@@ -1,0 +1,15 @@
+query GetExerciseInfo($exerciseId: String!) {
+  getExerciseInfo(exerciseId: $exerciseId) {
+    id
+    name
+    primaryMuscles
+    secondaryMuscles
+    instructions
+    force
+    level
+    mechanic
+    equipment
+    category
+    isCommonExercise
+  }
+}

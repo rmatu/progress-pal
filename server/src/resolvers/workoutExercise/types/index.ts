@@ -50,3 +50,39 @@ export class GetExerciseChartDataResponse {
   @Field(() => [WeightSetChartData])
   weightSetChartData: WeightSetChartData[];
 }
+
+@ObjectType()
+export class getExerciseInfoResponse {
+  @Field(() => String)
+  id: string;
+
+  @Field(() => String)
+  name: string;
+
+  @Field(() => [String])
+  primaryMuscles: string[];
+
+  @Field(() => [String])
+  secondaryMuscles: string[];
+
+  @Field(() => [String])
+  instructions: string[];
+
+  @Field(() => String, { nullable: true })
+  force?: string;
+
+  @Field(() => String, { nullable: true })
+  level: string;
+
+  @Field(() => String, { nullable: true })
+  mechanic?: string;
+
+  @Field(() => String, { nullable: true })
+  equipment?: string;
+
+  @Field(() => String, { nullable: true })
+  category?: string;
+
+  @Field(() => Boolean)
+  isCommonExercise: boolean;
+}

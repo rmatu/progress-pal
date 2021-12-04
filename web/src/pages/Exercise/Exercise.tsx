@@ -5,7 +5,7 @@ import { useParams } from "react-router";
 import MaxWeightChart from "../../components/Charts/MaxWeightChart/MaxWeightChart";
 import VolumeChart from "../../components/Charts/VolumeChart/VolumeChart";
 import WeightSetChart from "../../components/Charts/WeightSetChart/WeightSetChart";
-
+import { ReactComponent as CalendarSVG } from "../../assets/svg/calendar.svg";
 import {
   useGetExerciseChartDataLazyQuery,
   useMeQuery,
@@ -13,8 +13,7 @@ import {
 import DashbordLayoutHOC from "../../hoc/DashbordLayoutHOC";
 import { RightContent } from "../../hoc/styles";
 import { AppState } from "../../redux/rootReducer";
-
-import {} from "./styles";
+import { ChartWrapper } from "./styles";
 
 interface ExerciseProps {}
 
@@ -46,19 +45,23 @@ const Exercise: React.FC<ExerciseProps> = ({}) => {
   return (
     <DashbordLayoutHOC user={userData?.me}>
       <RightContent open={open}>
-        <WeightSetChart
-          data={
-            exerciseChartData?.getExerciseChartData.weightSetChartData as any
-          }
-        />
-        <MaxWeightChart
-          data={
-            exerciseChartData?.getExerciseChartData.maxWeightChartData as any
-          }
-        />
-        <VolumeChart
-          data={exerciseChartData?.getExerciseChartData.volumeChartData as any}
-        />
+        <ChartWrapper>
+          <WeightSetChart
+            data={
+              exerciseChartData?.getExerciseChartData.weightSetChartData as any
+            }
+          />
+          <MaxWeightChart
+            data={
+              exerciseChartData?.getExerciseChartData.maxWeightChartData as any
+            }
+          />
+          <VolumeChart
+            data={
+              exerciseChartData?.getExerciseChartData.volumeChartData as any
+            }
+          />
+        </ChartWrapper>
       </RightContent>
     </DashbordLayoutHOC>
   );

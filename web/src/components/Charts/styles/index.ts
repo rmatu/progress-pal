@@ -6,6 +6,7 @@ export const Wrapper = styled.div<{ width: number }>`
   align-items: center;
   justify-content: center;
   max-width: ${({ width }) => width}px;
+  width: 100%;
 
   h3 {
     margin-left: 2em;

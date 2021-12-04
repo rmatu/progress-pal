@@ -73,7 +73,11 @@ const VolumeChart: React.FC<VolumeChartProps> = ({ data }) => {
               fontWeight: "bolder",
             }}
             labelStyle={{
-              display: "none",
+              display: "flex",
+              alignSelf: "start",
+              order: 1,
+              textAlign: "center",
+              fontSize: "1.75rem",
             }}
             formatter={(value: number) => {
               return [`${value} kg`, `Volume`];

@@ -23,6 +23,7 @@ export type Query = {
   getUserYearlyWorkoutData?: Maybe<Array<YearlyWorkoutsAmountResponse>>;
   getDataForMuscleHeatmap?: Maybe<DataForMuscleHeatmap>;
   getExerciseChartData: GetExerciseChartDataResponse;
+  getExerciseInfo: GetExerciseInfoResponse;
   getAllCommonExercises?: Maybe<Array<CommonExercise>>;
 };
 
@@ -52,6 +53,11 @@ export type QueryGetDataForMuscleHeatmapArgs = {
 
 export type QueryGetExerciseChartDataArgs = {
   input: GetExerciseChartDataInput;
+};
+
+
+export type QueryGetExerciseInfoArgs = {
+  exerciseId: Scalars['String'];
 };
 
 export type User = {
@@ -206,6 +212,21 @@ export type GetExerciseChartDataInput = {
   exerciseId: Scalars['String'];
   startTime: Scalars['DateTime'];
   endTime: Scalars['DateTime'];
+};
+
+export type GetExerciseInfoResponse = {
+  __typename?: 'getExerciseInfoResponse';
+  id: Scalars['String'];
+  name: Scalars['String'];
+  primaryMuscles: Array<Scalars['String']>;
+  secondaryMuscles: Array<Scalars['String']>;
+  instructions: Array<Scalars['String']>;
+  force?: Maybe<Scalars['String']>;
+  level?: Maybe<Scalars['String']>;
+  mechanic?: Maybe<Scalars['String']>;
+  equipment?: Maybe<Scalars['String']>;
+  category?: Maybe<Scalars['String']>;
+  isCommonExercise: Scalars['Boolean'];
 };
 
 export type Mutation = {
@@ -781,6 +802,19 @@ export type GetExerciseChartDataQuery = (
   & { getExerciseChartData: (
     { __typename?: 'GetExerciseChartDataResponse' }
     & RegularGetExerciseChartDataResponseFragment
+  ) }
+);
+
+export type GetExerciseInfoQueryVariables = Exact<{
+  exerciseId: Scalars['String'];
+}>;
+
+
+export type GetExerciseInfoQuery = (
+  { __typename?: 'Query' }
+  & { getExerciseInfo: (
+    { __typename?: 'getExerciseInfoResponse' }
+    & Pick<GetExerciseInfoResponse, 'id' | 'name' | 'primaryMuscles' | 'secondaryMuscles' | 'instructions' | 'force' | 'level' | 'mechanic' | 'equipment' | 'category' | 'isCommonExercise'>
   ) }
 );
 
@@ -1710,6 +1744,49 @@ export function useGetExerciseChartDataLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetExerciseChartDataQueryHookResult = ReturnType<typeof useGetExerciseChartDataQuery>;
 export type GetExerciseChartDataLazyQueryHookResult = ReturnType<typeof useGetExerciseChartDataLazyQuery>;
 export type GetExerciseChartDataQueryResult = Apollo.QueryResult<GetExerciseChartDataQuery, GetExerciseChartDataQueryVariables>;
+export const GetExerciseInfoDocument = gql`
+    query GetExerciseInfo($exerciseId: String!) {
+  getExerciseInfo(exerciseId: $exerciseId) {
+    id
+    name
+    primaryMuscles
+    secondaryMuscles
+    instructions
+    force
+    level
+    mechanic
+    equipment
+    category
+    isCommonExercise
+  }
+}
+    `;
+
+/**
+ * __useGetExerciseInfoQuery__
+ *
+ * To run a query within a React component, call `useGetExerciseInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetExerciseInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetExerciseInfoQuery({
+ *   variables: {
+ *      exerciseId: // value for 'exerciseId'
+ *   },
+ * });
+ */
+export function useGetExerciseInfoQuery(baseOptions: Apollo.QueryHookOptions<GetExerciseInfoQuery, GetExerciseInfoQueryVariables>) {
+        return Apollo.useQuery<GetExerciseInfoQuery, GetExerciseInfoQueryVariables>(GetExerciseInfoDocument, baseOptions);
+      }
+export function useGetExerciseInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetExerciseInfoQuery, GetExerciseInfoQueryVariables>) {
+          return Apollo.useLazyQuery<GetExerciseInfoQuery, GetExerciseInfoQueryVariables>(GetExerciseInfoDocument, baseOptions);
+        }
+export type GetExerciseInfoQueryHookResult = ReturnType<typeof useGetExerciseInfoQuery>;
+export type GetExerciseInfoLazyQueryHookResult = ReturnType<typeof useGetExerciseInfoLazyQuery>;
+export type GetExerciseInfoQueryResult = Apollo.QueryResult<GetExerciseInfoQuery, GetExerciseInfoQueryVariables>;
 export const GetUserWorkoutDocument = gql`
     query GetUserWorkout($workoutId: String!) {
   getUserWorkout(workoutId: $workoutId) {

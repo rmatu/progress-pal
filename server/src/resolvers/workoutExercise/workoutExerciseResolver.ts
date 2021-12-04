@@ -3,10 +3,13 @@ import { MyContext } from "src/types";
 import { Arg, Ctx, Query, Resolver, UseMiddleware } from "type-graphql";
 import { Between, getRepository } from "typeorm";
 import { WorkoutExercise } from "../../entities/WorkoutExercise";
+import { CommonExercise } from "../../entities/CommonExercise";
 import { isAuthenticated } from "../../middleware/isAuthenticated";
+import { UserExercise } from "../../entities/UserExercise";
 import {
   GetExerciseChartDataInput,
   GetExerciseChartDataResponse,
+  getExerciseInfoResponse,
 } from "./types";
 
 @Resolver(WorkoutExercise)
@@ -100,6 +103,37 @@ export class WorkoutExerciseResolver {
     } catch (e) {
       console.log(e);
       return new Error("No exercises");
+    }
+  }
+
+  @Query(() => getExerciseInfoResponse)
+  @UseMiddleware(isAuthenticated)
+  async getExerciseInfo(
+    @Arg("exerciseId") exerciseId: string,
+    @Ctx() { req }: MyContext,
+  ) {
+    const { userId } = req.session;
+    try {
+      const commonExerciseRepo = await getRepository(CommonExercise);
+
+      // This is most likely commonExercise
+      const commonExercise = await commonExerciseRepo.findOne(exerciseId);
+      if (commonExercise) return commonExercise;
+
+      // If it's not commonExercise try userExercise
+      const userExerciseRepo = await getRepository(UserExercise);
+      const userExercise = await userExerciseRepo.findOne({
+        where: {
+          id: exerciseId,
+          user: userId,
+        },
+      });
+      if (userExercise) return userExercise;
+
+      return new Error("This exercise does not exist");
+    } catch (e) {
+      console.log(e);
+      return new Error("Something went wrong");
     }
   }
 }

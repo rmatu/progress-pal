@@ -111,7 +111,14 @@ const WeightSetChart: React.FC<WeightSetChartProps> = ({ data }) => {
               return -setNumber;
             }}
             labelStyle={{
-              display: "none",
+              display: "flex",
+              alignSelf: "start",
+              order: 1,
+              textAlign: "center",
+              fontSize: "1.75rem",
+            }}
+            itemStyle={{
+              marginLeft: "0.8em",
             }}
             formatter={(value: number, name: string) => {
               const setNumber = name.slice(3, name.length);

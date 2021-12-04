@@ -12,6 +12,7 @@ import theme from "../../../theme/theme";
 import { Heading } from "../../UI";
 import Loader from "../../UI/Loader/Loader";
 import { chartSize } from "../consts";
+import { getStrokeColor } from "../strokeColors";
 import { LoaderWrapper, Wrapper } from "../styles";
 import {} from "./styles";
 
@@ -73,7 +74,12 @@ const MaxWeightChart: React.FC<MaxWeightChartProps> = ({ data }) => {
               fontWeight: "bolder",
             }}
             labelStyle={{
-              display: "none",
+              display: "flex",
+              alignSelf: "start",
+              order: 1,
+              textAlign: "center",
+              fontSize: "1.75rem",
+              marginLeft: "0.5em",
             }}
             formatter={(value: number) => {
               return [`${value} kg`, `Max weight`];
