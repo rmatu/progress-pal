@@ -17,7 +17,7 @@ import { Heading } from "../../UI";
 import Loader from "../../UI/Loader/Loader";
 import { chartSize } from "../consts";
 import { getStrokeColor } from "../strokeColors";
-import { LoaderWrapper, Wrapper } from "../styles";
+import { LoaderWrapper, NoData, Wrapper } from "../styles";
 
 interface WeightSetChartProps {
   data: [
@@ -38,11 +38,78 @@ const WeightSetChart: React.FC<WeightSetChartProps> = ({ data }) => {
     setConvertedDataForGraph(convertToWeightSetChartData(data));
   }, [data]);
 
-  if (!data || !convertedDataForGraph?.length) {
+  if (!data) {
     return (
       <LoaderWrapper width={size.WIDTH} height={size.HEIGHT}>
         <Loader />
       </LoaderWrapper>
+    );
+  }
+
+  if (!convertedDataForGraph?.length) {
+    return (
+      <Wrapper width={size.WIDTH}>
+        <Heading size="h3" marginB="0.5em">
+          Weight with Set
+        </Heading>
+        <ResponsiveContainer width="100%" height={size.HEIGHT}>
+          <LineChart
+            width={size.WIDTH}
+            height={size.HEIGHT}
+            data={convertedDataForGraph}
+          >
+            <XAxis dataKey="date" />
+            <CartesianGrid
+              vertical
+              horizontal
+              verticalFill={["#444444"]}
+              fillOpacity={0.2}
+            />
+            <YAxis
+              label={{
+                value: "in kilograms",
+                angle: -90,
+                position: "insideLeft",
+                fill: "#666",
+              }}
+            />
+
+            <Tooltip
+              contentStyle={{
+                borderRadius: "0.5em",
+                padding: "0.5em 3em",
+                backgroundColor: theme.colors.backgroundGray,
+                borderColor: theme.colors.grayText,
+                fontWeight: "bolder",
+                display: "flex",
+                flexDirection: "column-reverse",
+              }}
+              // Don't know how to fix those
+              //@ts-ignore
+              itemSorter={({ name }) => {
+                if (!name) return;
+                //@ts-ignore
+                const setNumber = Number(name.slice(3, name.length));
+                return -setNumber;
+              }}
+              labelStyle={{
+                display: "flex",
+                alignSelf: "start",
+                order: 1,
+                textAlign: "center",
+                fontSize: "1.75rem",
+              }}
+              itemStyle={{
+                marginLeft: "0.8em",
+              }}
+              formatter={(value: number, name: string) => {
+                const setNumber = name.slice(3, name.length);
+                return [`${value} kg`, `Set ${setNumber}`];
+              }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </Wrapper>
     );
   }
 
