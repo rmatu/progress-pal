@@ -21,3 +21,7 @@ export const LoaderWrapper = styled.div<{ width: number; height: number }>`
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
 `;
+
+export const NoData = styled.p`
+  opacity: 0.5;
+`;

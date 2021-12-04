@@ -30,7 +30,7 @@ export const TopSearchWrapper = styled.div`
   }
 `;
 
-export const ExercisesWrapper = styled.div`
+export const ExercisesWrapper = styled.div<{ exercisePage?: boolean }>`
   max-height: 70vh;
   overflow-y: auto;
   display: flex;
@@ -50,6 +50,17 @@ export const ExercisesWrapper = styled.div`
   @media screen and (max-width: 768px) {
     max-height: 50vh;
   }
+
+  ${({ exercisePage }) =>
+    exercisePage &&
+    css`
+      max-height: 78vh;
+      width: 100%;
+
+      @media screen and (max-width: 768px) {
+        max-height: 66vh;
+      }
+    `}
 `;
 
 export const Form = styled.form``;

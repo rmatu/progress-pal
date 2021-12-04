@@ -1,6 +1,11 @@
 import styled, { css } from "styled-components/macro";
 import { convertPxToRem } from "../../../utils/cssHelpers";
 
+export const ExerciseNameWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
 export const ExerciseName = styled.h3`
   display: flex;
   align-items: center;

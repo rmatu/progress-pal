@@ -18,6 +18,11 @@ export const Wrapper = styled.div`
   }
 `;
 
+export const ExerciseNameWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
 export const ExerciseName = styled.h3`
   display: flex;
   align-items: center;

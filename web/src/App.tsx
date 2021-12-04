@@ -23,7 +23,8 @@ import PageNotFound from "./pages/PageNotFound/PageNotFound";
 import AddWorkout from "./pages/AddWorkout/AddWorkout";
 import Workouts from "./pages/Workouts/Workouts";
 import Workout from "./pages/Workouts/Workout/Workout";
-import Exercise from "./pages/Exercise/Exercise";
+import Exercise from "./pages/Exercises/Exercise/Exercise";
+import Exercises from "./pages/Exercises/Exercises";
 
 const App: React.FC = () => (
   <AnimatePresence>
@@ -105,6 +106,12 @@ const App: React.FC = () => (
         exact
         path={ROUTES.WORKOUTS}
         component={withAuth(Workouts)}
+      />
+      <Route
+        key={`${ROUTES.EXERCISE}`}
+        exact
+        path={`${ROUTES.EXERCISE}`}
+        component={withAuth(Exercises)}
       />
       <Route
         key={`${ROUTES.EXERCISE}/:id`}

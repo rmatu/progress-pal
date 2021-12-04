@@ -54,8 +54,8 @@ export const sanitazeMuscleNameFromDB = (muscleNames: string[]) => {
 };
 
 export const unsanitazeMuscleNameFromDB = (muscleNames: string[]) => {
-  if (muscleNames.includes("Middle Back")) return `"middle back"`;
-  if (muscleNames.includes("Lower Back")) return `"lower back"`;
+  if (muscleNames.includes("Middle Back")) return "middle back";
+  if (muscleNames.includes("Lower Back")) return "lower back";
 
   return muscleNames[0];
 };
