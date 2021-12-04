@@ -13,6 +13,7 @@ import InputWithIcon from "../../../components/UI/InputWithIcon/InputWithIcon";
 import Loader from "../../../components/UI/Loader/Loader";
 import Popup from "../../../components/UI/Popup/Popup";
 import ExerciseInstructionModal from "../../../components/UI/WorkoutInstructionModal/ExerciseInstructionModal";
+import { WORKOUTS } from "../../../constants/routes";
 import {
   GetUserWorkoutQuery,
   useAddNewExercisesToTheWorkoutMutation,
@@ -302,7 +303,7 @@ const Workout: React.FC<WorkoutProps> = () => {
   }, [workoutData]);
 
   useEffect(() => {
-    dispatch(navActions.changeItem(""));
+    dispatch(navActions.changeItem(WORKOUTS));
   }, []);
 
   if (!fetchedWorkout) {

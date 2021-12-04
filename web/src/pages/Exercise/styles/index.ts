@@ -32,7 +32,7 @@ export const DateWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1em;
+  margin-bottom: 1.5em;
   font-size: 1.125rem;
   opacity: 0.8;
   p {

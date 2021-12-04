@@ -12,6 +12,7 @@ import { Button } from "../UI";
 import ExerciseInstructionModal from "../UI/WorkoutInstructionModal/ExerciseInstructionModal";
 import {
   ExerciseName,
+  ExerciseNameWrapper,
   Grid,
   GridItem,
   Input,
@@ -151,12 +152,14 @@ const ExerciseSets: React.FC<ExerciseSetsProps> = ({
 
   return (
     <Wrapper matchExerciseSetsFromDBStyle={matchExerciseSetsFromDBStyle}>
-      <ExerciseName onClick={handleChangePage}>
-        {exercise?.name}
-        <InfoSVGWrapper>
-          <InfoSVG onClick={() => setOpenInfoModal(true)} />
-        </InfoSVGWrapper>
-      </ExerciseName>
+      <ExerciseNameWrapper>
+        <ExerciseName onClick={handleChangePage}>
+          {exercise?.name}
+          <InfoSVGWrapper>
+            <InfoSVG onClick={() => setOpenInfoModal(true)} />
+          </InfoSVGWrapper>
+        </ExerciseName>
+      </ExerciseNameWrapper>
       <PrimaryMuscles>
         {exercise?.primaryMuscles?.map((name, idx) => (
           <PrimaryMuscle key={name}>

@@ -1,10 +1,11 @@
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import MaxWeightChart from "../../components/Charts/MaxWeightChart/MaxWeightChart";
 import VolumeChart from "../../components/Charts/VolumeChart/VolumeChart";
 import WeightSetChart from "../../components/Charts/WeightSetChart/WeightSetChart";
+import * as navActions from "../../redux/dashboardNavbar/dashboardNavbarActions";
 import { ReactComponent as CalendarSVG } from "../../assets/svg/calendar.svg";
 import {
   useGetExerciseChartDataLazyQuery,
@@ -19,6 +20,7 @@ import Loader from "../../components/UI/Loader/Loader";
 import { Heading } from "../../components/UI";
 import DateRangePickerModal from "../../components/UI/DateRangePickerModal/DateRangePickerModal";
 import { getDateXMonthsBefore } from "../../utils/dateHelpers";
+import { EXERCISE } from "../../constants/routes";
 
 interface ExerciseProps {}
 
@@ -38,6 +40,7 @@ const Exercise: React.FC<ExerciseProps> = ({}) => {
   const { open } = useSelector((state: AppState) => state.dashboardNavbar);
   const { data: userData } = useMeQuery();
   const { id: exerciseId } = useParams<{ id: string }>();
+  const dispatch = useDispatch();
 
   const [showModal, setShowModal] = useState(false);
   // Data for Selecting time in Calendar Modal
@@ -86,6 +89,10 @@ const Exercise: React.FC<ExerciseProps> = ({}) => {
       },
     });
   }, [exerciseId]);
+
+  useEffect(() => {
+    dispatch(navActions.changeItem(EXERCISE));
+  }, []);
 
   if (exerciseInfoLoading && !exerciseInfoError) {
     return (

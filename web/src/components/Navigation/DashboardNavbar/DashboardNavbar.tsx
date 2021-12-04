@@ -89,16 +89,16 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user }) => {
           Dashboard
         </NavListItem>
         <NavListItem
-          selected={selectedItem === "daily-activities"}
-          onClick={() => handleClick("daily-activities")}
-        >
-          Daily Activities
-        </NavListItem>
-        <NavListItem
           selected={selectedItem === ROUTES.WORKOUTS}
           onClick={() => handleClick(ROUTES.WORKOUTS)}
         >
           Workouts
+        </NavListItem>
+        <NavListItem
+          selected={selectedItem === ROUTES.EXERCISE}
+          onClick={() => handleClick(ROUTES.EXERCISE)}
+        >
+          Exercises
         </NavListItem>
         <NavListItem
           selected={selectedItem === "donate"}

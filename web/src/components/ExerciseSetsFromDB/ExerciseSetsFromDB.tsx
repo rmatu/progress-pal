@@ -25,6 +25,7 @@ import { Button, Heading, Modal } from "../UI";
 import {
   EditButtonsWrapper,
   ExerciseName,
+  ExerciseNameWrapper,
   Grid,
   GridItem,
   InfoSVGWrapper,
@@ -319,12 +320,14 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
 
   return (
     <Wrapper>
-      <ExerciseName onClick={handleChangePage}>
-        {exercise?.userExercise?.name || exercise?.commonExercise?.name}
+      <ExerciseNameWrapper>
+        <ExerciseName onClick={handleChangePage}>
+          {exercise?.userExercise?.name || exercise?.commonExercise?.name}
+        </ExerciseName>
         <InfoSVGWrapper>
           <InfoSVG onClick={() => setOpenInfoModal(true)} />
         </InfoSVGWrapper>
-      </ExerciseName>
+      </ExerciseNameWrapper>
       <PrimaryMuscles>
         {exercise?.commonExercise?.primaryMuscles?.map((name, idx) => (
           <PrimaryMuscle key={name}>
