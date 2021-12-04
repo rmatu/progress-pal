@@ -33,8 +33,6 @@ const ExerciseInstructionModal: React.FC<ExerciseInstructionModalProps> = ({
   const exerciseInfo2 = exactExercise;
   const exerciseInfo = exerciseInfo1 || exerciseInfo2;
 
-  console.log(exerciseInfo);
-
   return (
     <ModalScroll show={opened} handleClose={close}>
       <Heading size="h2" marginB="0.6em">

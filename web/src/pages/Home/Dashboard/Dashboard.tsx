@@ -34,9 +34,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   );
 
   const width = useWindowResize();
-  const { selectedItem, open } = useSelector(
-    (state: AppState) => state.dashboardNavbar,
-  );
+  const { open } = useSelector((state: AppState) => state.dashboardNavbar);
 
   const dispatch = useDispatch();
 

@@ -361,6 +361,8 @@ export class WorkoutResolver {
 
       for (const inputExercise of input.exercises) {
         const workoutExercise = new WorkoutExercise();
+        workoutExercise.createdAt = moment(input.date).toDate();
+        workoutExercise.updatedAt = moment(input.date).toDate();
 
         if (inputExercise.isCommonExercise) {
           // @ts-ignore
@@ -372,6 +374,8 @@ export class WorkoutResolver {
 
         // @ts-ignore
         workoutExercise.workout = savedWorkout.id;
+        workoutExercise.user = userId;
+
         const savedExercise = await queryRunner.manager.save(workoutExercise);
 
         inputExercise.sets.forEach(async inputSet => {
@@ -605,10 +609,19 @@ export class WorkoutResolver {
     @Ctx() { req }: MyContext,
   ) {
     const { userId } = req.session;
+    // get a connection and create a new query runner
+    const connection = getConnection();
+    const queryRunner = connection.createQueryRunner();
 
     try {
       const workoutRepo = await getRepository(Workout);
+      const exerciseRepo = await getRepository(WorkoutExercise);
 
+      // establish real database connection using our new query runner
+      await queryRunner.connect();
+
+      // lets now open a new transaction:
+      await queryRunner.startTransaction();
       const workout = await workoutRepo.findOne({
         relations: [
           "workoutExercise",
@@ -637,7 +650,23 @@ export class WorkoutResolver {
         workout.endTime = input.endTime;
       }
 
-      const savedWorkout = await Workout.save(workout);
+      // update workoutExercise date
+      if (input.date) {
+        //@ts-ignore
+        workout.workoutExercise.map(async (exercise: WorkoutExercise) => {
+          const foundExercise = await exerciseRepo.findOne({
+            id: exercise.id,
+          });
+
+          if (!foundExercise) return;
+
+          //@ts-ignore
+          foundExercise.updatedAt = input.date;
+          await queryRunner.manager.save(foundExercise);
+        });
+      }
+
+      const savedWorkout = await queryRunner.manager.save(workout);
 
       // Sorting nested relations in typeORM is super hard, so I'm sorting it on the server
       // Sort ASC
@@ -655,10 +684,15 @@ export class WorkoutResolver {
           return 0;
         });
 
+      // commit transaction now:
+      await queryRunner.commitTransaction();
       return savedWorkout;
-    } catch (e) {
-      console.log(e);
+    } catch {
+      // since we have errors let's rollback changes we made
+      await queryRunner.rollbackTransaction();
       return new Error("Something went wrong");
+    } finally {
+      await queryRunner.release();
     }
   }
 

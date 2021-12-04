@@ -245,3 +245,37 @@ export const getTimeBetweenTwoDates = (startDate: Date, endDate: Date) => {
 
   return moment.utc(duration).format("H[h] mm[m]");
 };
+
+export const convertToWeightSetChartData = (
+  data: {
+    date: string;
+    sets: number[];
+  }[],
+) => {
+  const arr: { [key: string]: any }[] = [];
+
+  data.forEach(exercise => {
+    const sets: { [key: string]: number } = {};
+
+    exercise.sets.forEach((set, idx) => {
+      sets[`set${idx + 1}`] = set;
+    });
+
+    arr.push({
+      date: exercise.date,
+      ...sets,
+    });
+  });
+
+  return arr;
+};
+
+export const getHighestAmountOfSets = (data: { [key: string]: any }[]) => {
+  let max = 0;
+  data.forEach(exercise => {
+    if (Object.keys(exercise).length > max)
+      max = Object.keys(exercise).length - 1;
+  });
+
+  return max;
+};

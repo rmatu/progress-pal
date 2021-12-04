@@ -11,6 +11,7 @@ import {
 } from "typeorm";
 import { CommonExercise } from "./CommonExercise";
 import { ExerciseSet } from "./ExerciseSet";
+import { User } from "./User";
 import { UserExercise } from "./UserExercise";
 import { Workout } from "./Workout";
 
@@ -34,6 +35,7 @@ export class WorkoutExercise extends BaseEntity {
   @Field(() => Workout)
   @ManyToOne(() => Workout, (workout: Workout) => workout.workoutExercise, {
     onDelete: "CASCADE",
+    orphanedRowAction: "delete",
   })
   workout: Workout;
 
@@ -52,6 +54,12 @@ export class WorkoutExercise extends BaseEntity {
     { onDelete: "CASCADE" },
   )
   userExercise: UserExercise;
+
+  @Field(() => User)
+  @ManyToOne(() => User, (user: User) => user.workoutExercise, {
+    onDelete: "CASCADE",
+  })
+  user: User;
 
   @Field(() => CommonExercise, { nullable: true })
   @ManyToOne(

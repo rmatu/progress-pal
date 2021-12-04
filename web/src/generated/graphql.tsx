@@ -22,6 +22,8 @@ export type Query = {
   getUserWorkout?: Maybe<Workout>;
   getUserYearlyWorkoutData?: Maybe<Array<YearlyWorkoutsAmountResponse>>;
   getDataForMuscleHeatmap?: Maybe<DataForMuscleHeatmap>;
+  getExerciseChartData: GetExerciseChartDataResponse;
+  getExerciseInfo: GetExerciseInfoResponse;
   getAllCommonExercises?: Maybe<Array<CommonExercise>>;
 };
 
@@ -48,6 +50,16 @@ export type QueryGetDataForMuscleHeatmapArgs = {
   startDate: Scalars['String'];
 };
 
+
+export type QueryGetExerciseChartDataArgs = {
+  input: GetExerciseChartDataInput;
+};
+
+
+export type QueryGetExerciseInfoArgs = {
+  exerciseId: Scalars['String'];
+};
+
 export type User = {
   __typename?: 'User';
   id: Scalars['Int'];
@@ -65,6 +77,7 @@ export type User = {
   createdAt: Scalars['String'];
   userMetrics: Array<UserMetrics>;
   userExercise: Array<UserExercise>;
+  workoutExercise: Array<WorkoutExercise>;
   workout: Array<Workout>;
 };
 
@@ -108,6 +121,7 @@ export type WorkoutExercise = {
   workout: Workout;
   exerciseSet: Array<ExerciseSet>;
   userExercise?: Maybe<UserExercise>;
+  user: User;
   commonExercise?: Maybe<CommonExercise>;
 };
 
@@ -167,6 +181,52 @@ export type Muscles = {
   __typename?: 'Muscles';
   muscleName: Scalars['String'];
   amount: Scalars['Float'];
+};
+
+export type GetExerciseChartDataResponse = {
+  __typename?: 'GetExerciseChartDataResponse';
+  maxWeightChartData: Array<MaxWeightChartData>;
+  volumeChartData: Array<VolumeChartData>;
+  weightSetChartData: Array<WeightSetChartData>;
+};
+
+export type MaxWeightChartData = {
+  __typename?: 'MaxWeightChartData';
+  date: Scalars['String'];
+  maxWeight: Scalars['Float'];
+};
+
+export type VolumeChartData = {
+  __typename?: 'VolumeChartData';
+  date: Scalars['String'];
+  volume: Scalars['Float'];
+};
+
+export type WeightSetChartData = {
+  __typename?: 'WeightSetChartData';
+  date: Scalars['String'];
+  sets: Array<Scalars['Float']>;
+};
+
+export type GetExerciseChartDataInput = {
+  exerciseId: Scalars['String'];
+  startTime: Scalars['DateTime'];
+  endTime: Scalars['DateTime'];
+};
+
+export type GetExerciseInfoResponse = {
+  __typename?: 'getExerciseInfoResponse';
+  id: Scalars['String'];
+  name: Scalars['String'];
+  primaryMuscles: Array<Scalars['String']>;
+  secondaryMuscles: Array<Scalars['String']>;
+  instructions: Array<Scalars['String']>;
+  force?: Maybe<Scalars['String']>;
+  level?: Maybe<Scalars['String']>;
+  mechanic?: Maybe<Scalars['String']>;
+  equipment?: Maybe<Scalars['String']>;
+  category?: Maybe<Scalars['String']>;
+  isCommonExercise: Scalars['Boolean'];
 };
 
 export type Mutation = {
@@ -386,6 +446,20 @@ export type RegularErrorFragment = (
 export type RegularExerciseSetFragment = (
   { __typename?: 'ExerciseSet' }
   & Pick<ExerciseSet, 'id' | 'set' | 'weight' | 'reps'>
+);
+
+export type RegularGetExerciseChartDataResponseFragment = (
+  { __typename?: 'GetExerciseChartDataResponse' }
+  & { volumeChartData: Array<(
+    { __typename?: 'VolumeChartData' }
+    & Pick<VolumeChartData, 'date' | 'volume'>
+  )>, maxWeightChartData: Array<(
+    { __typename?: 'MaxWeightChartData' }
+    & Pick<MaxWeightChartData, 'date' | 'maxWeight'>
+  )>, weightSetChartData: Array<(
+    { __typename?: 'WeightSetChartData' }
+    & Pick<WeightSetChartData, 'date' | 'sets'>
+  )> }
 );
 
 export type RegularUpdateOnboardingResponseFragment = (
@@ -718,6 +792,32 @@ export type GetDataForMuscleHeatmapQuery = (
   )> }
 );
 
+export type GetExerciseChartDataQueryVariables = Exact<{
+  input: GetExerciseChartDataInput;
+}>;
+
+
+export type GetExerciseChartDataQuery = (
+  { __typename?: 'Query' }
+  & { getExerciseChartData: (
+    { __typename?: 'GetExerciseChartDataResponse' }
+    & RegularGetExerciseChartDataResponseFragment
+  ) }
+);
+
+export type GetExerciseInfoQueryVariables = Exact<{
+  exerciseId: Scalars['String'];
+}>;
+
+
+export type GetExerciseInfoQuery = (
+  { __typename?: 'Query' }
+  & { getExerciseInfo: (
+    { __typename?: 'getExerciseInfoResponse' }
+    & Pick<GetExerciseInfoResponse, 'id' | 'name' | 'primaryMuscles' | 'secondaryMuscles' | 'instructions' | 'force' | 'level' | 'mechanic' | 'equipment' | 'category' | 'isCommonExercise'>
+  ) }
+);
+
 export type GetUserWorkoutQueryVariables = Exact<{
   workoutId: Scalars['String'];
 }>;
@@ -770,6 +870,22 @@ export type MeQuery = (
   )> }
 );
 
+export const RegularGetExerciseChartDataResponseFragmentDoc = gql`
+    fragment RegularGetExerciseChartDataResponse on GetExerciseChartDataResponse {
+  volumeChartData {
+    date
+    volume
+  }
+  maxWeightChartData {
+    date
+    maxWeight
+  }
+  weightSetChartData {
+    date
+    sets
+  }
+}
+    `;
 export const RegularUserMetricsFragmentDoc = gql`
     fragment RegularUserMetrics on UserMetrics {
   id
@@ -1595,6 +1711,82 @@ export function useGetDataForMuscleHeatmapLazyQuery(baseOptions?: Apollo.LazyQue
 export type GetDataForMuscleHeatmapQueryHookResult = ReturnType<typeof useGetDataForMuscleHeatmapQuery>;
 export type GetDataForMuscleHeatmapLazyQueryHookResult = ReturnType<typeof useGetDataForMuscleHeatmapLazyQuery>;
 export type GetDataForMuscleHeatmapQueryResult = Apollo.QueryResult<GetDataForMuscleHeatmapQuery, GetDataForMuscleHeatmapQueryVariables>;
+export const GetExerciseChartDataDocument = gql`
+    query GetExerciseChartData($input: GetExerciseChartDataInput!) {
+  getExerciseChartData(input: $input) {
+    ...RegularGetExerciseChartDataResponse
+  }
+}
+    ${RegularGetExerciseChartDataResponseFragmentDoc}`;
+
+/**
+ * __useGetExerciseChartDataQuery__
+ *
+ * To run a query within a React component, call `useGetExerciseChartDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetExerciseChartDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetExerciseChartDataQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetExerciseChartDataQuery(baseOptions: Apollo.QueryHookOptions<GetExerciseChartDataQuery, GetExerciseChartDataQueryVariables>) {
+        return Apollo.useQuery<GetExerciseChartDataQuery, GetExerciseChartDataQueryVariables>(GetExerciseChartDataDocument, baseOptions);
+      }
+export function useGetExerciseChartDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetExerciseChartDataQuery, GetExerciseChartDataQueryVariables>) {
+          return Apollo.useLazyQuery<GetExerciseChartDataQuery, GetExerciseChartDataQueryVariables>(GetExerciseChartDataDocument, baseOptions);
+        }
+export type GetExerciseChartDataQueryHookResult = ReturnType<typeof useGetExerciseChartDataQuery>;
+export type GetExerciseChartDataLazyQueryHookResult = ReturnType<typeof useGetExerciseChartDataLazyQuery>;
+export type GetExerciseChartDataQueryResult = Apollo.QueryResult<GetExerciseChartDataQuery, GetExerciseChartDataQueryVariables>;
+export const GetExerciseInfoDocument = gql`
+    query GetExerciseInfo($exerciseId: String!) {
+  getExerciseInfo(exerciseId: $exerciseId) {
+    id
+    name
+    primaryMuscles
+    secondaryMuscles
+    instructions
+    force
+    level
+    mechanic
+    equipment
+    category
+    isCommonExercise
+  }
+}
+    `;
+
+/**
+ * __useGetExerciseInfoQuery__
+ *
+ * To run a query within a React component, call `useGetExerciseInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetExerciseInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetExerciseInfoQuery({
+ *   variables: {
+ *      exerciseId: // value for 'exerciseId'
+ *   },
+ * });
+ */
+export function useGetExerciseInfoQuery(baseOptions: Apollo.QueryHookOptions<GetExerciseInfoQuery, GetExerciseInfoQueryVariables>) {
+        return Apollo.useQuery<GetExerciseInfoQuery, GetExerciseInfoQueryVariables>(GetExerciseInfoDocument, baseOptions);
+      }
+export function useGetExerciseInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetExerciseInfoQuery, GetExerciseInfoQueryVariables>) {
+          return Apollo.useLazyQuery<GetExerciseInfoQuery, GetExerciseInfoQueryVariables>(GetExerciseInfoDocument, baseOptions);
+        }
+export type GetExerciseInfoQueryHookResult = ReturnType<typeof useGetExerciseInfoQuery>;
+export type GetExerciseInfoLazyQueryHookResult = ReturnType<typeof useGetExerciseInfoLazyQuery>;
+export type GetExerciseInfoQueryResult = Apollo.QueryResult<GetExerciseInfoQuery, GetExerciseInfoQueryVariables>;
 export const GetUserWorkoutDocument = gql`
     query GetUserWorkout($workoutId: String!) {
   getUserWorkout(workoutId: $workoutId) {

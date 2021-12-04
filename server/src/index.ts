@@ -27,6 +27,7 @@ import { WorkoutExercise } from "./entities/WorkoutExercise";
 import { UserResolver } from "./resolvers/user";
 import { UserMetricsResolver } from "./resolvers/userMetrics";
 import { WorkoutResolver } from "./resolvers/workout/workoutResolver";
+import { WorkoutExerciseResolver } from "./resolvers/WorkoutExercise/WorkoutExerciseResolver";
 import { CommonExerciseResolver } from "./resolvers/commonExercise";
 
 const main = async () => {
@@ -99,6 +100,7 @@ const main = async () => {
         UserMetricsResolver,
         UserResolver,
         WorkoutResolver,
+        WorkoutExerciseResolver,
       ],
       validate: false,
     }),
