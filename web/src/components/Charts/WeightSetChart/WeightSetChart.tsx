@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   CartesianGrid,
   Line,
+  ResponsiveContainer,
   LineChart,
   Tooltip,
   XAxis,
@@ -56,6 +57,7 @@ const WeightSetChart: React.FC<WeightSetChartProps> = ({ data }) => {
           dataKey={`set${i + 1}`}
           stroke={getStrokeColor(i + 1)}
           strokeWidth={3}
+          connectNulls
         />,
       );
     }
@@ -68,44 +70,56 @@ const WeightSetChart: React.FC<WeightSetChartProps> = ({ data }) => {
       <Heading size="h3" marginB="0.5em">
         Weight with Set
       </Heading>
-      <LineChart
-        width={size.WIDTH}
-        height={size.HEIGHT}
-        data={convertedDataForGraph}
-      >
-        <XAxis dataKey="date" />
-        <CartesianGrid
-          vertical
-          horizontal
-          verticalFill={["#444444"]}
-          fillOpacity={0.2}
-        />
-        <YAxis
-          label={{
-            value: "in kilograms",
-            angle: -90,
-            position: "insideLeft",
-            fill: "#666",
-          }}
-        />
-        {createLines()}
-        <Tooltip
-          contentStyle={{
-            borderRadius: "0.5em",
-            padding: "0.5em 3em",
-            backgroundColor: theme.colors.backgroundGray,
-            borderColor: theme.colors.grayText,
-            fontWeight: "bolder",
-          }}
-          labelStyle={{
-            display: "none",
-          }}
-          formatter={(value: number, name: string) => {
-            const setNumber = name.slice(3, name.length);
-            return [`${value} kg`, `Set ${setNumber}`];
-          }}
-        />
-      </LineChart>
+      <ResponsiveContainer width="100%" height={size.HEIGHT}>
+        <LineChart
+          width={size.WIDTH}
+          height={size.HEIGHT}
+          data={convertedDataForGraph}
+        >
+          <XAxis dataKey="date" />
+          <CartesianGrid
+            vertical
+            horizontal
+            verticalFill={["#444444"]}
+            fillOpacity={0.2}
+          />
+          <YAxis
+            label={{
+              value: "in kilograms",
+              angle: -90,
+              position: "insideLeft",
+              fill: "#666",
+            }}
+          />
+          {createLines()}
+          <Tooltip
+            contentStyle={{
+              borderRadius: "0.5em",
+              padding: "0.5em 3em",
+              backgroundColor: theme.colors.backgroundGray,
+              borderColor: theme.colors.grayText,
+              fontWeight: "bolder",
+              display: "flex",
+              flexDirection: "column-reverse",
+            }}
+            // Don't know how to fix those
+            //@ts-ignore
+            itemSorter={({ name }) => {
+              if (!name) return;
+              //@ts-ignore
+              const setNumber = Number(name.slice(3, name.length));
+              return -setNumber;
+            }}
+            labelStyle={{
+              display: "none",
+            }}
+            formatter={(value: number, name: string) => {
+              const setNumber = name.slice(3, name.length);
+              return [`${value} kg`, `Set ${setNumber}`];
+            }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
     </Wrapper>
   );
 };

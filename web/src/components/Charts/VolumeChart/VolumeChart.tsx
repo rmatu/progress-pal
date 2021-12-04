@@ -4,6 +4,7 @@ import {
   Line,
   LineChart,
   Tooltip,
+  ResponsiveContainer,
   XAxis,
   YAxis,
 } from "recharts";
@@ -40,44 +41,46 @@ const VolumeChart: React.FC<VolumeChartProps> = ({ data }) => {
       <Heading size="h3" marginB="0.5em">
         Volume
       </Heading>
-      <LineChart width={size.WIDTH} height={size.HEIGHT} data={data}>
-        <XAxis dataKey="date" />
-        <CartesianGrid
-          vertical
-          horizontal
-          verticalFill={["#444444"]}
-          fillOpacity={0.2}
-        />
-        <YAxis
-          label={{
-            value: "in kilograms",
-            angle: -90,
-            position: "insideLeft",
-            fill: "#666",
-          }}
-        />
-        <Line
-          type="monotone"
-          dataKey="volume"
-          stroke={getStrokeColor(6)}
-          strokeWidth={3}
-        />
-        <Tooltip
-          contentStyle={{
-            borderRadius: "0.5em",
-            padding: "0.5em 3em",
-            backgroundColor: theme.colors.backgroundGray,
-            borderColor: theme.colors.grayText,
-            fontWeight: "bolder",
-          }}
-          labelStyle={{
-            display: "none",
-          }}
-          formatter={(value: number) => {
-            return [`${value} kg`, `Volume`];
-          }}
-        />
-      </LineChart>
+      <ResponsiveContainer width="100%" height={size.HEIGHT}>
+        <LineChart width={size.WIDTH} height={size.HEIGHT} data={data}>
+          <XAxis dataKey="date" />
+          <CartesianGrid
+            vertical
+            horizontal
+            verticalFill={["#444444"]}
+            fillOpacity={0.2}
+          />
+          <YAxis
+            label={{
+              value: "in kilograms",
+              angle: -90,
+              position: "insideLeft",
+              fill: "#666",
+            }}
+          />
+          <Line
+            type="monotone"
+            dataKey="volume"
+            stroke={getStrokeColor(6)}
+            strokeWidth={3}
+          />
+          <Tooltip
+            contentStyle={{
+              borderRadius: "0.5em",
+              padding: "0.5em 3em",
+              backgroundColor: theme.colors.backgroundGray,
+              borderColor: theme.colors.grayText,
+              fontWeight: "bolder",
+            }}
+            labelStyle={{
+              display: "none",
+            }}
+            formatter={(value: number) => {
+              return [`${value} kg`, `Volume`];
+            }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
     </Wrapper>
   );
 };

@@ -3,6 +3,7 @@ import {
   CartesianGrid,
   Line,
   LineChart,
+  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
@@ -39,45 +40,47 @@ const MaxWeightChart: React.FC<MaxWeightChartProps> = ({ data }) => {
       <Heading size="h3" marginB="0.5em">
         Max Weight
       </Heading>
-      <LineChart width={size.WIDTH} height={size.HEIGHT} data={data}>
-        <XAxis dataKey="date" />
-        <CartesianGrid
-          vertical
-          horizontal
-          verticalFill={["#444444"]}
-          fillOpacity={0.2}
-        />
-        <YAxis
-          label={{
-            value: "in kilograms",
-            angle: -90,
-            position: "insideLeft",
-            fill: "#666",
-          }}
-        />
-        <Line
-          type="monotone"
-          dataKey="maxWeight"
-          stroke={theme.colors.orange}
-          strokeWidth={3}
-        />
+      <ResponsiveContainer width="100%" height={size.HEIGHT}>
+        <LineChart width={size.WIDTH} height={size.HEIGHT} data={data}>
+          <XAxis dataKey="date" />
+          <CartesianGrid
+            vertical
+            horizontal
+            verticalFill={["#444444"]}
+            fillOpacity={0.2}
+          />
+          <YAxis
+            label={{
+              value: "in kilograms",
+              angle: -90,
+              position: "insideLeft",
+              fill: "#666",
+            }}
+          />
+          <Line
+            type="monotone"
+            dataKey="maxWeight"
+            stroke={theme.colors.orange}
+            strokeWidth={3}
+          />
 
-        <Tooltip
-          contentStyle={{
-            borderRadius: "0.5em",
-            padding: "0.5em 3em",
-            backgroundColor: theme.colors.backgroundGray,
-            borderColor: theme.colors.grayText,
-            fontWeight: "bolder",
-          }}
-          labelStyle={{
-            display: "none",
-          }}
-          formatter={(value: number) => {
-            return [`${value} kg`, `Max weight`];
-          }}
-        />
-      </LineChart>
+          <Tooltip
+            contentStyle={{
+              borderRadius: "0.5em",
+              padding: "0.5em 3em",
+              backgroundColor: theme.colors.backgroundGray,
+              borderColor: theme.colors.grayText,
+              fontWeight: "bolder",
+            }}
+            labelStyle={{
+              display: "none",
+            }}
+            formatter={(value: number) => {
+              return [`${value} kg`, `Max weight`];
+            }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
     </Wrapper>
   );
 };
