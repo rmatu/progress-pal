@@ -67,6 +67,8 @@ const AddWorkout = () => {
       "getDataForMuscleHeatmap",
       "getUserWorkouts",
       "getUserYearlyWorkout",
+      "getUserLastWorkout",
+      "getUserLastWorkout",
     ]),
   });
   const [selectedExercise, setSelectedExercise] = useState();

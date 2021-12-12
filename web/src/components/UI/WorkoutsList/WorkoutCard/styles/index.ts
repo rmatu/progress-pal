@@ -1,20 +1,9 @@
-import styled from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
 import { convertPxToRem } from "../../../../../utils/cssHelpers";
 
-export const WorkoutCardWrapper = styled.div`
+export const ContentWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  border-radius: 0.5em;
-  background-color: ${({ theme }) => theme.colors.backgroundGray};
-  height: 200px;
-  transition: all 0.1s ease-in-out;
-  padding: 1em;
-  position: relative;
-
-  :hover {
-    transform: scale(1.015);
-    cursor: pointer;
-  }
 `;
 
 export const WorkoutName = styled.h3`
@@ -76,13 +65,68 @@ export const LeftCardContent = styled.div`
 
 export const ExerciseSVG = styled.div<{
   muscles?: string[];
+  dashboardLayout?: boolean;
 }>`
   display: flex;
   flex-direction: row;
   padding: 0.5em 0;
 
   svg {
-    height: ${convertPxToRem(150)};
+    width: ${convertPxToRem(80)};
     padding: 0.5em;
+
+    ${({ dashboardLayout }) =>
+      dashboardLayout &&
+      css`
+        width: ${convertPxToRem(110)};
+      `}
+  }
+`;
+
+export const WorkoutCardWrapper = styled.div<{
+  dashboardLayout?: boolean;
+  loader?: boolean;
+}>`
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.5em;
+  background-color: ${({ theme }) => theme.colors.backgroundGray};
+  height: 200px;
+  transition: all 0.1s ease-in-out;
+  padding: 1em;
+  position: relative;
+  max-width: ${convertPxToRem(358)};
+  width: 100%;
+
+  :hover {
+    transform: scale(1.015);
+    cursor: pointer;
+  }
+
+  ${({ dashboardLayout }) =>
+    dashboardLayout &&
+    css`
+      height: ${convertPxToRem(300)};
+      max-width: ${convertPxToRem(400)};
+
+      ${LeftCardContent} {
+        margin-top: 2em;
+      }
+    `}
+
+  ${({ dashboardLayout, loader }) =>
+    dashboardLayout &&
+    loader &&
+    css`
+      align-items: center;
+      justify-content: center;
+    `}
+
+  @media screen and (max-width: 764px) {
+    ${({ dashboardLayout }) =>
+      !dashboardLayout &&
+      css`
+        height: 170px;
+      `}
   }
 `;

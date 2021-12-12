@@ -279,3 +279,15 @@ export const getHighestAmountOfSets = (data: { [key: string]: any }[]) => {
 
   return max;
 };
+
+export const getExercisesAmount = (workout: Workout) => {
+  return workout.workoutExercise.length;
+};
+
+export const getExercisesAmountString = (workout: Workout) => {
+  if (!workout.workoutExercise) return;
+
+  return workout.workoutExercise.length === 1
+    ? `${workout.workoutExercise.length} exercise`
+    : `${workout.workoutExercise.length} exercises`;
+};

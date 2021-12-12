@@ -2,11 +2,14 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MuscleHeatmapModel from "../../../components/UI/MuscleHeatmapModel/MuscleHeatmapModel";
+import WorkoutCard from "../../../components/UI/WorkoutsList/WorkoutCard/WorkoutCard";
 import YearlyCalendarHeatmap from "../../../components/UI/YearlyCalendarHeatmap/YearlyCalendarHeatmap";
 import { MAIN_PAGE } from "../../../constants/routes";
 import {
   MeQuery,
+  useGetUserLastWorkoutQuery,
   useGetUserYearlyWorkoutDataLazyQuery,
+  Workout,
 } from "../../../generated/graphql";
 import DashbordLayoutHOC from "../../../hoc/DashbordLayoutHOC";
 import { RightContent } from "../../../hoc/styles";
@@ -24,6 +27,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     getAllUserYearlyWorkoutData,
     { data: calendarData, loading: loadingCalendarData },
   ] = useGetUserYearlyWorkoutDataLazyQuery();
+  const { data: userLastWorkout } = useGetUserLastWorkoutQuery();
+
+  console.log(userLastWorkout);
 
   // Whole year data for calendar
   const [startDate, setStartDate] = useState(
@@ -77,6 +83,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         />
         <Row>
           <MuscleHeatmapModel />
+          <WorkoutCard
+            workout={userLastWorkout?.getUserLastWorkout as Workout}
+            dashboardLayout
+          />
         </Row>
       </RightContent>
     </DashbordLayoutHOC>
