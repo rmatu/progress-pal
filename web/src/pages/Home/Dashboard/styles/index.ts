@@ -74,4 +74,11 @@ export const NavListItem = styled.li<{ selected?: boolean }>`
   }
 `;
 
-export const RightContentWrapper = styled.div``;
+export const RightContentWrapper = styled.div`
+  @media screen and (max-width: 1880px) {
+    > div {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+`;

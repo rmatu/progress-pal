@@ -102,7 +102,7 @@ select {
 }
 html{
   height: -webkit-fill-available;
-  font-size: 80%;
+  font-size: 76%;
   box-sizing: border-box;
 
   @media ${props => props.theme.mediaQueries.phones} {

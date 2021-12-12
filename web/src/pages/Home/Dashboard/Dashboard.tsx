@@ -1,6 +1,8 @@
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import MuscleBarChart from "../../../components/Charts/MuscleBarChart/MuscleBarChart";
+import { FlexWrapperDiv } from "../../../components/FlexElements";
 import MuscleHeatmapModel from "../../../components/UI/MuscleHeatmapModel/MuscleHeatmapModel";
 import WorkoutCard from "../../../components/UI/WorkoutsList/WorkoutCard/WorkoutCard";
 import YearlyCalendarHeatmap from "../../../components/UI/YearlyCalendarHeatmap/YearlyCalendarHeatmap";
@@ -16,7 +18,7 @@ import { RightContent } from "../../../hoc/styles";
 import { useWindowResize } from "../../../hooks/useWindowResize";
 import * as navActions from "../../../redux/dashboardNavbar/dashboardNavbarActions";
 import { AppState } from "../../../redux/rootReducer";
-import { Row } from "./styles";
+import { RightContentWrapper, Row } from "./styles";
 
 interface DashboardProps {
   user: MeQuery["me"] | undefined;
@@ -72,22 +74,29 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   return (
     <DashbordLayoutHOC user={user}>
       <RightContent open={open}>
-        <YearlyCalendarHeatmap
-          endDate={endDate}
-          loadingCalendarData={loadingCalendarData}
-          getAllUserYearlyWorkoutData={getAllUserYearlyWorkoutData}
-          setEndDate={setEndDate}
-          setStartDate={setStartDate}
-          startDate={startDate}
-          values={calendarData?.getUserYearlyWorkoutData}
-        />
-        <Row>
-          <MuscleHeatmapModel />
-          <WorkoutCard
-            workout={userLastWorkout?.getUserLastWorkout as Workout}
-            dashboardLayout
-          />
-        </Row>
+        <RightContentWrapper>
+          <FlexWrapperDiv flexDirection="row">
+            <FlexWrapperDiv flexDirection="column">
+              <YearlyCalendarHeatmap
+                endDate={endDate}
+                loadingCalendarData={loadingCalendarData}
+                getAllUserYearlyWorkoutData={getAllUserYearlyWorkoutData}
+                setEndDate={setEndDate}
+                setStartDate={setStartDate}
+                startDate={startDate}
+                values={calendarData?.getUserYearlyWorkoutData}
+              />
+              <Row>
+                <MuscleHeatmapModel />
+                <WorkoutCard
+                  workout={userLastWorkout?.getUserLastWorkout as Workout}
+                  dashboardLayout
+                />
+              </Row>
+            </FlexWrapperDiv>
+            <MuscleBarChart data={[]} />
+          </FlexWrapperDiv>
+        </RightContentWrapper>
       </RightContent>
     </DashbordLayoutHOC>
   );
