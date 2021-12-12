@@ -6,6 +6,10 @@
 
 App is not ready yet
 
+This is the current design that I am not entirely satisfied with. I was focusing on functionalities rather then designs. There is much more to add.
+
+Desktop version might feel a bit empty, because I was developing mobile version first.
+
 ## Description
 
 - [Technology Stack](#Frontend)
@@ -48,13 +52,40 @@ App is not ready yet
 - Sending email inorder to recover the password
 - Password recovery
 
-# Every Page is Fully Responsive
-
 ## ERD
 
 <img src="media/dekstop/ERD Diagram.png"/>
 
+# Every Page is Fully Responsive
+
 ## Screenshots
+
+### Dashboard
+
+<img src="media/dekstop/Screenshot_20.png"/>
+
+### Add Workout:
+
+<img src="media/dekstop/Screenshot_12.png"/>
+<img src="media/dekstop/Screenshot_13.png"/>
+
+### Workouts
+
+<img src="media/dekstop/Screenshot_14.png"/>
+
+### User Workout
+
+<img src="media/dekstop/Screenshot_18.png"/>
+<img src="media/dekstop/Screenshot_19.png"/>
+
+### Exercises
+
+<img src="media/dekstop/Screenshot_15.png"/>
+
+### Charts
+
+<img src="media/dekstop/Screenshot_16.png"/>
+<img src="media/dekstop/Screenshot_17.png"/>
 
 ### Sign in:
 
@@ -75,11 +106,3 @@ App is not ready yet
 ### Registration Email:
 
 <img src="media/dekstop/Screenshot_5.png"/>
-
-### Reset Password:
-
-<img src="media/dekstop/Screenshot_6.png"/>
-
-### Verifiction Page:
-
-<img src="media/dekstop/Screenshot_7.png"/>
