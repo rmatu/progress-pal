@@ -9,16 +9,28 @@ export const ModelWrapper = styled.div`
   svg {
     padding: 0 0.5em;
   }
+
+  @media screen and (max-width: 764px) {
+    align-items: center;
+    justify-content: center;
+    svg {
+      height: 260px;
+    }
+  }
 `;
 
 export const LoaderWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: ${convertPxToRem(300)};
-  height: ${convertPxToRem(315)};
+  width: ${convertPxToRem(280)};
+  height: ${convertPxToRem(300)};
   background-color: ${({ theme }) => theme.colors.backgroundGray};
   border-radius: 0.5em;
+
+  @media screen and (max-width: 764px) {
+    width: ${convertPxToRem(280)};
+  }
 `;
 
 export const Text = styled.p`
@@ -32,7 +44,11 @@ export const Wrapper = styled.div`
   padding: 1em;
   border-radius: 0.5em;
   background-color: ${({ theme }) => theme.colors.backgroundGray};
-  width: ${convertPxToRem(300)};
+  width: ${convertPxToRem(280)};
+
+  @media screen and (max-width: 764px) {
+    width: ${convertPxToRem(400)};
+  }
 `;
 
 export const CalendarWrapper = styled.div`

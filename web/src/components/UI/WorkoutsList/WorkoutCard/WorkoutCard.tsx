@@ -5,6 +5,7 @@ import { useHistory } from "react-router";
 import { ReactComponent as TrashIcon } from "../../../../assets/svg/trash.svg";
 import { ReactComponent as WeightIcon } from "../../../../assets/svg/weight.svg";
 import { ReactComponent as TimerIcon } from "../../../../assets/svg/timer.svg";
+import { ReactComponent as ExerciseIcon } from "../../../../assets/svg/exercise.svg";
 import { WORKOUTS } from "../../../../constants/routes";
 import {
   useDeleteWorkoutMutation,
@@ -12,6 +13,7 @@ import {
 } from "../../../../generated/graphql";
 import {
   calculateVolume,
+  getExercisesAmountString,
   getMusclesFromWorkout,
   getThemostTraineMuscleAmountFromWorkout,
   getTimeBetweenTwoDates,
@@ -21,6 +23,7 @@ import { createRefetchQueriesArray } from "../../../../utils/graphQLHelpers";
 import { gramsToKilograms } from "../../../../utils/numberUtils";
 import {
   ExerciseSVG,
+  ContentWrapper,
   LeftCardContent,
   QuickInfoRow,
   RightCardContent,
@@ -30,9 +33,12 @@ import {
   WorkoutDate,
   WorkoutName,
 } from "./styles";
+import Loader from "../../Loader/Loader";
+import { Heading } from "../..";
 
 interface WorkoutCardProps {
   workout: Workout | undefined;
+  dashboardLayout?: boolean;
   setPopup?: React.Dispatch<
     React.SetStateAction<{
       showPopup: boolean;
@@ -41,12 +47,17 @@ interface WorkoutCardProps {
   >;
 }
 
-const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout, setPopup }) => {
+const WorkoutCard: React.FC<WorkoutCardProps> = ({
+  dashboardLayout,
+  workout,
+  setPopup,
+}) => {
   const [deleteWorkout] = useDeleteWorkoutMutation({
     refetchQueries: createRefetchQueriesArray([
       "getDataForMuscleHeatmap",
       "getUserWorkouts",
       "getUserYearlyWorkout",
+      "getUserLastWorkout",
     ]),
     onCompleted: () => {
       if (setPopup) {
@@ -85,71 +96,97 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout, setPopup }) => {
 
   getTimeBetweenTwoDates(workout?.startTime, workout?.endTime);
 
-  return (
-    <WorkoutCardWrapper onClick={handleSelectWorkout}>
-      <LeftCardContent>
-        <WorkoutName>{workout?.name}</WorkoutName>
-        <WorkoutDate>
-          {moment(workout?.createdAt, "x").format("DD MMMM - HH:mm")}
-        </WorkoutDate>
-        <QuickInfoRow>
-          <SVGWrapper>
-            <WeightIcon />
-            {gramsToKilograms(calculateVolume(workout as Workout))} kg
-          </SVGWrapper>
-        </QuickInfoRow>
-        <QuickInfoRow>
-          <SVGWrapper>
-            <TimerIcon />
-            {getTimeBetweenTwoDates(workout?.startTime, workout?.endTime)}
-          </SVGWrapper>
-        </QuickInfoRow>
-      </LeftCardContent>
-      <RightCardContent>
-        <ExerciseSVG>
-          <Model
-            highlightedColors={[
-              ...populateColorsForMuscleHeatmap(
-                getThemostTraineMuscleAmountFromWorkout(workout as Workout),
-                299,
-                180,
-                180,
-                8,
-              ),
-            ]}
-            data={[
-              {
-                name: "",
-                //@ts-ignore
-                muscles: getMusclesFromWorkout(workout as Workout),
-              },
-            ]}
-          />
+  if (!workout) {
+    return (
+      <WorkoutCardWrapper dashboardLayout={dashboardLayout} loader>
+        <Loader />
+      </WorkoutCardWrapper>
+    );
+  }
 
-          <Model
-            type="posterior"
-            highlightedColors={[
-              ...populateColorsForMuscleHeatmap(
-                getThemostTraineMuscleAmountFromWorkout(workout as Workout),
-                299,
-                180,
-                180,
-                8,
-              ),
-            ]}
-            data={[
-              {
-                name: "",
-                //@ts-ignore
-                muscles: getMusclesFromWorkout(workout as Workout),
-              },
-            ]}
-          />
-        </ExerciseSVG>
-      </RightCardContent>
-      <TrashIconWrapper>
-        <TrashIcon onClick={handleDeleteWorkout} />
-      </TrashIconWrapper>
+  return (
+    <WorkoutCardWrapper
+      onClick={handleSelectWorkout}
+      dashboardLayout={dashboardLayout}
+    >
+      {dashboardLayout && (
+        <Heading size="h3" marginB="0.4em">
+          Latest training
+        </Heading>
+      )}
+      <ContentWrapper>
+        <LeftCardContent>
+          <WorkoutName>{workout?.name}</WorkoutName>
+          <WorkoutDate>
+            {moment(workout?.createdAt, "x").format("DD MMMM - HH:mm")}
+          </WorkoutDate>
+          <QuickInfoRow>
+            <SVGWrapper>
+              <WeightIcon />
+              {gramsToKilograms(calculateVolume(workout as Workout))} kg
+            </SVGWrapper>
+          </QuickInfoRow>
+          <QuickInfoRow>
+            <SVGWrapper>
+              <TimerIcon />
+              {getTimeBetweenTwoDates(workout?.startTime, workout?.endTime)}
+            </SVGWrapper>
+          </QuickInfoRow>
+          <QuickInfoRow>
+            <SVGWrapper>
+              <ExerciseIcon />
+              {getExercisesAmountString(workout)}
+            </SVGWrapper>
+          </QuickInfoRow>
+        </LeftCardContent>
+        <RightCardContent>
+          <ExerciseSVG dashboardLayout={dashboardLayout}>
+            <Model
+              highlightedColors={[
+                ...populateColorsForMuscleHeatmap(
+                  getThemostTraineMuscleAmountFromWorkout(workout as Workout),
+                  299,
+                  180,
+                  180,
+                  8,
+                ),
+              ]}
+              data={[
+                {
+                  name: "",
+                  //@ts-ignore
+                  muscles: getMusclesFromWorkout(workout as Workout),
+                },
+              ]}
+            />
+
+            <Model
+              type="posterior"
+              highlightedColors={[
+                ...populateColorsForMuscleHeatmap(
+                  getThemostTraineMuscleAmountFromWorkout(workout as Workout),
+                  299,
+                  180,
+                  180,
+                  8,
+                ),
+              ]}
+              data={[
+                {
+                  name: "",
+                  //@ts-ignore
+                  muscles: getMusclesFromWorkout(workout as Workout),
+                },
+              ]}
+            />
+          </ExerciseSVG>
+        </RightCardContent>
+      </ContentWrapper>
+      {!dashboardLayout && (
+        <TrashIconWrapper>
+          <TrashIcon onClick={handleDeleteWorkout} />
+        </TrashIconWrapper>
+      )}
     </WorkoutCardWrapper>
   );
 };

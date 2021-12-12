@@ -27,6 +27,11 @@ export const Row = styled.div`
   flex-direction: row;
   margin-top: 1em;
   width: 100%;
+  gap: 1em;
+
+  @media screen and (max-width: 764px) {
+    flex-wrap: wrap;
+  }
 `;
 
 export const Avatar = styled.div`

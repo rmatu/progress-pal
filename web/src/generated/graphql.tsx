@@ -20,6 +20,7 @@ export type Query = {
   getAllUserWorkouts?: Maybe<Array<Workout>>;
   getUserWorkouts?: Maybe<Array<Workout>>;
   getUserWorkout?: Maybe<Workout>;
+  getUserLastWorkout?: Maybe<Workout>;
   getUserYearlyWorkoutData?: Maybe<Array<YearlyWorkoutsAmountResponse>>;
   getDataForMuscleHeatmap?: Maybe<DataForMuscleHeatmap>;
   getExerciseChartData: GetExerciseChartDataResponse;
@@ -816,6 +817,17 @@ export type GetExerciseInfoQuery = (
     { __typename?: 'getExerciseInfoResponse' }
     & Pick<GetExerciseInfoResponse, 'id' | 'name' | 'primaryMuscles' | 'secondaryMuscles' | 'instructions' | 'force' | 'level' | 'mechanic' | 'equipment' | 'category' | 'isCommonExercise'>
   ) }
+);
+
+export type GetUserLastWorkoutQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetUserLastWorkoutQuery = (
+  { __typename?: 'Query' }
+  & { getUserLastWorkout?: Maybe<(
+    { __typename?: 'Workout' }
+    & RegularWorkoutFragment
+  )> }
 );
 
 export type GetUserWorkoutQueryVariables = Exact<{
@@ -1787,6 +1799,38 @@ export function useGetExerciseInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetExerciseInfoQueryHookResult = ReturnType<typeof useGetExerciseInfoQuery>;
 export type GetExerciseInfoLazyQueryHookResult = ReturnType<typeof useGetExerciseInfoLazyQuery>;
 export type GetExerciseInfoQueryResult = Apollo.QueryResult<GetExerciseInfoQuery, GetExerciseInfoQueryVariables>;
+export const GetUserLastWorkoutDocument = gql`
+    query GetUserLastWorkout {
+  getUserLastWorkout {
+    ...RegularWorkout
+  }
+}
+    ${RegularWorkoutFragmentDoc}`;
+
+/**
+ * __useGetUserLastWorkoutQuery__
+ *
+ * To run a query within a React component, call `useGetUserLastWorkoutQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserLastWorkoutQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserLastWorkoutQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetUserLastWorkoutQuery(baseOptions?: Apollo.QueryHookOptions<GetUserLastWorkoutQuery, GetUserLastWorkoutQueryVariables>) {
+        return Apollo.useQuery<GetUserLastWorkoutQuery, GetUserLastWorkoutQueryVariables>(GetUserLastWorkoutDocument, baseOptions);
+      }
+export function useGetUserLastWorkoutLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserLastWorkoutQuery, GetUserLastWorkoutQueryVariables>) {
+          return Apollo.useLazyQuery<GetUserLastWorkoutQuery, GetUserLastWorkoutQueryVariables>(GetUserLastWorkoutDocument, baseOptions);
+        }
+export type GetUserLastWorkoutQueryHookResult = ReturnType<typeof useGetUserLastWorkoutQuery>;
+export type GetUserLastWorkoutLazyQueryHookResult = ReturnType<typeof useGetUserLastWorkoutLazyQuery>;
+export type GetUserLastWorkoutQueryResult = Apollo.QueryResult<GetUserLastWorkoutQuery, GetUserLastWorkoutQueryVariables>;
 export const GetUserWorkoutDocument = gql`
     query GetUserWorkout($workoutId: String!) {
   getUserWorkout(workoutId: $workoutId) {
