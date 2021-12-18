@@ -31,7 +31,8 @@ const updateMuscleBarChartDataObject = (
   const idx = muscleBarChartData.findIndex(
     el => el.name === muscleBarChartMuscleName,
   );
-  muscleBarChartData[idx].volume = volume / 100; // in kg
+  volume /= 100; // in kg
+  muscleBarChartData[idx].volume += volume;
 };
 
 export const updateMuscleBarChartDataArr = (
@@ -108,8 +109,12 @@ export const updateMuscleBarChartDataArr = (
       );
     if (muscleName === "glutes")
       updateMuscleBarChartDataObject("Glutes", muscleBarChartData, exerciseSet);
-    if (muscleName === "Hamstring")
-      updateMuscleBarChartDataObject("Quads", muscleBarChartData, exerciseSet);
+    if (muscleName === "hamstrings")
+      updateMuscleBarChartDataObject(
+        "Hamstring",
+        muscleBarChartData,
+        exerciseSet,
+      );
   });
 
   return muscleBarChartData;
