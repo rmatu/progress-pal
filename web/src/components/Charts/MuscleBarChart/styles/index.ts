@@ -1,4 +1,5 @@
 import styled from "styled-components/macro";
+import { convertPxToRem } from "../../../../utils/cssHelpers";
 
 export const Wrapper = styled.div<{ width: string }>`
   background-color: ${({ theme }) => theme.colors.backgroundGray};
@@ -7,6 +8,7 @@ export const Wrapper = styled.div<{ width: string }>`
   width: 100%;
   margin-left: 1em;
   border-radius: 0.5em;
+  position: relative;
 
   tspan {
     fill: #9b9b9b;
@@ -19,4 +21,31 @@ export const Wrapper = styled.div<{ width: string }>`
   @media screen and (max-width: 764px) {
     height: 36em;
   }
+`;
+
+export const CalendarWrapper = styled.div`
+  position: absolute;
+  bottom: 0.5em;
+  right: 0.5em;
+  opacity: 0.5;
+  transition: all 0.1s ease-in-out;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  :hover {
+    cursor: pointer;
+    opacity: 1;
+  }
+
+  svg {
+    width: ${convertPxToRem(30)};
+    height: ${convertPxToRem(30)};
+    color: white;
+    fill: white;
+  }
+`;
+
+export const Text = styled.p`
+  margin-right: 1em;
 `;

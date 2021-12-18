@@ -94,7 +94,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                 />
               </Row>
             </FlexWrapperDiv>
-            <MuscleBarChart data={[]} />
+            <MuscleBarChart />
           </FlexWrapperDiv>
         </RightContentWrapper>
       </RightContent>

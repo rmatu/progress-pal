@@ -14,30 +14,13 @@ import Loader from "../../UI/Loader/Loader";
 import { chartSize } from "../consts";
 import { getStrokeColor } from "../strokeColors";
 import { LoaderWrapper } from "../styles";
-import { Wrapper } from "./styles";
+import { CalendarWrapper, Text, Wrapper } from "./styles";
+import { ReactComponent as CalendarIcon } from "../../../assets/svg/calendar.svg";
+import { subDays } from "date-fns";
+import moment from "moment";
+import DateRangePickerModal from "../../UI/DateRangePickerModal/DateRangePickerModal";
 
-interface MuscleBarChartProps {
-  data: any;
-}
-
-const muscles = [
-  "Abdominals",
-  "Adductors",
-  "Biceps",
-  "Calves",
-  "Chest",
-  "Forearms",
-  "Glutes",
-  "Hamstrings",
-  "Lats",
-  "Lower Back",
-  "Middle Back",
-  "Neck",
-  "Quadriceps",
-  "Shoulders",
-  "Traps",
-  "Triceps",
-];
+interface MuscleBarChartProps {}
 
 const mockData = [
   { volume: 12, name: "Shoulder" },
@@ -58,10 +41,22 @@ const mockData = [
   { volume: 30, name: "Low Back" },
 ];
 
-const MuscleBarChart: React.FC<MuscleBarChartProps> = ({ data }) => {
+const MuscleBarChart: React.FC<MuscleBarChartProps> = () => {
   const [size, setSize] = useState({ ...chartSize.DESKTOP });
+  const [showModal, setShowModal] = useState(false);
 
-  if (!data) {
+  // Data for muscle heatmap
+  const [heatmapData, setHeatmapData] = useState([
+    {
+      startDate: subDays(new Date(), 14),
+      endDate: new Date(),
+      key: "selection",
+    },
+  ]);
+
+  const handleFinish = () => {};
+
+  if (!mockData) {
     return (
       <LoaderWrapper width={size.WIDTH} height={size.HEIGHT}>
         <Loader />
@@ -77,7 +72,7 @@ const MuscleBarChart: React.FC<MuscleBarChartProps> = ({ data }) => {
           <XAxis dataKey="name" fill="#fff" />
           <YAxis
             label={{
-              value: "in kilograms",
+              value: "volume in kilograms",
               angle: -90,
               position: "insideLeft",
               fill: "#9b9b9b",
@@ -106,6 +101,20 @@ const MuscleBarChart: React.FC<MuscleBarChartProps> = ({ data }) => {
           <Bar dataKey={"volume"} fill={getStrokeColor(13)} barSize={26} />
         </BarChart>
       </ResponsiveContainer>
+      <CalendarWrapper onClick={() => setShowModal(true)}>
+        <Text>
+          {moment(heatmapData[0].startDate).format("DD-MM-YYYY")} -{" "}
+          {moment(heatmapData[0].endDate).format("DD-MM-YYYY")}
+        </Text>
+        <CalendarIcon />
+      </CalendarWrapper>
+      <DateRangePickerModal
+        show={showModal}
+        handleClose={() => setShowModal(false)}
+        heatmapData={heatmapData}
+        setHeatmapData={setHeatmapData}
+        handleFinish={handleFinish}
+      />
     </Wrapper>
   );
 };
