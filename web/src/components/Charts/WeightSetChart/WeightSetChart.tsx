@@ -17,7 +17,7 @@ import { Heading } from "../../UI";
 import Loader from "../../UI/Loader/Loader";
 import { chartSize } from "../consts";
 import { getStrokeColor } from "../strokeColors";
-import { LoaderWrapper, NoData, Wrapper } from "../styles";
+import { LoaderWrapper, Wrapper } from "../styles";
 
 interface WeightSetChartProps {
   data: [

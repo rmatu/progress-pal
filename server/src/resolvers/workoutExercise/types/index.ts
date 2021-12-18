@@ -1,5 +1,8 @@
 import { Field, InputType, ObjectType } from "type-graphql";
 
+// ===========================
+// ======= InputTypes ========
+// ===========================
 @InputType()
 export class GetExerciseChartDataInput {
   @Field(() => String)
@@ -12,6 +15,18 @@ export class GetExerciseChartDataInput {
   endTime: Date;
 }
 
+@InputType()
+export class GetMuscleBarChartDataInput {
+  @Field(() => Date)
+  startTime: Date;
+
+  @Field(() => Date)
+  endTime: Date;
+}
+
+// ===========================
+// ====== ObjectTypes ========
+// ===========================
 @ObjectType()
 export class MaxWeightChartData {
   @Field(() => String)
@@ -52,7 +67,7 @@ export class GetExerciseChartDataResponse {
 }
 
 @ObjectType()
-export class getExerciseInfoResponse {
+export class GetExerciseInfoResponse {
   @Field(() => String)
   id: string;
 
@@ -85,4 +100,19 @@ export class getExerciseInfoResponse {
 
   @Field(() => Boolean)
   isCommonExercise: boolean;
+}
+
+@ObjectType()
+class MuslceBarChartObjects {
+  @Field(() => String)
+  name: string;
+
+  @Field(() => Number)
+  volume: number;
+}
+
+@ObjectType()
+export class GetMuscleBarChartDataResponse {
+  @Field(() => [MuslceBarChartObjects])
+  muscleBarChartData: MuslceBarChartObjects[];
 }

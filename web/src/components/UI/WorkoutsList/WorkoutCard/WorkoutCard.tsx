@@ -6,7 +6,7 @@ import { ReactComponent as TrashIcon } from "../../../../assets/svg/trash.svg";
 import { ReactComponent as WeightIcon } from "../../../../assets/svg/weight.svg";
 import { ReactComponent as TimerIcon } from "../../../../assets/svg/timer.svg";
 import { ReactComponent as ExerciseIcon } from "../../../../assets/svg/exercise.svg";
-import { WORKOUTS } from "../../../../constants/routes";
+import { WORKOUTS, ADD_WORKOUT } from "../../../../constants/routes";
 import {
   useDeleteWorkoutMutation,
   Workout,
@@ -39,6 +39,7 @@ import { Heading } from "../..";
 interface WorkoutCardProps {
   workout: Workout | undefined;
   dashboardLayout?: boolean;
+  loading?: boolean;
   setPopup?: React.Dispatch<
     React.SetStateAction<{
       showPopup: boolean;
@@ -50,6 +51,7 @@ interface WorkoutCardProps {
 const WorkoutCard: React.FC<WorkoutCardProps> = ({
   dashboardLayout,
   workout,
+  loading = false,
   setPopup,
 }) => {
   const [deleteWorkout] = useDeleteWorkoutMutation({
@@ -58,6 +60,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({
       "getUserWorkouts",
       "getUserYearlyWorkout",
       "getUserLastWorkout",
+      "getMuscleBarChartData",
     ]),
     onCompleted: () => {
       if (setPopup) {
@@ -95,6 +98,18 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({
   };
 
   getTimeBetweenTwoDates(workout?.startTime, workout?.endTime);
+
+  if (!workout && !loading) {
+    return (
+      <WorkoutCardWrapper
+        dashboardLayout={dashboardLayout}
+        loader
+        onClick={() => history.push(ADD_WORKOUT)}
+      >
+        You don't have any trainings yet...
+      </WorkoutCardWrapper>
+    );
+  }
 
   if (!workout) {
     return (

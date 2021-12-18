@@ -69,6 +69,7 @@ const AddWorkout = () => {
       "getUserYearlyWorkout",
       "getUserLastWorkout",
       "getUserLastWorkout",
+      "getMuscleBarChartData",
     ]),
   });
   const [selectedExercise, setSelectedExercise] = useState();

@@ -146,9 +146,18 @@ const ExerciseSetsFromDB: React.FC<ExerciseSetsFromDBProps> = ({
         );
       }, 4000);
     },
-    refetchQueries: createRefetchQueriesArray(["getUserWorkout"], {
-      workoutId: workoutId,
-    }),
+    refetchQueries: createRefetchQueriesArray(
+      [
+        "getDataForMuscleHeatmap",
+        "getUserWorkouts",
+        "getUserYearlyWorkout",
+        "getUserLastWorkout",
+        "getMuscleBarChartData",
+      ],
+      {
+        workoutId: workoutId,
+      },
+    ),
   });
 
   const [edit, setEdit] = useState(false);

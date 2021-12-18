@@ -9,8 +9,11 @@ import { UserExercise } from "../../entities/UserExercise";
 import {
   GetExerciseChartDataInput,
   GetExerciseChartDataResponse,
-  getExerciseInfoResponse,
+  GetExerciseInfoResponse,
+  GetMuscleBarChartDataInput,
+  GetMuscleBarChartDataResponse,
 } from "./types";
+import { updateMuscleBarChartDataArr } from "../../utils/converters";
 
 @Resolver(WorkoutExercise)
 export class WorkoutExerciseResolver {
@@ -106,7 +109,7 @@ export class WorkoutExerciseResolver {
     }
   }
 
-  @Query(() => getExerciseInfoResponse)
+  @Query(() => GetExerciseInfoResponse)
   @UseMiddleware(isAuthenticated)
   async getExerciseInfo(
     @Arg("exerciseId") exerciseId: string,
@@ -131,6 +134,85 @@ export class WorkoutExerciseResolver {
       if (userExercise) return userExercise;
 
       return new Error("This exercise does not exist");
+    } catch (e) {
+      console.log(e);
+      return new Error("Something went wrong");
+    }
+  }
+
+  @Query(() => GetMuscleBarChartDataResponse)
+  @UseMiddleware(isAuthenticated)
+  async getMuscleBarChartData(
+    @Arg("input") input: GetMuscleBarChartDataInput,
+    @Ctx() { req }: MyContext,
+  ) {
+    const { userId } = req.session;
+    try {
+      const workoutExerciseRepo = await getRepository(WorkoutExercise);
+
+      // Between clause wouldn't include these dates so we need to extend them
+      const cStartDate = moment(input.startTime)
+        .subtract(1, "days")
+        .format("YYYY-MM-DD");
+      const cEndDate = moment(input.endTime)
+        .add(1, "days")
+        .format("YYYY-MM-DD");
+
+      const workoutExercises = await workoutExerciseRepo.find({
+        relations: ["exerciseSet", "commonExercise", "userExercise"],
+        order: {
+          updatedAt: "ASC",
+        },
+        where: [
+          {
+            user: userId,
+            updatedAt: Between(cStartDate, cEndDate),
+          },
+          {
+            user: userId,
+            updatedAt: Between(cStartDate, cEndDate),
+          },
+        ],
+      });
+
+      const muscleBarChartData = [
+        { volume: 0, name: "Shoulder" },
+        { volume: 0, name: "Glutes" },
+        { volume: 0, name: "Adduct" },
+        { volume: 0, name: "Biceps" },
+        { volume: 0, name: "Calves" },
+        { volume: 0, name: "Chest" },
+        { volume: 0, name: "Forearm" },
+        { volume: 0, name: "Abs" },
+        { volume: 0, name: "Hamstring" },
+        { volume: 0, name: "Lats" },
+        { volume: 0, name: "Traps" },
+        { volume: 0, name: "Mid Back" },
+        { volume: 0, name: "Quads" },
+        { volume: 0, name: "Triceps" },
+        { volume: 0, name: "Neck" },
+        { volume: 0, name: "Low Back" },
+      ];
+
+      workoutExercises.forEach(exercise => {
+        if (exercise.commonExercise) {
+          console.log(exercise.commonExercise.primaryMuscles);
+          console.log(exercise.exerciseSet);
+          updateMuscleBarChartDataArr(
+            exercise.commonExercise.primaryMuscles,
+            muscleBarChartData,
+            exercise.exerciseSet,
+          );
+        } else {
+          updateMuscleBarChartDataArr(
+            exercise.userExercise.primaryMuscles,
+            muscleBarChartData,
+            exercise.exerciseSet,
+          );
+        }
+      });
+
+      return { muscleBarChartData };
     } catch (e) {
       console.log(e);
       return new Error("Something went wrong");
