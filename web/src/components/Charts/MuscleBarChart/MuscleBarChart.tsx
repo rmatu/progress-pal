@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -11,63 +11,76 @@ import {
 } from "recharts";
 import theme from "../../../theme/theme";
 import Loader from "../../UI/Loader/Loader";
-import { chartSize } from "../consts";
 import { getStrokeColor } from "../strokeColors";
-import { LoaderWrapper } from "../styles";
-import { CalendarWrapper, Text, Wrapper } from "./styles";
+import { CalendarWrapper, Text, Wrapper, LoaderWrapper } from "./styles";
 import { ReactComponent as CalendarIcon } from "../../../assets/svg/calendar.svg";
-import { subDays } from "date-fns";
 import moment from "moment";
 import DateRangePickerModal from "../../UI/DateRangePickerModal/DateRangePickerModal";
+import { useGetMuscleBarChartDataLazyQuery } from "../../../generated/graphql";
+import { getDateXMonthsBefore } from "../../../utils/dateHelpers";
 
 interface MuscleBarChartProps {}
 
-const mockData = [
-  { volume: 12, name: "Shoulder" },
-  { volume: 30, name: "Glutes" },
-  { volume: 30, name: "Adduct" },
-  { volume: 10, name: "Biceps" },
-  { volume: 12, name: "Calves" },
-  { volume: 30, name: "Chest" },
-  { volume: 30, name: "Forearm" },
-  { volume: 30, name: "Abs" },
-  { volume: 10, name: "Hamstring" },
-  { volume: 12, name: "Lats" },
-  { volume: 30, name: "Traps" },
-  { volume: 30, name: "Mid Back" },
-  { volume: 10, name: "Quads" },
-  { volume: 30, name: "Triceps" },
-  { volume: 30, name: "Neck" },
-  { volume: 30, name: "Low Back" },
-];
-
 const MuscleBarChart: React.FC<MuscleBarChartProps> = () => {
-  const [size, setSize] = useState({ ...chartSize.DESKTOP });
   const [showModal, setShowModal] = useState(false);
+
+  const [getMuscleBarChartData, { data: muscleBarChartData }] =
+    useGetMuscleBarChartDataLazyQuery();
+
+  const data =
+    muscleBarChartData?.getMuscleBarChartData?.muscleBarChartData ?? [];
 
   // Data for muscle heatmap
   const [heatmapData, setHeatmapData] = useState([
     {
-      startDate: subDays(new Date(), 14),
+      startDate: getDateXMonthsBefore(new Date(), 1, 1),
       endDate: new Date(),
       key: "selection",
     },
   ]);
 
-  const handleFinish = () => {};
+  const handleFinish = () => {
+    getMuscleBarChartData({
+      variables: {
+        input: {
+          startTime: moment(heatmapData[0].startDate).format("YYYY-MM-DD"),
+          endTime: moment(heatmapData[0].endDate).format("YYYY-MM-DD"),
+        },
+      },
+    });
+  };
 
-  if (!mockData) {
+  useEffect(() => {
+    const muscleHeatMapStartDate = moment(
+      getDateXMonthsBefore(new Date(), 1, 1),
+    ).format("YYYY-MM-DD");
+
+    const muscleHeatMapEndDate = moment().format("YYYY-MM-DD");
+
+    getMuscleBarChartData({
+      variables: {
+        input: {
+          startTime: muscleHeatMapStartDate,
+          endTime: muscleHeatMapEndDate,
+        },
+      },
+    });
+  }, []);
+
+  if (!data.length) {
     return (
-      <LoaderWrapper width={size.WIDTH} height={size.HEIGHT}>
-        <Loader />
-      </LoaderWrapper>
+      <Wrapper width="930">
+        <LoaderWrapper>
+          <Loader />
+        </LoaderWrapper>
+      </Wrapper>
     );
   }
 
   return (
     <Wrapper width="930">
       <ResponsiveContainer height="99%">
-        <BarChart data={mockData}>
+        <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" fill="#fff" />
           <YAxis
@@ -76,6 +89,7 @@ const MuscleBarChart: React.FC<MuscleBarChartProps> = () => {
               angle: -90,
               position: "insideLeft",
               fill: "#9b9b9b",
+              marginRight: "1em",
             }}
           />
           <Legend />

@@ -75,7 +75,13 @@ const Workout: React.FC<WorkoutProps> = () => {
         );
       }, 4000);
     },
-    refetchQueries: createRefetchQueriesArray(["getUserWorkout"]),
+    refetchQueries: createRefetchQueriesArray([
+      "getDataForMuscleHeatmap",
+      "getUserWorkouts",
+      "getUserYearlyWorkout",
+      "getUserLastWorkout",
+      "getMuscleBarChartData",
+    ]),
   });
   const [addNewExercisesToTheWorkout] = useAddNewExercisesToTheWorkoutMutation({
     onCompleted: ({ addNewExercisesToTheWorkout }) => {
@@ -118,9 +124,18 @@ const Workout: React.FC<WorkoutProps> = () => {
         );
       }, 4000);
     },
-    refetchQueries: createRefetchQueriesArray(["getUserWorkout"], {
-      workoutId: id,
-    }),
+    refetchQueries: createRefetchQueriesArray(
+      [
+        "getDataForMuscleHeatmap",
+        "getUserWorkouts",
+        "getUserYearlyWorkout",
+        "getUserLastWorkout",
+        "getMuscleBarChartData",
+      ],
+      {
+        workoutId: id,
+      },
+    ),
   });
 
   const { show, text, popupType } = useSelector(

@@ -14,6 +14,11 @@ export const Wrapper = styled.div<{ width: string }>`
     fill: #9b9b9b;
   }
 
+  .recharts-legend-item.legend-item-0 {
+    position: absolute;
+    bottom: -20px;
+  }
+
   @media screen and (max-width: 1800px) {
     margin: 1em 0;
   }
@@ -48,4 +53,11 @@ export const CalendarWrapper = styled.div`
 
 export const Text = styled.p`
   margin-right: 1em;
+`;
+
+export const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 `;

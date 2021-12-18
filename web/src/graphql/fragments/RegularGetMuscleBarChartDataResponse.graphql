@@ -1,0 +1,6 @@
+fragment RegularGetMuscleBarChartDataResponse on GetMuscleBarChartDataResponse {
+  muscleBarChartData {
+    volume
+    name
+  }
+}

@@ -29,9 +29,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     getAllUserYearlyWorkoutData,
     { data: calendarData, loading: loadingCalendarData },
   ] = useGetUserYearlyWorkoutDataLazyQuery();
-  const { data: userLastWorkout } = useGetUserLastWorkoutQuery();
-
-  console.log(userLastWorkout);
+  const { data: userLastWorkout, loading: userLastWorkoutLoading } =
+    useGetUserLastWorkoutQuery();
 
   // Whole year data for calendar
   const [startDate, setStartDate] = useState(
@@ -91,6 +90,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                 <WorkoutCard
                   workout={userLastWorkout?.getUserLastWorkout as Workout}
                   dashboardLayout
+                  loading={userLastWorkoutLoading}
                 />
               </Row>
             </FlexWrapperDiv>

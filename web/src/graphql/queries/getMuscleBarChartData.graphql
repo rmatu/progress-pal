@@ -1,0 +1,5 @@
+query GetMuscleBarChartData($input: GetMuscleBarChartDataInput!) {
+  getMuscleBarChartData(input: $input) {
+    ...RegularGetMuscleBarChartDataResponse
+  }
+}
