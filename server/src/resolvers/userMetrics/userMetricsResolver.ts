@@ -1,45 +1,21 @@
-import { isAuthenticated } from "../middleware/isAuthenticated";
-import { UserMetrics } from "../entities/UserMetrics";
+import { isAuthenticated } from "../../middleware/isAuthenticated";
+import { UserMetrics } from "../../entities/UserMetrics";
 import {
   Arg,
   Ctx,
-  Field,
-  InputType,
   Mutation,
-  ObjectType,
   Query,
   Resolver,
   UseMiddleware,
 } from "type-graphql";
 import { MyContext } from "src/types";
-import { User } from "../entities/User";
-
-@InputType()
-class CreateUserMetricsInput {
-  @Field()
-  gender: string;
-  @Field()
-  weightGoal: string;
-  @Field()
-  activityLevel: string;
-  @Field()
-  height: number;
-  @Field()
-  weight: number;
-  @Field()
-  weightGoalValue: number;
-  @Field()
-  birthDate: string;
-}
-
-@ObjectType()
-class UpdateOnboardingResponse {
-  @Field(() => UserMetrics, { nullable: true })
-  userMetrics?: UserMetrics;
-
-  @Field(() => User, { nullable: true })
-  user?: User;
-}
+import { User } from "../../entities/User";
+import {
+  CreateUserMetricsInput,
+  UpdateOnboardingResponse,
+  UpdateUserMetricsInput,
+} from "./types";
+import { getRepository } from "typeorm";
 
 @Resolver(UserMetrics)
 export class UserMetricsResolver {
@@ -97,5 +73,43 @@ export class UserMetricsResolver {
     await User.save(user);
 
     return { userMetrics, user };
+  }
+
+  @Mutation(() => UserMetrics)
+  @UseMiddleware(isAuthenticated)
+  async addNewWeight(@Arg("weight") weight: Number, @Ctx() { req }: MyContext) {
+    const { userId } = req.session;
+
+    try {
+      const userMetricsRepo = await getRepository(UserMetrics);
+
+      // Get the latest user metric
+      const userMetrics = await userMetricsRepo.findOne({
+        where: { user: userId },
+        order: { updatedAt: "DESC" },
+      });
+
+      let newUserMetrics;
+
+      if (!userMetrics) {
+        newUserMetrics = await UserMetrics.create({
+          weight: Number(weight),
+        }).save();
+      } else {
+        newUserMetrics = await UserMetrics.create({
+          weightGoal: userMetrics.weightGoal,
+          activityLevel: userMetrics.activityLevel,
+          height: userMetrics.height,
+          weight: Number(weight),
+          weightGoalValue: userMetrics.weightGoalValue,
+          user: userId,
+        }).save();
+      }
+
+      return newUserMetrics;
+    } catch (e) {
+      console.log(e);
+      return new Error("Something went wrong");
+    }
   }
 }
