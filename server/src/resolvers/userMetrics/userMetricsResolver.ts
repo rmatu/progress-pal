@@ -77,7 +77,7 @@ export class UserMetricsResolver {
 
   @Mutation(() => UserMetrics)
   @UseMiddleware(isAuthenticated)
-  async addNewWeight(@Arg("weight") weight: Number, @Ctx() { req }: MyContext) {
+  async addNewWeight(@Arg("weight") weight: number, @Ctx() { req }: MyContext) {
     const { userId } = req.session;
 
     try {
@@ -93,20 +93,51 @@ export class UserMetricsResolver {
 
       if (!userMetrics) {
         newUserMetrics = await UserMetrics.create({
-          weight: Number(weight),
+          weight: weight,
         }).save();
       } else {
         newUserMetrics = await UserMetrics.create({
           weightGoal: userMetrics.weightGoal,
           activityLevel: userMetrics.activityLevel,
           height: userMetrics.height,
-          weight: Number(weight),
+          weight: weight,
           weightGoalValue: userMetrics.weightGoalValue,
           user: userId,
         }).save();
       }
 
       return newUserMetrics;
+    } catch (e) {
+      console.log(e);
+      return new Error("Something went wrong");
+    }
+  }
+
+  @Mutation(() => UserMetrics)
+  @UseMiddleware(isAuthenticated)
+  async updateWeight(
+    @Arg("weight") weight: number,
+    @Arg("weightId") weightId: number,
+    @Ctx() { req }: MyContext,
+  ) {
+    const { userId } = req.session;
+
+    try {
+      const userMetricsRepo = await getRepository(UserMetrics);
+
+      // Get the latest user metric
+      const userMetrics = await userMetricsRepo.findOne({
+        where: { user: userId, id: weightId },
+        order: { updatedAt: "DESC" },
+      });
+
+      if (!userMetrics) {
+        return new Error("This weight does not exist");
+      }
+
+      userMetrics.weight = weight;
+
+      return await userMetrics.save();
     } catch (e) {
       console.log(e);
       return new Error("Something went wrong");
