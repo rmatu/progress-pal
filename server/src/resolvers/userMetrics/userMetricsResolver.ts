@@ -12,10 +12,12 @@ import { MyContext } from "src/types";
 import { User } from "../../entities/User";
 import {
   CreateUserMetricsInput,
+  GetWieghtChartDataResponse,
   UpdateOnboardingResponse,
   UpdateUserMetricsInput,
 } from "./types";
-import { getRepository } from "typeorm";
+import { Between, getRepository } from "typeorm";
+import moment from "moment";
 
 @Resolver(UserMetrics)
 export class UserMetricsResolver {
@@ -42,6 +44,38 @@ export class UserMetricsResolver {
     }
 
     return userMetrics;
+  }
+
+  @Query(() => [GetWieghtChartDataResponse])
+  @UseMiddleware(isAuthenticated)
+  async getWieghtChartData(
+    @Arg("startDate") startDate: string,
+    @Arg("endDate") endDate: string,
+    @Ctx() { req }: MyContext,
+  ) {
+    const { userId } = req.session;
+    try {
+      const userMetricsRepo = await getRepository(UserMetrics);
+
+      // Between clause wouldn't include these dates so we need to extend them
+      const cStartDate = moment(startDate)
+        .subtract(1, "days")
+        .format("YYYY-MM-DD");
+      const cEndDate = moment(endDate).add(1, "days").format("YYYY-MM-DD");
+
+      const userMetrics = await userMetricsRepo.find({
+        where: { user: userId, updatedAt: Between(cStartDate, cEndDate) },
+        order: { updatedAt: "DESC" },
+      });
+
+      return userMetrics.map(el => ({
+        weight: el.weight,
+        date: moment(el.updatedAt).format("YYYY-MM-DD"),
+      }));
+    } catch (e) {
+      console.log(e);
+      return new Error("Something went wrong");
+    }
   }
 
   // ===========================

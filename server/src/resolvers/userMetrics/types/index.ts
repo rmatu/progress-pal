@@ -46,3 +46,12 @@ export class UpdateOnboardingResponse {
   @Field(() => User, { nullable: true })
   user?: User;
 }
+
+@ObjectType()
+export class GetWieghtChartDataResponse {
+  @Field(() => String)
+  date: string;
+
+  @Field(() => Number)
+  weight: number;
+}
