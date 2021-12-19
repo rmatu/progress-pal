@@ -2,6 +2,7 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MuscleBarChart from "../../../components/Charts/MuscleBarChart/MuscleBarChart";
+import UserWeightChart from "../../../components/Charts/UserWeightChart/UserWeightChart";
 import { FlexWrapperDiv } from "../../../components/FlexElements";
 import MuscleHeatmapModel from "../../../components/UI/MuscleHeatmapModel/MuscleHeatmapModel";
 import WorkoutCard from "../../../components/UI/WorkoutsList/WorkoutCard/WorkoutCard";
@@ -95,6 +96,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               </Row>
             </FlexWrapperDiv>
             <MuscleBarChart />
+          </FlexWrapperDiv>
+          <FlexWrapperDiv flexDirection="row">
+            <Row>
+              <UserWeightChart version="gradient" />
+            </Row>
           </FlexWrapperDiv>
         </RightContentWrapper>
       </RightContent>

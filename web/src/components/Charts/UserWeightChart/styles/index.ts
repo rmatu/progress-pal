@@ -1,25 +1,38 @@
 import styled from "styled-components/macro";
 import { convertPxToRem } from "../../../../utils/cssHelpers";
 
-export const Wrapper = styled.div<{ width: string }>`
+export const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.backgroundGray};
-  padding: 2em;
-  max-width: ${({ width }) => `${width}px`};
-  width: 100%;
-  margin-left: 1em;
   border-radius: 0.5em;
+  max-width: 701px;
+  width: 100%;
+  padding: 0.5em 2em;
   position: relative;
+  padding-bottom: 4em;
 
   tspan {
     fill: #9b9b9b;
   }
+`;
 
-  @media screen and (max-width: 1800px) {
-    margin: 1em 0 0 0;
-  }
+export const IconsWrapper = styled.div`
+  position: absolute;
+  top: 1em;
+  right: 0;
+  display: flex;
+  flex-direction: row;
 
-  @media screen and (max-width: 764px) {
-    height: 36em;
+  svg {
+    transition: all 0.1s ease-in-out;
+    opacity: 0.5;
+    margin-right: 0.5em;
+    cursor: pointer;
+    width: ${convertPxToRem(20)};
+    height: ${convertPxToRem(20)};
+
+    :hover {
+      opacity: 1;
+    }
   }
 `;
 
