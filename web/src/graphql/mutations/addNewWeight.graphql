@@ -1,0 +1,5 @@
+mutation AddNewWeight($weight: Float!, $date: DateTime) {
+  addNewWeight(weight: $weight, date: $date) {
+    weight
+  }
+}

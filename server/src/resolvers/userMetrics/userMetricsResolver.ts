@@ -14,7 +14,6 @@ import {
   CreateUserMetricsInput,
   GetWieghtChartDataResponse,
   UpdateOnboardingResponse,
-  UpdateUserMetricsInput,
 } from "./types";
 import { Between, getRepository } from "typeorm";
 import moment from "moment";
@@ -48,9 +47,9 @@ export class UserMetricsResolver {
 
   @Query(() => [GetWieghtChartDataResponse])
   @UseMiddleware(isAuthenticated)
-  async getWieghtChartData(
-    @Arg("startDate") startDate: string,
-    @Arg("endDate") endDate: string,
+  async getWeightChartData(
+    @Arg("startDate") startDate: Date,
+    @Arg("endDate") endDate: Date,
     @Ctx() { req }: MyContext,
   ) {
     const { userId } = req.session;
@@ -111,7 +110,11 @@ export class UserMetricsResolver {
 
   @Mutation(() => UserMetrics)
   @UseMiddleware(isAuthenticated)
-  async addNewWeight(@Arg("weight") weight: number, @Ctx() { req }: MyContext) {
+  async addNewWeight(
+    @Arg("weight") weight: number,
+    @Arg("date", { nullable: true }) date: Date,
+    @Ctx() { req }: MyContext,
+  ) {
     const { userId } = req.session;
 
     try {
@@ -125,16 +128,22 @@ export class UserMetricsResolver {
 
       let newUserMetrics;
 
+      const variables: { weight: number; updatedAt?: Date } = {
+        weight: weight,
+      };
+
+      if (date) {
+        variables["updatedAt"] = date;
+      }
+
       if (!userMetrics) {
-        newUserMetrics = await UserMetrics.create({
-          weight: weight,
-        }).save();
+        newUserMetrics = await UserMetrics.create(variables).save();
       } else {
         newUserMetrics = await UserMetrics.create({
+          ...variables,
           weightGoal: userMetrics.weightGoal,
           activityLevel: userMetrics.activityLevel,
           height: userMetrics.height,
-          weight: weight,
           weightGoalValue: userMetrics.weightGoalValue,
           user: userId,
         }).save();
@@ -152,6 +161,7 @@ export class UserMetricsResolver {
   async updateWeight(
     @Arg("weight") weight: number,
     @Arg("weightId") weightId: number,
+    @Arg("date", { nullable: true }) date: Date,
     @Ctx() { req }: MyContext,
   ) {
     const { userId } = req.session;
@@ -170,6 +180,7 @@ export class UserMetricsResolver {
       }
 
       userMetrics.weight = weight;
+      if (date) userMetrics.updatedAt = date;
 
       return await userMetrics.save();
     } catch (e) {

@@ -17,6 +17,7 @@ export type Query = {
   __typename?: 'Query';
   me?: Maybe<User>;
   getUserMetrics?: Maybe<Array<UserMetrics>>;
+  getWeightChartData: Array<GetWieghtChartDataResponse>;
   getAllUserWorkouts?: Maybe<Array<Workout>>;
   getUserWorkouts?: Maybe<Array<Workout>>;
   getUserWorkout?: Maybe<Workout>;
@@ -27,6 +28,12 @@ export type Query = {
   getExerciseInfo: GetExerciseInfoResponse;
   getMuscleBarChartData: GetMuscleBarChartDataResponse;
   getAllCommonExercises?: Maybe<Array<CommonExercise>>;
+};
+
+
+export type QueryGetWeightChartDataArgs = {
+  endDate: Scalars['DateTime'];
+  startDate: Scalars['DateTime'];
 };
 
 
@@ -172,6 +179,12 @@ export type CommonExercise = {
   workoutExercise: Array<WorkoutExercise>;
 };
 
+export type GetWieghtChartDataResponse = {
+  __typename?: 'GetWieghtChartDataResponse';
+  date: Scalars['String'];
+  weight: Scalars['Float'];
+};
+
 export type YearlyWorkoutsAmountResponse = {
   __typename?: 'YearlyWorkoutsAmountResponse';
   date?: Maybe<Scalars['String']>;
@@ -267,6 +280,8 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   changeOnboardingStep: User;
   finishOnboarding: UpdateOnboardingResponse;
+  addNewWeight: UserMetrics;
+  updateWeight: UserMetrics;
   createWorkout?: Maybe<Workout>;
   addNewExercisesToTheWorkout: Scalars['Boolean'];
   deleteWorkout: Scalars['Boolean'];
@@ -335,6 +350,19 @@ export type MutationChangeOnboardingStepArgs = {
 
 export type MutationFinishOnboardingArgs = {
   input: CreateUserMetricsInput;
+};
+
+
+export type MutationAddNewWeightArgs = {
+  date?: Maybe<Scalars['DateTime']>;
+  weight: Scalars['Float'];
+};
+
+
+export type MutationUpdateWeightArgs = {
+  date?: Maybe<Scalars['DateTime']>;
+  weightId: Scalars['Float'];
+  weight: Scalars['Float'];
 };
 
 
@@ -562,6 +590,20 @@ export type AddNewExercisesToTheWorkoutMutationVariables = Exact<{
 export type AddNewExercisesToTheWorkoutMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'addNewExercisesToTheWorkout'>
+);
+
+export type AddNewWeightMutationVariables = Exact<{
+  weight: Scalars['Float'];
+  date?: Maybe<Scalars['DateTime']>;
+}>;
+
+
+export type AddNewWeightMutation = (
+  { __typename?: 'Mutation' }
+  & { addNewWeight: (
+    { __typename?: 'UserMetrics' }
+    & Pick<UserMetrics, 'weight'>
+  ) }
 );
 
 export type ChangeOnboardingStepMutationVariables = Exact<{
@@ -914,6 +956,20 @@ export type GetUserYearlyWorkoutDataQuery = (
   )>> }
 );
 
+export type GetWeightChartDataQueryVariables = Exact<{
+  startDate: Scalars['DateTime'];
+  endDate: Scalars['DateTime'];
+}>;
+
+
+export type GetWeightChartDataQuery = (
+  { __typename?: 'Query' }
+  & { getWeightChartData: Array<(
+    { __typename?: 'GetWieghtChartDataResponse' }
+    & Pick<GetWieghtChartDataResponse, 'date' | 'weight'>
+  )> }
+);
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1100,6 +1156,39 @@ export function useAddNewExercisesToTheWorkoutMutation(baseOptions?: Apollo.Muta
 export type AddNewExercisesToTheWorkoutMutationHookResult = ReturnType<typeof useAddNewExercisesToTheWorkoutMutation>;
 export type AddNewExercisesToTheWorkoutMutationResult = Apollo.MutationResult<AddNewExercisesToTheWorkoutMutation>;
 export type AddNewExercisesToTheWorkoutMutationOptions = Apollo.BaseMutationOptions<AddNewExercisesToTheWorkoutMutation, AddNewExercisesToTheWorkoutMutationVariables>;
+export const AddNewWeightDocument = gql`
+    mutation AddNewWeight($weight: Float!, $date: DateTime) {
+  addNewWeight(weight: $weight, date: $date) {
+    weight
+  }
+}
+    `;
+export type AddNewWeightMutationFn = Apollo.MutationFunction<AddNewWeightMutation, AddNewWeightMutationVariables>;
+
+/**
+ * __useAddNewWeightMutation__
+ *
+ * To run a mutation, you first call `useAddNewWeightMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddNewWeightMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addNewWeightMutation, { data, loading, error }] = useAddNewWeightMutation({
+ *   variables: {
+ *      weight: // value for 'weight'
+ *      date: // value for 'date'
+ *   },
+ * });
+ */
+export function useAddNewWeightMutation(baseOptions?: Apollo.MutationHookOptions<AddNewWeightMutation, AddNewWeightMutationVariables>) {
+        return Apollo.useMutation<AddNewWeightMutation, AddNewWeightMutationVariables>(AddNewWeightDocument, baseOptions);
+      }
+export type AddNewWeightMutationHookResult = ReturnType<typeof useAddNewWeightMutation>;
+export type AddNewWeightMutationResult = Apollo.MutationResult<AddNewWeightMutation>;
+export type AddNewWeightMutationOptions = Apollo.BaseMutationOptions<AddNewWeightMutation, AddNewWeightMutationVariables>;
 export const ChangeOnboardingStepDocument = gql`
     mutation ChangeOnboardingStep($step: Float!) {
   changeOnboardingStep(step: $step) {
@@ -2017,6 +2106,41 @@ export function useGetUserYearlyWorkoutDataLazyQuery(baseOptions?: Apollo.LazyQu
 export type GetUserYearlyWorkoutDataQueryHookResult = ReturnType<typeof useGetUserYearlyWorkoutDataQuery>;
 export type GetUserYearlyWorkoutDataLazyQueryHookResult = ReturnType<typeof useGetUserYearlyWorkoutDataLazyQuery>;
 export type GetUserYearlyWorkoutDataQueryResult = Apollo.QueryResult<GetUserYearlyWorkoutDataQuery, GetUserYearlyWorkoutDataQueryVariables>;
+export const GetWeightChartDataDocument = gql`
+    query GetWeightChartData($startDate: DateTime!, $endDate: DateTime!) {
+  getWeightChartData(startDate: $startDate, endDate: $endDate) {
+    date
+    weight
+  }
+}
+    `;
+
+/**
+ * __useGetWeightChartDataQuery__
+ *
+ * To run a query within a React component, call `useGetWeightChartDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetWeightChartDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetWeightChartDataQuery({
+ *   variables: {
+ *      startDate: // value for 'startDate'
+ *      endDate: // value for 'endDate'
+ *   },
+ * });
+ */
+export function useGetWeightChartDataQuery(baseOptions: Apollo.QueryHookOptions<GetWeightChartDataQuery, GetWeightChartDataQueryVariables>) {
+        return Apollo.useQuery<GetWeightChartDataQuery, GetWeightChartDataQueryVariables>(GetWeightChartDataDocument, baseOptions);
+      }
+export function useGetWeightChartDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetWeightChartDataQuery, GetWeightChartDataQueryVariables>) {
+          return Apollo.useLazyQuery<GetWeightChartDataQuery, GetWeightChartDataQueryVariables>(GetWeightChartDataDocument, baseOptions);
+        }
+export type GetWeightChartDataQueryHookResult = ReturnType<typeof useGetWeightChartDataQuery>;
+export type GetWeightChartDataLazyQueryHookResult = ReturnType<typeof useGetWeightChartDataLazyQuery>;
+export type GetWeightChartDataQueryResult = Apollo.QueryResult<GetWeightChartDataQuery, GetWeightChartDataQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {
