@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -13,43 +13,34 @@ import {
 import theme from "../../../theme/theme";
 import { Heading } from "../../UI";
 import { getStrokeColor } from "../strokeColors";
-import { CalendarWrapper, IconsWrapper, Text, Wrapper } from "./styles";
+import {
+  CalendarWrapper,
+  IconsWrapper,
+  LoaderWrapper,
+  Text,
+  Wrapper,
+} from "./styles";
 import { ReactComponent as PencilIcon } from "../../../assets/svg/pencil.svg";
 import { ReactComponent as AddIcon } from "../../../assets/svg/plusCircle.svg";
 import { ReactComponent as CalendarIcon } from "../../../assets/svg/calendar.svg";
 import DateRangePickerModal from "../../UI/DateRangePickerModal/DateRangePickerModal";
 import moment from "moment";
 import { getDateXMonthsBefore } from "../../../utils/dateHelpers";
+import { useGetWeightChartDataLazyQuery } from "../../../generated/graphql";
+import Loader from "../../UI/Loader/Loader";
 
 interface UserWeightChartProps {
   version?: "gradient" | "linear";
 }
 
-const data = [
-  {
-    date: "2021-10-12",
-    weight: 60,
-  },
-  {
-    date: "2021-10-23",
-    weight: 62,
-  },
-  {
-    date: "2021-11-21",
-    weight: 68,
-  },
-  {
-    date: "2021-12-12",
-    weight: 70,
-  },
-  {
-    date: "2021-12-30",
-    weight: 80,
-  },
-];
-
 const UserWeightChart: React.FC<UserWeightChartProps> = ({ version }) => {
   const [showModal, setShowModal] = useState(false);
+  const [
+    getWeightChartData,
+    { data: weightChartData, loading: wieghtChartDataLoading },
+  ] = useGetWeightChartDataLazyQuery();
+
+  const chartData = weightChartData?.getWeightChartData ?? [];
 
   // Data for muscle heatmap
   const [heatmapData, setHeatmapData] = useState([
@@ -60,7 +51,33 @@ const UserWeightChart: React.FC<UserWeightChartProps> = ({ version }) => {
     },
   ]);
 
-  const handleFinish = () => {};
+  const handleFinish = () => {
+    getWeightChartData({
+      variables: {
+        startDate: heatmapData[0].startDate,
+        endDate: heatmapData[0].endDate,
+      },
+    });
+  };
+
+  useEffect(() => {
+    getWeightChartData({
+      variables: {
+        startDate: heatmapData[0].startDate,
+        endDate: heatmapData[0].endDate,
+      },
+    });
+  }, []);
+
+  if (wieghtChartDataLoading) {
+    return (
+      <Wrapper>
+        <LoaderWrapper>
+          <Loader />
+        </LoaderWrapper>
+      </Wrapper>
+    );
+  }
 
   if (version === "gradient") {
     return (
@@ -76,7 +93,7 @@ const UserWeightChart: React.FC<UserWeightChartProps> = ({ version }) => {
           <AreaChart
             width={730}
             height={250}
-            data={data}
+            data={chartData}
             margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
           >
             <defs>
@@ -161,7 +178,7 @@ const UserWeightChart: React.FC<UserWeightChartProps> = ({ version }) => {
         Your weight progress
       </Heading>
       <ResponsiveContainer width="100%" height={350}>
-        <LineChart data={data}>
+        <LineChart data={chartData}>
           <XAxis dataKey="date" />
           <CartesianGrid
             vertical
