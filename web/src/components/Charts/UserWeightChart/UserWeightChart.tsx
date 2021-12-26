@@ -11,12 +11,14 @@ import {
   YAxis,
 } from "recharts";
 import theme from "../../../theme/theme";
-import { Heading } from "../../UI";
+import { Button, Heading, Popup } from "../../UI";
 import { getStrokeColor } from "../strokeColors";
 import {
+  ButtonsWrapper,
   CalendarWrapper,
   IconsWrapper,
   LoaderWrapper,
+  ModalContent,
   Text,
   Wrapper,
 } from "./styles";
@@ -26,8 +28,20 @@ import { ReactComponent as CalendarIcon } from "../../../assets/svg/calendar.svg
 import DateRangePickerModal from "../../UI/DateRangePickerModal/DateRangePickerModal";
 import moment from "moment";
 import { getDateXMonthsBefore } from "../../../utils/dateHelpers";
-import { useGetWeightChartDataLazyQuery } from "../../../generated/graphql";
+import {
+  useAddNewWeightMutation,
+  useGetWeightChartDataLazyQuery,
+} from "../../../generated/graphql";
 import Loader from "../../UI/Loader/Loader";
+import ModalScroll from "../../UI/ModalScroll/ModalScroll";
+import { useFormik } from "formik";
+import InputWithIcon from "../../UI/InputWithIcon/InputWithIcon";
+import { WeightChartSchema } from "../../../utils/formSchemas";
+import { FlexWrapperDiv } from "../../FlexElements";
+import CalendarWithTimeModal from "../../UI/CalendarWithTimeModal/CalendarWithTimeModal";
+import { useDispatch, useSelector } from "react-redux";
+import * as popupActions from "../../../redux/popup/popupActions";
+import { AppState } from "../../../redux/rootReducer";
 
 interface UserWeightChartProps {
   version?: "gradient" | "linear";
@@ -35,21 +49,75 @@ interface UserWeightChartProps {
 
 const UserWeightChart: React.FC<UserWeightChartProps> = ({ version }) => {
   const [showModal, setShowModal] = useState(false);
+  const [showCalendarModal, setShowCalendarModal] = useState(false);
+  const [showAddNewWeightModal, setShowAddNewWeightModal] = useState(false);
+  const [heatmapData, setHeatmapData] = useState([
+    {
+      startDate: getDateXMonthsBefore(new Date(), 3, 1),
+      endDate: new Date(),
+      key: "selection",
+    },
+  ]);
+
+  const dispatch = useDispatch();
+  const { show, text, popupType } = useSelector(
+    (state: AppState) => state.popup,
+  );
+
   const [
     getWeightChartData,
     { data: weightChartData, loading: wieghtChartDataLoading },
   ] = useGetWeightChartDataLazyQuery();
 
+  const [addNewWeight] = useAddNewWeightMutation({
+    onCompleted: () => {
+      getWeightChartData({
+        variables: {
+          startDate: heatmapData[0].startDate,
+          endDate: new Date(),
+        },
+      });
+      dispatch(
+        popupActions.setPopupVisibility({
+          visibility: true,
+          text: "Added successfuly!",
+          popupType: "success",
+        }),
+      );
+      setTimeout(() => {
+        dispatch(
+          popupActions.setPopupVisibility({
+            visibility: false,
+            text: "Added successfuly!",
+            popupType: "success",
+          }),
+        );
+      }, 4000);
+    },
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      weight: undefined,
+      date: moment().format("DD-MM-YYYY"),
+    },
+    validationSchema: WeightChartSchema,
+    onSubmit: ({ weight, date }) => {
+      setShowAddNewWeightModal(false);
+      addNewWeight({
+        variables: {
+          weight: Number(weight)!,
+          date: moment(date, "DD-MM-YYYY").format("YYYY-MM-DD"),
+        },
+      });
+    },
+  });
+
   const chartData = weightChartData?.getWeightChartData ?? [];
 
-  // Data for muscle heatmap
-  const [heatmapData, setHeatmapData] = useState([
-    {
-      startDate: getDateXMonthsBefore(new Date(), 1, 1),
-      endDate: new Date(),
-      key: "selection",
-    },
-  ]);
+  const handleDateChange = (date: Date) => {
+    formik.setFieldValue("date", moment(date).format("DD-MM-YYYY"));
+  };
 
   const handleFinish = () => {
     getWeightChartData({
@@ -79,12 +147,81 @@ const UserWeightChart: React.FC<UserWeightChartProps> = ({ version }) => {
     );
   }
 
+  const modals = () => {
+    return (
+      <ModalScroll
+        show={showAddNewWeightModal}
+        handleClose={() => setShowAddNewWeightModal(false)}
+      >
+        <ModalContent onSubmit={formik.handleSubmit}>
+          <Heading size="h2" marginB="0.4em">
+            Add New Weight
+          </Heading>
+          <FlexWrapperDiv
+            justifyContent="center"
+            alignItems="center"
+            gap="0.8em"
+          >
+            <InputWithIcon
+              name="weight"
+              value={formik.values.weight}
+              type="number"
+              onChange={e => formik.handleChange(e)}
+              width="100%"
+              error={formik.errors.weight}
+              title="Weight"
+              placeholder="in kilograms"
+            />
+            <InputWithIcon
+              name="date"
+              value={formik.values.date}
+              type="string"
+              onChange={e => formik.handleChange(e)}
+              width="100%"
+              error={formik.errors.date}
+              iconComp={<CalendarIcon />}
+              title="Date"
+              handleIconClick={() => setShowCalendarModal(true)}
+            />
+          </FlexWrapperDiv>
+          <ButtonsWrapper>
+            <Button
+              bColor={theme.colors.successTextColor}
+              fontSize="1rem"
+              type="submit"
+              disabled={!formik.isValid}
+            >
+              Add
+            </Button>
+            <Button
+              bColor={theme.colors.errorTextColor}
+              fontSize="1rem"
+              type="button"
+              onClick={() => setShowAddNewWeightModal(false)}
+            >
+              Cancel
+            </Button>
+          </ButtonsWrapper>
+        </ModalContent>
+        {showCalendarModal && (
+          <CalendarWithTimeModal
+            noTime
+            setOnlyDate={handleDateChange}
+            setDateWithTime={() => {}}
+            opened={showCalendarModal}
+            close={() => setShowCalendarModal(false)}
+          />
+        )}
+      </ModalScroll>
+    );
+  };
+
   if (version === "gradient") {
     return (
       <Wrapper>
         <IconsWrapper>
           <PencilIcon />
-          <AddIcon />
+          <AddIcon onClick={() => setShowAddNewWeightModal(true)} />
         </IconsWrapper>
         <Heading size="h3" marginB="0.5em">
           Body weight progress
@@ -168,12 +305,20 @@ const UserWeightChart: React.FC<UserWeightChartProps> = ({ version }) => {
           setHeatmapData={setHeatmapData}
           handleFinish={handleFinish}
         />
+        {modals()}
+        <Popup showPopup={show} error={popupType === "error"}>
+          {text}
+        </Popup>
       </Wrapper>
     );
   }
 
   return (
     <Wrapper>
+      <IconsWrapper>
+        <PencilIcon />
+        <AddIcon onClick={() => setShowAddNewWeightModal(true)} />
+      </IconsWrapper>
       <Heading size="h3" marginB="0.5em">
         Your weight progress
       </Heading>
@@ -235,6 +380,10 @@ const UserWeightChart: React.FC<UserWeightChartProps> = ({ version }) => {
         setHeatmapData={setHeatmapData}
         handleFinish={handleFinish}
       />
+      {modals()}
+      <Popup showPopup={show} error={popupType === "error"}>
+        {text}
+      </Popup>
     </Wrapper>
   );
 };

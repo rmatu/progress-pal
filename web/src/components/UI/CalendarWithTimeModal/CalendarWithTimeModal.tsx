@@ -21,10 +21,14 @@ interface CalendarWithTimeModalProps {
       | undefined
     >
   >;
+  noTime?: boolean;
+  setOnlyDate?: (arg: Date) => void;
 }
 
 const CalendarWithTimeModal: React.FC<CalendarWithTimeModalProps> = ({
   opened,
+  noTime,
+  setOnlyDate,
   close,
   setDateWithTime,
 }) => {
@@ -53,6 +57,10 @@ const CalendarWithTimeModal: React.FC<CalendarWithTimeModalProps> = ({
       });
     }
 
+    if (setOnlyDate) {
+      setOnlyDate(date);
+    }
+
     close();
   };
 
@@ -68,20 +76,22 @@ const CalendarWithTimeModal: React.FC<CalendarWithTimeModalProps> = ({
 
   return (
     <Modal opened={opened} close={close} maxWidth="50em">
-      <TimeInputWrapper>
-        <TimeInput
-          placeholder={"H:m or H:m:s"}
-          heading={"Start time"}
-          value={startTime}
-          setValue={setStartTime}
-        />
-        <TimeInput
-          placeholder={"H:m or H:m:s"}
-          heading={"End time"}
-          value={endTime}
-          setValue={setEndTime}
-        />
-      </TimeInputWrapper>
+      {!noTime && (
+        <TimeInputWrapper>
+          <TimeInput
+            placeholder={"H:m or H:m:s"}
+            heading={"Start time"}
+            value={startTime}
+            setValue={setStartTime}
+          />
+          <TimeInput
+            placeholder={"H:m or H:m:s"}
+            heading={"End time"}
+            value={endTime}
+            setValue={setEndTime}
+          />
+        </TimeInputWrapper>
+      )}
       <Calendar
         date={date}
         onChange={handleChange}

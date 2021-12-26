@@ -69,3 +69,21 @@ export const LoaderWrapper = styled.div`
   align-items: center;
   height: 350px;
 `;
+
+export const ButtonsWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-top: 1em;
+  justify-content: center;
+
+  button {
+    margin: 0;
+    border-radius: 0.5em;
+    padding: 0.2em 0.5em;
+    width: ${convertPxToRem(100)};
+    margin: 0 0.4em;
+    opacity: 0.7;
+  }
+`;
+
+export const ModalContent = styled.form``;

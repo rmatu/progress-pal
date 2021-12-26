@@ -64,12 +64,12 @@ export class UserMetricsResolver {
 
       const userMetrics = await userMetricsRepo.find({
         where: { user: userId, updatedAt: Between(cStartDate, cEndDate) },
-        order: { updatedAt: "DESC" },
+        order: { updatedAt: "ASC" },
       });
 
       return userMetrics.map(el => ({
         weight: el.weight,
-        date: moment(el.updatedAt).format("YYYY-MM-DD"),
+        date: moment(el.updatedAt).format("DD-MM-YYYY"),
       }));
     } catch (e) {
       console.log(e);
@@ -137,7 +137,10 @@ export class UserMetricsResolver {
       }
 
       if (!userMetrics) {
-        newUserMetrics = await UserMetrics.create(variables).save();
+        newUserMetrics = await UserMetrics.create({
+          ...variables,
+          user: userId,
+        }).save();
       } else {
         newUserMetrics = await UserMetrics.create({
           ...variables,
@@ -172,7 +175,6 @@ export class UserMetricsResolver {
       // Get the latest user metric
       const userMetrics = await userMetricsRepo.findOne({
         where: { user: userId, id: weightId },
-        order: { updatedAt: "DESC" },
       });
 
       if (!userMetrics) {

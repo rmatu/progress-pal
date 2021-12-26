@@ -3,6 +3,10 @@ import { convertPxToRem } from "../../../utils/cssHelpers";
 
 export const ContentWrapper = styled.div`
   padding: 0 1em;
+
+  @media screen and (max-width: 764px) {
+    padding: 0;
+  }
 `;
 
 export const SearchWrapper = styled.div`

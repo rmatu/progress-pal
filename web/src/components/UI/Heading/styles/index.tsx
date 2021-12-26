@@ -12,6 +12,7 @@ const baseStyle = css<Props>`
   color: ${({ color, theme }) => {
     if (color === "white") return "#fff";
     if (color === "black") return "#000";
+    return color;
   }};
   margin-top: 0;
   margin-bottom: ${({ marginB }) => marginB};
