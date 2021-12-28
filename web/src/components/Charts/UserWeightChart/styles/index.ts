@@ -87,3 +87,20 @@ export const ButtonsWrapper = styled.div`
 `;
 
 export const ModalContent = styled.form``;
+
+export const WeightRowWrapper = styled.div`
+  max-height: 600px;
+  overflow-y: auto;
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    background: #0d141f;
+    background-color: #0d141f;
+    border-radius: 8px 8px 8px 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #525861;
+    border-radius: 8px 8px 8px 8px;
+  }
+`;

@@ -18,6 +18,7 @@ import {
   CalendarWrapper,
   IconsWrapper,
   LoaderWrapper,
+  WeightRowWrapper,
   ModalContent,
   Text,
   Wrapper,
@@ -42,6 +43,7 @@ import CalendarWithTimeModal from "../../UI/CalendarWithTimeModal/CalendarWithTi
 import { useDispatch, useSelector } from "react-redux";
 import * as popupActions from "../../../redux/popup/popupActions";
 import { AppState } from "../../../redux/rootReducer";
+import WeightRow from "./subcomponents/WeightRow/WeightRow";
 
 interface UserWeightChartProps {
   version?: "gradient" | "linear";
@@ -51,6 +53,7 @@ const UserWeightChart: React.FC<UserWeightChartProps> = ({ version }) => {
   const [showModal, setShowModal] = useState(false);
   const [showCalendarModal, setShowCalendarModal] = useState(false);
   const [showAddNewWeightModal, setShowAddNewWeightModal] = useState(false);
+  const [showEditWeightModal, setShowEditWeightModal] = useState(false);
   const [heatmapData, setHeatmapData] = useState([
     {
       startDate: getDateXMonthsBefore(new Date(), 3, 1),
@@ -149,70 +152,82 @@ const UserWeightChart: React.FC<UserWeightChartProps> = ({ version }) => {
 
   const modals = () => {
     return (
-      <ModalScroll
-        show={showAddNewWeightModal}
-        handleClose={() => setShowAddNewWeightModal(false)}
-      >
-        <ModalContent onSubmit={formik.handleSubmit}>
-          <Heading size="h2" marginB="0.4em">
-            Add New Weight
-          </Heading>
-          <FlexWrapperDiv
-            justifyContent="center"
-            alignItems="center"
-            gap="0.8em"
-          >
-            <InputWithIcon
-              name="weight"
-              value={formik.values.weight}
-              type="number"
-              onChange={e => formik.handleChange(e)}
-              width="100%"
-              error={formik.errors.weight}
-              title="Weight"
-              placeholder="in kilograms"
-            />
-            <InputWithIcon
-              name="date"
-              value={formik.values.date}
-              type="string"
-              onChange={e => formik.handleChange(e)}
-              width="100%"
-              error={formik.errors.date}
-              iconComp={<CalendarIcon />}
-              title="Date"
-              handleIconClick={() => setShowCalendarModal(true)}
-            />
-          </FlexWrapperDiv>
-          <ButtonsWrapper>
-            <Button
-              bColor={theme.colors.successTextColor}
-              fontSize="1rem"
-              type="submit"
-              disabled={!formik.isValid}
+      <>
+        <ModalScroll
+          show={showAddNewWeightModal}
+          handleClose={() => setShowAddNewWeightModal(false)}
+        >
+          <ModalContent onSubmit={formik.handleSubmit}>
+            <Heading size="h2" marginB="0.4em">
+              Add New Weight
+            </Heading>
+            <FlexWrapperDiv
+              justifyContent="center"
+              alignItems="center"
+              gap="0.8em"
             >
-              Add
-            </Button>
-            <Button
-              bColor={theme.colors.errorTextColor}
-              fontSize="1rem"
-              type="button"
-              onClick={() => setShowAddNewWeightModal(false)}
-            >
-              Cancel
-            </Button>
-          </ButtonsWrapper>
-        </ModalContent>
-        {showCalendarModal && (
-          <CalendarWithTimeModal
-            noTime
-            setOnlyDate={handleDateChange}
-            setDateWithTime={() => {}}
-            opened={showCalendarModal}
-            close={() => setShowCalendarModal(false)}
-          />
-        )}
-      </ModalScroll>
+              <InputWithIcon
+                name="weight"
+                value={formik.values.weight}
+                type="number"
+                onChange={e => formik.handleChange(e)}
+                width="100%"
+                error={formik.errors.weight}
+                title="Weight"
+                placeholder="in kilograms"
+              />
+              <InputWithIcon
+                name="date"
+                value={formik.values.date}
+                type="string"
+                onChange={e => formik.handleChange(e)}
+                width="100%"
+                error={formik.errors.date}
+                iconComp={<CalendarIcon />}
+                title="Date"
+                handleIconClick={() => setShowCalendarModal(true)}
+              />
+            </FlexWrapperDiv>
+            <ButtonsWrapper>
+              <Button
+                bColor={theme.colors.successTextColor}
+                fontSize="1rem"
+                type="submit"
+                disabled={!formik.isValid}
+              >
+                Add
+              </Button>
+              <Button
+                bColor={theme.colors.errorTextColor}
+                fontSize="1rem"
+                type="button"
+                onClick={() => setShowAddNewWeightModal(false)}
+              >
+                Cancel
+              </Button>
+            </ButtonsWrapper>
+          </ModalContent>
+          {showCalendarModal && (
+            <CalendarWithTimeModal
+              noTime
+              setOnlyDate={handleDateChange}
+              setDateWithTime={() => {}}
+              opened={showCalendarModal}
+              close={() => setShowCalendarModal(false)}
+            />
+          )}
+        </ModalScroll>
+        <ModalScroll
+          show={showEditWeightModal}
+          handleClose={() => setShowEditWeightModal(false)}
+        >
+          <WeightRowWrapper>
+            {chartData.map(el => (
+              <WeightRow data={el} />
+            ))}
+          </WeightRowWrapper>
+        </ModalScroll>
+      </>
     );
   };
 
@@ -220,7 +235,7 @@ const UserWeightChart: React.FC<UserWeightChartProps> = ({ version }) => {
     return (
       <Wrapper>
         <IconsWrapper>
-          <PencilIcon />
+          <PencilIcon onClick={() => setShowEditWeightModal(true)} />
           <AddIcon onClick={() => setShowAddNewWeightModal(true)} />
         </IconsWrapper>
         <Heading size="h3" marginB="0.5em">
@@ -316,7 +331,7 @@ const UserWeightChart: React.FC<UserWeightChartProps> = ({ version }) => {
   return (
     <Wrapper>
       <IconsWrapper>
-        <PencilIcon />
+        <PencilIcon onClick={() => setShowEditWeightModal(true)} />
         <AddIcon onClick={() => setShowAddNewWeightModal(true)} />
       </IconsWrapper>
       <Heading size="h3" marginB="0.5em">
