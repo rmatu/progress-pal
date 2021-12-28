@@ -2,5 +2,6 @@ query GetWeightChartData($startDate: DateTime!, $endDate: DateTime!) {
   getWeightChartData(startDate: $startDate, endDate: $endDate) {
     date
     weight
+    id
   }
 }

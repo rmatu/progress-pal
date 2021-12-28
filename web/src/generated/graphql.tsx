@@ -183,6 +183,7 @@ export type GetWieghtChartDataResponse = {
   __typename?: 'GetWieghtChartDataResponse';
   date: Scalars['String'];
   weight: Scalars['Float'];
+  id: Scalars['Float'];
 };
 
 export type YearlyWorkoutsAmountResponse = {
@@ -823,6 +824,21 @@ export type UpdateGeneralWorkoutInfoMutation = (
   ) }
 );
 
+export type UpdateWeightMutationVariables = Exact<{
+  weight: Scalars['Float'];
+  weightId: Scalars['Float'];
+  date?: Maybe<Scalars['DateTime']>;
+}>;
+
+
+export type UpdateWeightMutation = (
+  { __typename?: 'Mutation' }
+  & { updateWeight: (
+    { __typename?: 'UserMetrics' }
+    & Pick<UserMetrics, 'weight'>
+  ) }
+);
+
 export type GetAllCommonExercisesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -966,7 +982,7 @@ export type GetWeightChartDataQuery = (
   { __typename?: 'Query' }
   & { getWeightChartData: Array<(
     { __typename?: 'GetWieghtChartDataResponse' }
-    & Pick<GetWieghtChartDataResponse, 'date' | 'weight'>
+    & Pick<GetWieghtChartDataResponse, 'date' | 'weight' | 'id'>
   )> }
 );
 
@@ -1758,6 +1774,40 @@ export function useUpdateGeneralWorkoutInfoMutation(baseOptions?: Apollo.Mutatio
 export type UpdateGeneralWorkoutInfoMutationHookResult = ReturnType<typeof useUpdateGeneralWorkoutInfoMutation>;
 export type UpdateGeneralWorkoutInfoMutationResult = Apollo.MutationResult<UpdateGeneralWorkoutInfoMutation>;
 export type UpdateGeneralWorkoutInfoMutationOptions = Apollo.BaseMutationOptions<UpdateGeneralWorkoutInfoMutation, UpdateGeneralWorkoutInfoMutationVariables>;
+export const UpdateWeightDocument = gql`
+    mutation UpdateWeight($weight: Float!, $weightId: Float!, $date: DateTime) {
+  updateWeight(weight: $weight, weightId: $weightId, date: $date) {
+    weight
+  }
+}
+    `;
+export type UpdateWeightMutationFn = Apollo.MutationFunction<UpdateWeightMutation, UpdateWeightMutationVariables>;
+
+/**
+ * __useUpdateWeightMutation__
+ *
+ * To run a mutation, you first call `useUpdateWeightMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateWeightMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateWeightMutation, { data, loading, error }] = useUpdateWeightMutation({
+ *   variables: {
+ *      weight: // value for 'weight'
+ *      weightId: // value for 'weightId'
+ *      date: // value for 'date'
+ *   },
+ * });
+ */
+export function useUpdateWeightMutation(baseOptions?: Apollo.MutationHookOptions<UpdateWeightMutation, UpdateWeightMutationVariables>) {
+        return Apollo.useMutation<UpdateWeightMutation, UpdateWeightMutationVariables>(UpdateWeightDocument, baseOptions);
+      }
+export type UpdateWeightMutationHookResult = ReturnType<typeof useUpdateWeightMutation>;
+export type UpdateWeightMutationResult = Apollo.MutationResult<UpdateWeightMutation>;
+export type UpdateWeightMutationOptions = Apollo.BaseMutationOptions<UpdateWeightMutation, UpdateWeightMutationVariables>;
 export const GetAllCommonExercisesDocument = gql`
     query GetAllCommonExercises {
   getAllCommonExercises {
@@ -2111,6 +2161,7 @@ export const GetWeightChartDataDocument = gql`
   getWeightChartData(startDate: $startDate, endDate: $endDate) {
     date
     weight
+    id
   }
 }
     `;
