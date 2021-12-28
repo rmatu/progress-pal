@@ -54,4 +54,7 @@ export class GetWieghtChartDataResponse {
 
   @Field(() => Number)
   weight: number;
+
+  @Field(() => Number)
+  id: number;
 }

@@ -67,10 +67,21 @@ export class UserMetricsResolver {
         order: { updatedAt: "ASC" },
       });
 
-      return userMetrics.map(el => ({
-        weight: el.weight,
-        date: moment(el.updatedAt).format("DD-MM-YYYY"),
-      }));
+      const returnData: { date: string; id: number; weight?: number }[] = [];
+
+      userMetrics.forEach(el => {
+        if (!el.weight) return;
+
+        const data: { date: string; id: number; weight?: number } = {
+          date: moment(el.updatedAt).format("DD-MM-YY"),
+          id: el.id,
+          weight: el.weight,
+        };
+
+        return returnData.push(data);
+      });
+
+      return returnData;
     } catch (e) {
       console.log(e);
       return new Error("Something went wrong");
@@ -153,6 +164,35 @@ export class UserMetricsResolver {
       }
 
       return newUserMetrics;
+    } catch (e) {
+      console.log(e);
+      return new Error("Something went wrong");
+    }
+  }
+
+  @Mutation(() => UserMetrics)
+  @UseMiddleware(isAuthenticated)
+  async deleteWeight(
+    @Arg("weightId") weightId: number,
+    @Ctx() { req }: MyContext,
+  ) {
+    const { userId } = req.session;
+
+    try {
+      const userMetricsRepo = await getRepository(UserMetrics);
+
+      // Get the latest user metric
+      const userMetrics = await userMetricsRepo.findOne({
+        where: { user: userId, id: weightId },
+        order: { updatedAt: "DESC" },
+      });
+      if (!userMetrics)
+        return new Error("Invalid ID or you don't own this data");
+
+      //@ts-ignore
+      userMetrics.weight = null;
+
+      return await userMetrics.save();
     } catch (e) {
       console.log(e);
       return new Error("Something went wrong");
