@@ -141,9 +141,6 @@ export interface IExportedExercise {
   sets: ISet[];
 }
 
-const digitsOnly = (value: string) =>
-  /^\d*[\.{1}\d*]\d*$/.test(value) || value.length === 0;
-
 export const AddWorkoutSchema = Yup.object().shape({
   name: Yup.string()
     .max(40, "Maximum of 40 characters")
@@ -162,4 +159,18 @@ export const AddWorkoutSchema = Yup.object().shape({
 
 export const SearchSchema = Yup.object().shape({
   search: Yup.string(),
+});
+
+export const WeightChartSchema = Yup.object().shape({
+  weight: Yup.number()
+    .min(1, "Min weight is 1kg")
+    .max(999, "Max weight is 999kg")
+    .required("Fill the input"),
+  date: Yup.string()
+    .matches(
+      /^([0-2][0-9]|(3)[0-1])(-)(((0)[0-9])|((1)[0-2]))(-)\d{4}$/,
+      "Invalid date",
+    )
+    .max(10, "Invalid date")
+    .required("Birthday is required"),
 });

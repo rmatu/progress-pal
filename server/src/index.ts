@@ -25,7 +25,7 @@ import { WorkoutExercise } from "./entities/WorkoutExercise";
 
 //Resolvers
 import { UserResolver } from "./resolvers/user";
-import { UserMetricsResolver } from "./resolvers/userMetrics";
+import { UserMetricsResolver } from "./resolvers/userMetrics/userMetricsResolver";
 import { WorkoutResolver } from "./resolvers/workout/workoutResolver";
 import { WorkoutExerciseResolver } from "./resolvers/WorkoutExercise/WorkoutExerciseResolver";
 import { CommonExerciseResolver } from "./resolvers/commonExercise";

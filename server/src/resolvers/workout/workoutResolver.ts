@@ -138,40 +138,45 @@ export class WorkoutResolver {
   async getUserLastWorkout(@Ctx() { req }: MyContext) {
     const { userId } = req.session;
 
-    const workoutRepo = await getRepository(Workout);
+    try {
+      const workoutRepo = await getRepository(Workout);
 
-    const workout = await workoutRepo.findOne({
-      relations: [
-        "workoutExercise",
-        "workoutExercise.commonExercise",
-        "workoutExercise.userExercise",
-        "workoutExercise.exerciseSet",
-      ],
-      where: { user: userId },
-      order: { updatedAt: "DESC" },
-    });
-
-    if (!workout) {
-      return null;
-    }
-
-    // Sorting nested relations in typeORM is super hard, so I'm sorting it on the server
-    // Sort ASC
-    // The newest
-    workout.workoutExercise = workout?.workoutExercise
-      //@ts-ignore
-      .map(el => el)
-      .sort((a: WorkoutExercise, b: WorkoutExercise) => {
-        if (moment(a.updatedAt).unix() > moment(b.updatedAt).unix()) {
-          return 1;
-        }
-        if (moment(a.updatedAt).unix() < moment(b.updatedAt).unix()) {
-          return -1;
-        }
-        return 0;
+      const workout = await workoutRepo.findOne({
+        relations: [
+          "workoutExercise",
+          "workoutExercise.commonExercise",
+          "workoutExercise.userExercise",
+          "workoutExercise.exerciseSet",
+        ],
+        where: { user: userId },
+        order: { updatedAt: "DESC" },
       });
 
-    return workout;
+      if (!workout) {
+        return null;
+      }
+
+      // Sorting nested relations in typeORM is super hard, so I'm sorting it on the server
+      // Sort ASC
+      // The newest
+      workout.workoutExercise = workout?.workoutExercise
+        //@ts-ignore
+        .map(el => el)
+        .sort((a: WorkoutExercise, b: WorkoutExercise) => {
+          if (moment(a.updatedAt).unix() > moment(b.updatedAt).unix()) {
+            return 1;
+          }
+          if (moment(a.updatedAt).unix() < moment(b.updatedAt).unix()) {
+            return -1;
+          }
+          return 0;
+        });
+
+      return workout;
+    } catch (e) {
+      console.log(e);
+      return new Error("Something went wrong");
+    }
   }
 
   @Query(() => [YearlyWorkoutsAmountResponse], { nullable: true })

@@ -5,6 +5,7 @@ import {
   GetUserWorkoutDocument,
   GetUserLastWorkoutDocument,
   GetMuscleBarChartDataDocument,
+  GetWeightChartDataDocument,
 } from "./../generated/graphql";
 import { DocumentNode } from "graphql";
 import moment from "moment";
@@ -16,6 +17,7 @@ type documentNames =
   | "getUserYearlyWorkout"
   | "getUserWorkout"
   | "getMuscleBarChartData"
+  | "getWeightChartData"
   | "getUserWorkouts";
 
 export const createRefetchQueriesArray = (
@@ -47,6 +49,16 @@ export const createRefetchQueriesArray = (
     } else if (name === "getUserWorkouts") {
       refetchQueriesArray.push({
         query: GetUserWorkoutsDocument,
+        variables: {
+          startDate: moment(getDateXMonthsBefore(new Date(), 3, 1)).format(
+            "YYYY-MM-DD",
+          ),
+          endDate: moment().format("YYYY-MM-DD"),
+        },
+      });
+    } else if (name === "getWeightChartData") {
+      refetchQueriesArray.push({
+        query: GetWeightChartDataDocument,
         variables: {
           startDate: moment(getDateXMonthsBefore(new Date(), 3, 1)).format(
             "YYYY-MM-DD",

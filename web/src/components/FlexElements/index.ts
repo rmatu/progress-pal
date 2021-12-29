@@ -10,6 +10,7 @@ interface FlexWrapperProps {
   padding?: string;
   backgroundColor?: string;
   borderRadius?: string;
+  gap?: string;
 }
 
 export const FlexWrapperDiv = styled.div<FlexWrapperProps>`
@@ -23,6 +24,7 @@ export const FlexWrapperDiv = styled.div<FlexWrapperProps>`
   padding: ${({ padding }) => padding};
   border-radius: ${({ borderRadius }) => borderRadius};
   background-color: ${({ backgroundColor }) => backgroundColor};
+  gap: ${({ gap }) => gap};
 `;
 
 export const FlexWrapperUl = styled.ul<FlexWrapperProps>`
@@ -36,4 +38,5 @@ export const FlexWrapperUl = styled.ul<FlexWrapperProps>`
   padding: ${({ padding }) => padding};
   border-radius: ${({ borderRadius }) => borderRadius};
   background-color: ${({ backgroundColor }) => backgroundColor};
+  gap: ${({ gap }) => gap};
 `;

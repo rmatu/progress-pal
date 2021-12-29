@@ -18,6 +18,7 @@ export const Input = styled.input<{ width?: string }>`
   color: white;
   transition: all 0.1s ease-in-out;
   width: ${({ width }) => width};
+  opacity: 1;
 
   :-webkit-autofill,
   :-webkit-autofill:hover,

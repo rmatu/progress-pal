@@ -92,7 +92,7 @@ const MuscleBarChart: React.FC<MuscleBarChartProps> = () => {
               marginRight: "1em",
             }}
           />
-          <Legend />
+
           <Tooltip
             contentStyle={{
               borderRadius: "0.5em",
@@ -117,8 +117,8 @@ const MuscleBarChart: React.FC<MuscleBarChartProps> = () => {
       </ResponsiveContainer>
       <CalendarWrapper onClick={() => setShowModal(true)}>
         <Text>
-          {moment(heatmapData[0].startDate).format("DD-MM-YYYY")} -{" "}
-          {moment(heatmapData[0].endDate).format("DD-MM-YYYY")}
+          {moment(heatmapData[0].startDate).format("DD MMM YYYY")} -{" "}
+          {moment(heatmapData[0].endDate).format("DD MMM YYYY")}
         </Text>
         <CalendarIcon />
       </CalendarWrapper>

@@ -196,8 +196,6 @@ export class WorkoutExerciseResolver {
 
       workoutExercises.forEach(exercise => {
         if (exercise.commonExercise) {
-          console.log(exercise.commonExercise.primaryMuscles);
-          console.log(exercise.exerciseSet);
           updateMuscleBarChartDataArr(
             exercise.commonExercise.primaryMuscles,
             muscleBarChartData,

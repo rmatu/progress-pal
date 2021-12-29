@@ -131,8 +131,8 @@ const MuscleHeatmapModel: React.FC<MuscleHeatmapModelProps> = ({}) => {
       </ModelWrapper>
       <Row>
         <Text>
-          {moment(heatmapData[0].startDate).format("DD-MM-YYYY")} -{" "}
-          {moment(heatmapData[0].endDate).format("DD-MM-YYYY")}
+          {moment(heatmapData[0].startDate).format("DD MMM YYYY")} -{" "}
+          {moment(heatmapData[0].endDate).format("DD MMM YYYY")}
         </Text>
         <CalendarWrapper>
           <CalendarIcon
