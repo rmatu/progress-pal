@@ -227,7 +227,13 @@ const UserWeightChart: React.FC<UserWeightChartProps> = ({ version }) => {
               .slice(0)
               .reverse()
               .map(el => (
-                <WeightRow data={el} key={el.id} />
+                <WeightRow
+                  data={el}
+                  key={el.id}
+                  heatmapData={heatmapData}
+                  getWeightChartData={getWeightChartData}
+                  setShowEditWeightModal={setShowEditWeightModal}
+                />
               ))}
           </WeightRowWrapper>
         </ModalScroll>

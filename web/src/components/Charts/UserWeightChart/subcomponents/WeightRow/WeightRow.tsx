@@ -1,7 +1,11 @@
 import { useFormik } from "formik";
 import moment from "moment";
 import React, { useState } from "react";
-import { GetWieghtChartDataResponse } from "../../../../../generated/graphql";
+import {
+  GetWieghtChartDataResponse,
+  useDeleteWeightMutation,
+  useUpdateWeightMutation,
+} from "../../../../../generated/graphql";
 import { WeightChartSchema } from "../../../../../utils/formSchemas";
 import { FlexWrapperDiv } from "../../../../FlexElements";
 import InputWithIcon from "../../../../UI/InputWithIcon/InputWithIcon";
@@ -10,13 +14,80 @@ import { ReactComponent as PencilIcon } from "../../../../../assets/svg/pencil.s
 import { SVGWrapper, Wrapper, ButtonsWrapper } from "./styles";
 import { Button } from "../../../../UI";
 import theme from "../../../../../theme/theme";
+import { useDispatch } from "react-redux";
+import * as popupActions from "../../../../../redux/popup/popupActions";
 
 interface WeightRowProps {
   data: GetWieghtChartDataResponse;
+  getWeightChartData: any;
+  heatmapData: any;
+  setShowEditWeightModal: any;
 }
 
-const WeightRow: React.FC<WeightRowProps> = ({ data }) => {
+const WeightRow: React.FC<WeightRowProps> = ({
+  data,
+  getWeightChartData,
+  heatmapData,
+  setShowEditWeightModal,
+}) => {
   const [disabled, setDisabled] = useState(true);
+  const dispatch = useDispatch();
+
+  const [updateWeight] = useUpdateWeightMutation({
+    onCompleted: () => {
+      getWeightChartData({
+        variables: {
+          startDate: heatmapData[0].startDate,
+          endDate: new Date(),
+        },
+      });
+      dispatch(
+        popupActions.setPopupVisibility({
+          visibility: true,
+          text: "Weight updated successfuly!",
+          popupType: "success",
+        }),
+      );
+      setTimeout(() => {
+        dispatch(
+          popupActions.setPopupVisibility({
+            visibility: false,
+            text: "Weight updated!",
+            popupType: "success",
+          }),
+        );
+      }, 4000);
+      setShowEditWeightModal(false);
+    },
+  });
+
+  const [deleteWeight] = useDeleteWeightMutation({
+    onCompleted: () => {
+      getWeightChartData({
+        variables: {
+          startDate: heatmapData[0].startDate,
+          endDate: new Date(),
+        },
+      });
+      dispatch(
+        popupActions.setPopupVisibility({
+          visibility: true,
+          text: "Deleted successfuly!",
+          popupType: "success",
+        }),
+      );
+      setTimeout(() => {
+        dispatch(
+          popupActions.setPopupVisibility({
+            visibility: false,
+            text: "Deleted successfuly!",
+            popupType: "success",
+          }),
+        );
+      }, 4000);
+      setShowEditWeightModal(false);
+    },
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -24,8 +95,23 @@ const WeightRow: React.FC<WeightRowProps> = ({ data }) => {
       date: moment().format("DD-MM-YYYY"),
     },
     validationSchema: WeightChartSchema,
-    onSubmit: ({}) => {},
+    onSubmit: ({ weight }) => {
+      updateWeight({
+        variables: {
+          weight,
+          weightId: data.id,
+        },
+      });
+    },
   });
+
+  const handleDeleteWeight = () => {
+    deleteWeight({
+      variables: {
+        weightId: data.id,
+      },
+    });
+  };
 
   return (
     <Wrapper onSubmit={formik.handleSubmit}>
@@ -48,7 +134,7 @@ const WeightRow: React.FC<WeightRowProps> = ({ data }) => {
 
         <SVGWrapper>
           <PencilIcon onClick={() => setDisabled(!disabled)} />
-          <TrashIcon />
+          <TrashIcon onClick={handleDeleteWeight} />
         </SVGWrapper>
       </FlexWrapperDiv>
       {!disabled && (
