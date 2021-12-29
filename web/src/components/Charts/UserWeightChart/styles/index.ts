@@ -91,6 +91,7 @@ export const ModalContent = styled.form``;
 export const WeightRowWrapper = styled.div`
   max-height: 600px;
   overflow-y: auto;
+  margin-top: 1em;
 
   ::-webkit-scrollbar {
     width: 8px;

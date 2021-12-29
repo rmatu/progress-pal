@@ -282,6 +282,7 @@ export type Mutation = {
   changeOnboardingStep: User;
   finishOnboarding: UpdateOnboardingResponse;
   addNewWeight: UserMetrics;
+  deleteWeight: UserMetrics;
   updateWeight: UserMetrics;
   createWorkout?: Maybe<Workout>;
   addNewExercisesToTheWorkout: Scalars['Boolean'];
@@ -357,6 +358,11 @@ export type MutationFinishOnboardingArgs = {
 export type MutationAddNewWeightArgs = {
   date?: Maybe<Scalars['DateTime']>;
   weight: Scalars['Float'];
+};
+
+
+export type MutationDeleteWeightArgs = {
+  weightId: Scalars['Float'];
 };
 
 
@@ -655,6 +661,19 @@ export type CreateWorkoutMutation = (
     { __typename?: 'Workout' }
     & Pick<Workout, 'name'>
   )> }
+);
+
+export type DeleteWeightMutationVariables = Exact<{
+  weightId: Scalars['Float'];
+}>;
+
+
+export type DeleteWeightMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteWeight: (
+    { __typename?: 'UserMetrics' }
+    & Pick<UserMetrics, 'id' | 'weight'>
+  ) }
 );
 
 export type DeleteWorkoutMutationVariables = Exact<{
@@ -1332,6 +1351,39 @@ export function useCreateWorkoutMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateWorkoutMutationHookResult = ReturnType<typeof useCreateWorkoutMutation>;
 export type CreateWorkoutMutationResult = Apollo.MutationResult<CreateWorkoutMutation>;
 export type CreateWorkoutMutationOptions = Apollo.BaseMutationOptions<CreateWorkoutMutation, CreateWorkoutMutationVariables>;
+export const DeleteWeightDocument = gql`
+    mutation DeleteWeight($weightId: Float!) {
+  deleteWeight(weightId: $weightId) {
+    id
+    weight
+  }
+}
+    `;
+export type DeleteWeightMutationFn = Apollo.MutationFunction<DeleteWeightMutation, DeleteWeightMutationVariables>;
+
+/**
+ * __useDeleteWeightMutation__
+ *
+ * To run a mutation, you first call `useDeleteWeightMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteWeightMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteWeightMutation, { data, loading, error }] = useDeleteWeightMutation({
+ *   variables: {
+ *      weightId: // value for 'weightId'
+ *   },
+ * });
+ */
+export function useDeleteWeightMutation(baseOptions?: Apollo.MutationHookOptions<DeleteWeightMutation, DeleteWeightMutationVariables>) {
+        return Apollo.useMutation<DeleteWeightMutation, DeleteWeightMutationVariables>(DeleteWeightDocument, baseOptions);
+      }
+export type DeleteWeightMutationHookResult = ReturnType<typeof useDeleteWeightMutation>;
+export type DeleteWeightMutationResult = Apollo.MutationResult<DeleteWeightMutation>;
+export type DeleteWeightMutationOptions = Apollo.BaseMutationOptions<DeleteWeightMutation, DeleteWeightMutationVariables>;
 export const DeleteWorkoutDocument = gql`
     mutation DeleteWorkout($workoutId: String!) {
   deleteWorkout(workoutId: $workoutId)

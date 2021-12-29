@@ -1,0 +1,6 @@
+mutation DeleteWeight($weightId: Float!) {
+  deleteWeight(weightId: $weightId) {
+    id
+    weight
+  }
+}

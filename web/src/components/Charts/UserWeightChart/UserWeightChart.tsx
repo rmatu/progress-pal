@@ -220,11 +220,15 @@ const UserWeightChart: React.FC<UserWeightChartProps> = ({ version }) => {
         <ModalScroll
           show={showEditWeightModal}
           handleClose={() => setShowEditWeightModal(false)}
+          width="380px"
         >
           <WeightRowWrapper>
-            {chartData.map(el => (
-              <WeightRow data={el} />
-            ))}
+            {chartData
+              .slice(0)
+              .reverse()
+              .map(el => (
+                <WeightRow data={el} key={el.id} />
+              ))}
           </WeightRowWrapper>
         </ModalScroll>
       </>
