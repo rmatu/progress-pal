@@ -28,6 +28,7 @@ import { UserResolver } from "./resolvers/user";
 import { UserMetricsResolver } from "./resolvers/userMetrics/userMetricsResolver";
 import { WorkoutResolver } from "./resolvers/workout/workoutResolver";
 import { WorkoutExerciseResolver } from "./resolvers/WorkoutExercise/WorkoutExerciseResolver";
+import { UserExerciseResolver } from "./resolvers/UserExercise/userExerciseResolver";
 import { CommonExerciseResolver } from "./resolvers/commonExercise";
 
 const main = async () => {
@@ -99,6 +100,7 @@ const main = async () => {
         CommonExerciseResolver,
         UserMetricsResolver,
         UserResolver,
+        UserExerciseResolver,
         WorkoutResolver,
         WorkoutExerciseResolver,
       ],
