@@ -25,6 +25,7 @@ import Workouts from "./pages/Workouts/Workouts";
 import Workout from "./pages/Workouts/Workout/Workout";
 import Exercise from "./pages/Exercises/Exercise/Exercise";
 import Exercises from "./pages/Exercises/Exercises";
+import AddExercise from "./pages/AddExercise/AddExercise";
 
 const App: React.FC = () => (
   <AnimatePresence>
@@ -100,6 +101,12 @@ const App: React.FC = () => (
         exact
         path={ROUTES.ADD_WORKOUT}
         component={withAuth(AddWorkout)}
+      />
+      <Route
+        key={ROUTES.ADD_EXERCISE}
+        exact
+        path={ROUTES.ADD_EXERCISE}
+        component={withAuth(AddExercise)}
       />
       <Route
         key={ROUTES.WORKOUTS}
