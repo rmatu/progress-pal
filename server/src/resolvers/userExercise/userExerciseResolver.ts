@@ -1,5 +1,12 @@
 import { MyContext } from "src/types";
-import { Arg, Ctx, Mutation, Resolver, UseMiddleware } from "type-graphql";
+import {
+  Arg,
+  Ctx,
+  Mutation,
+  Query,
+  Resolver,
+  UseMiddleware,
+} from "type-graphql";
 import { getRepository } from "typeorm";
 import { UserExercise } from "../../entities/UserExercise";
 import { isAuthenticated } from "../../middleware/isAuthenticated";
@@ -13,6 +20,50 @@ export class UserExerciseResolver {
   // ===========================
   // ========= QUERYS ==========
   // ===========================
+
+  @Query(() => UserExercise)
+  @UseMiddleware(isAuthenticated)
+  async getUserExercise(
+    @Arg("exerciseId") exerciseId: string,
+    @Ctx() { req }: MyContext,
+  ) {
+    const { userId } = req.session;
+
+    try {
+      const userExerciseRepo = await getRepository(UserExercise);
+      const userExercise = await userExerciseRepo.findOne({
+        where: { user: userId, id: exerciseId },
+      });
+
+      if (!userExercise) return new Error("No exercise");
+
+      return userExercise;
+    } catch (e) {
+      console.log(e);
+      return new Error("Something went wrong");
+    }
+  }
+
+  @Query(() => [UserExercise])
+  @UseMiddleware(isAuthenticated)
+  async getAllUserExercise(@Ctx() { req }: MyContext) {
+    const { userId } = req.session;
+
+    try {
+      const userExerciseRepo = await getRepository(UserExercise);
+      const userExercise = await userExerciseRepo.find({
+        where: { user: userId },
+      });
+
+      if (!userExercise) return new Error("No exercise");
+
+      return userExercise;
+    } catch (e) {
+      console.log(e);
+      return new Error("Something went wrong");
+    }
+  }
+
   // ===========================
   // ======= MUTATIONS =========
   // ===========================
@@ -21,7 +72,6 @@ export class UserExerciseResolver {
   @UseMiddleware(isAuthenticated)
   async createUserExercise(
     @Arg("input") input: CreateUserExerciseInput,
-
     @Ctx() { req }: MyContext,
   ) {
     const { userId } = req.session;
