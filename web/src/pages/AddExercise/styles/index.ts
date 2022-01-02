@@ -24,12 +24,14 @@ export const ModelWrapper = styled.div`
   border-radius: 0.5em;
   display: flex;
   gap: 0.5em;
-  width: 400px;
+  max-width: 400px;
+  width: 100%;
   padding: 1.5em;
   position: relative;
 `;
 
 export const BottomContentWrapper = styled.div`
+  max-width: 400px;
   max-width: 400px;
   width: 100%;
 `;

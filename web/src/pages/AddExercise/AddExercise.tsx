@@ -30,6 +30,7 @@ import {
   Category,
   Equipment,
   Force,
+  Level,
   Mechanic,
 } from "../../constants/exercises";
 
@@ -51,16 +52,30 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
   const formik = useFormik({
     initialValues: {
       name: "",
-      primaryMuscles: [],
-      secondaryMuscles: [],
       force: "pull",
       mechanic: "compound",
       equipment: "body only",
       category: "strength",
+      level: "beginner",
       instructions: [],
     },
     validationSchema: CreateExerciseSchema,
-    onSubmit: ({}) => {},
+    onSubmit: ({}) => {
+      const primaryMuscles: string[] = [];
+      const secondaryMuscles: string[] = [];
+
+      console.log(dataForModel);
+
+      dataForModel.forEach((el: any) => {
+        if (el.type === "primaryMuscle") {
+          primaryMuscles.push(el.name);
+        } else {
+          secondaryMuscles.push(el.name);
+        }
+      });
+
+      console.log({ primaryMuscles, secondaryMuscles });
+    },
   });
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,9 +84,8 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
 
   const handleMuscleClick = (e: any) => {
     const { muscle } = e;
-    console.log(muscle);
 
-    if (muscle === "knees") return;
+    if (muscle === "knees" || muscle === "head") return;
 
     // Check if this muscle was ever selected
     const idx = dataForModel.findIndex((el: any) => el.name === muscle);
@@ -175,11 +189,11 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
             gap="0.8em"
           >
             <Select
-              options={[...Object.values(Equipment)]}
+              options={[...Object.values(Level)]}
               formik={formik}
               handleSelectChange={handleSelectChange}
-              name="equipment"
-              title="Equipment"
+              name="level"
+              title="Level"
               margin="0 0 1em 0"
               width="170px"
             />
@@ -197,7 +211,6 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
             justifyContent="center"
             alignItems="center"
             gap="0.8em"
-            margin="0 0 2em 0"
           >
             <Select
               options={[...Object.values(Mechanic)]}
@@ -216,6 +229,23 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
               title="Force"
               margin="0 0 1em 0"
               width="170px"
+            />
+          </FlexWrapperDiv>
+          <FlexWrapperDiv
+            justifyContent="center"
+            alignItems="center"
+            gap="0.8em"
+            margin="0 0 2em 0"
+            flexDirection="column"
+          >
+            <Select
+              options={[...Object.values(Equipment)]}
+              formik={formik}
+              handleSelectChange={handleSelectChange}
+              name="equipment"
+              title="Equipment"
+              margin="0 0 1em 0"
+              width="350px"
             />
           </FlexWrapperDiv>
           <FlexWrapperDiv
@@ -266,6 +296,16 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
                   <ResetIcon onClick={handleResetModels} />
                 </ResetIconWrapper>
               </ModelWrapper>
+
+              <FlexWrapperDiv
+                justifyContent="center"
+                alignItems="flex-start"
+                gap="0.8em"
+                margin="2em 0"
+                flexDirection="column"
+              >
+                <Heading size="h3">Instructions</Heading>
+              </FlexWrapperDiv>
             </BottomContentWrapper>
           </FlexWrapperDiv>
           <ButtonsWrapper>

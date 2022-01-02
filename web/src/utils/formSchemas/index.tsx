@@ -177,8 +177,6 @@ export const WeightChartSchema = Yup.object().shape({
 
 export const CreateExerciseSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
-  primaryMuscles: Yup.array().of(Yup.string()).required("Required"),
-  secondaryMuscles: Yup.array().of(Yup.string()),
   force: Yup.string().required("Required"),
   level: Yup.string().required("Required"),
   mechanic: Yup.string(),
