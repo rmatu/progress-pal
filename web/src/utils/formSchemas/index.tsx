@@ -174,3 +174,12 @@ export const WeightChartSchema = Yup.object().shape({
     .max(10, "Invalid date")
     .required("Birthday is required"),
 });
+
+export const CreateExerciseSchema = Yup.object().shape({
+  name: Yup.string().required("Required"),
+  force: Yup.string().required("Required"),
+  level: Yup.string().required("Required"),
+  mechanic: Yup.string(),
+  equipment: Yup.string().required("Required"),
+  category: Yup.string().required("Required"),
+});

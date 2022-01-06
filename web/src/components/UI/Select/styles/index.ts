@@ -1,11 +1,15 @@
-import styled from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
 
-export const Wrapper = styled.div``;
+export const Wrapper = styled.div<{ margin?: string }>`
+  margin: ${({ margin }) => margin};
+`;
 
 interface SelectProps {
   borderRadius?: string;
   padding?: string;
   bColor?: string;
+  margin?: string;
+  width?: string;
 }
 
 export const StyledSelect = styled.select<SelectProps>`
@@ -25,6 +29,14 @@ export const StyledSelect = styled.select<SelectProps>`
     background: #525861;
     border-radius: 8px 8px 8px 8px;
   }
+
+  ${({ width }) =>
+    width &&
+    css`
+      width: 100%;
+      width: ${width}
+    }
+  `}
 `;
 
 export const StyledOption = styled.option`

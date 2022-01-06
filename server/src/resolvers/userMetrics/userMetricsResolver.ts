@@ -98,7 +98,7 @@ export class UserMetricsResolver {
     @Arg("input") input: CreateUserMetricsInput,
     @Ctx() { req }: MyContext,
   ) {
-    const userMetrics = UserMetrics.create({
+    const userMetrics = await UserMetrics.create({
       weightGoal: input.weightGoal,
       activityLevel: input.activityLevel,
       height: input.height,
