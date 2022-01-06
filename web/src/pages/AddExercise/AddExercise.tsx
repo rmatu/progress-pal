@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useMeQuery } from "../../generated/graphql";
+import {
+  useCreateUserExerciseMutation,
+  useMeQuery,
+} from "../../generated/graphql";
 import DashbordLayoutHOC from "../../hoc/DashbordLayoutHOC";
 import { RightContent } from "../../hoc/styles";
 import { AppState } from "../../redux/rootReducer";
 import Model from "react-body-highlighter";
 import * as navActions from "../../redux/dashboardNavbar/dashboardNavbarActions";
+import * as popupActions from "../../redux/popup/popupActions";
 import { ReactComponent as ResetIcon } from "../../assets/svg/reset.svg";
 import { ReactComponent as PlusIcon } from "../../assets/svg/plusCircle.svg";
 import { ReactComponent as TrashIcon } from "../../assets/svg/trash.svg";
 import { ADD_EXERCISE } from "../../constants/routes";
-import { Button, Heading } from "../../components/UI";
+import { Button, Heading, Popup } from "../../components/UI";
 import {
   ButtonsWrapper,
   FormWrapper,
@@ -41,11 +45,32 @@ import {
   Level,
   Mechanic,
 } from "../../constants/exercises";
+import { convertSVGNamesToDBNames } from "../../utils/converters";
 
 interface AddExerciseProps {}
 
 const AddExercise: React.FC<AddExerciseProps> = () => {
   const { data: userData } = useMeQuery();
+  const [createUserExercise, { loading }] = useCreateUserExerciseMutation({
+    onCompleted: () => {
+      dispatch(
+        popupActions.setPopupVisibility({
+          visibility: true,
+          text: "Exercise created successfuly!",
+          popupType: "success",
+        }),
+      );
+      setTimeout(() => {
+        dispatch(
+          popupActions.setPopupVisibility({
+            visibility: false,
+            text: "Exercise created successfuly!",
+            popupType: "success",
+          }),
+        );
+      }, 4000);
+    },
+  });
   const [selectedMuscle, setSelectedMuscle] = useState<
     "primaryMuscle" | "secondaryMuscle"
   >("primaryMuscle");
@@ -58,6 +83,10 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
 
   const dispatch = useDispatch();
 
+  const { show, text, popupType } = useSelector(
+    (state: AppState) => state.popup,
+  );
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -68,11 +97,9 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
       level: "beginner",
     },
     validationSchema: CreateExerciseSchema,
-    onSubmit: ({}) => {
+    onSubmit: values => {
       const primaryMuscles: string[] = [];
       const secondaryMuscles: string[] = [];
-
-      console.log(dataForModel);
 
       dataForModel.forEach((el: any) => {
         if (el.type === "primaryMuscle") {
@@ -82,7 +109,24 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
         }
       });
 
-      console.log({ primaryMuscles, secondaryMuscles, instructions });
+      const variables: any = {
+        input: {
+          ...values,
+          primaryMuscles: convertSVGNamesToDBNames(primaryMuscles),
+        },
+      };
+
+      if (secondaryMuscles.length) {
+        variables.secondaryMuscles = convertSVGNamesToDBNames(secondaryMuscles);
+      }
+
+      if (instructions.length) {
+        if (instructions[0] !== "") {
+          variables.input.instructions = instructions;
+        }
+      }
+
+      createUserExercise({ variables });
     },
   });
 
@@ -392,6 +436,7 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
               bColor={theme.colors.successTextColor}
               fontSize="1rem"
               type="submit"
+              loading={loading && "Adding..."}
               disabled={
                 !formik.isValid ||
                 !formik.values.name ||
@@ -410,6 +455,9 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
           </ButtonsWrapper>
         </FormWrapper>
       </RightContent>
+      <Popup showPopup={show} error={popupType === "error"}>
+        {text}
+      </Popup>
     </DashbordLayoutHOC>
   );
 };

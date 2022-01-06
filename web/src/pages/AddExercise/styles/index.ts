@@ -155,7 +155,6 @@ export const GridItem = styled.div`
 
 export const TextArea = styled.textarea`
   display: flex;
-  font-weight: bold;
   justify-content: center;
   border-radius: 0.5em;
   padding: 1em;

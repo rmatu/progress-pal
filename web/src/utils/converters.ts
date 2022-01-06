@@ -45,6 +45,29 @@ export const convertMusclesToSVGNames = (muscleNames: string[]) => {
 
   return newArr;
 };
+// ('abdominals','hamstrings','adductors','quadriceps','biceps','shoulders','chest','middle back','calves','glutes','lower back',
+// 'lats','triceps','traps','forearms','neck','abductors');
+export const convertSVGNamesToDBNames = (muscleArr: string[]) => {
+  const newArr = muscleArr.map(muscleName => {
+    if (muscleName === "abs") return "abdominals";
+    if (muscleName === "hamstring") return "hamstrings";
+    if (muscleName === "adductor") return "adductors";
+    if (muscleName === "front-deltoids" || muscleName === "back-deltoids")
+      return "shoulders";
+    if (muscleName === "upper-back") return "middle back";
+    if (muscleName === "gluteal") return "glutes";
+    if (muscleName === "lower-back") return "lower back";
+    if (muscleName === "upper-back") return "lats";
+    if (muscleName === "trapezius") return "traps";
+    if (muscleName === "forearm") return "forearms";
+    if (muscleName === "trapezius") return "neck";
+    if (muscleName === "obliques") return "abdominals";
+
+    return muscleName;
+  });
+
+  return newArr;
+};
 
 export const sanitazeMuscleNameFromDB = (muscleNames: string[]) => {
   if (muscleNames.includes(`"middle back"`)) return "Middle Back";

@@ -27,6 +27,8 @@ export type Query = {
   getExerciseChartData: GetExerciseChartDataResponse;
   getExerciseInfo: GetExerciseInfoResponse;
   getMuscleBarChartData: GetMuscleBarChartDataResponse;
+  getUserExercise: UserExercise;
+  getAllUserExercise: Array<UserExercise>;
   getAllCommonExercises?: Maybe<Array<CommonExercise>>;
 };
 
@@ -72,6 +74,11 @@ export type QueryGetExerciseInfoArgs = {
 
 export type QueryGetMuscleBarChartDataArgs = {
   input: GetMuscleBarChartDataInput;
+};
+
+
+export type QueryGetUserExerciseArgs = {
+  exerciseId: Scalars['String'];
 };
 
 export type User = {
@@ -290,6 +297,9 @@ export type Mutation = {
   updateExerciseSets: Scalars['Boolean'];
   updateGeneralWorkoutInfo: Workout;
   deleteWorkoutExercise: Scalars['Boolean'];
+  createUserExercise: UserExercise;
+  updateUserExercise: UserExercise;
+  deleteUserExercise: UserExercise;
 };
 
 
@@ -403,6 +413,21 @@ export type MutationDeleteWorkoutExerciseArgs = {
   workoutExerciseId: Scalars['String'];
 };
 
+
+export type MutationCreateUserExerciseArgs = {
+  input: CreateUserExerciseInput;
+};
+
+
+export type MutationUpdateUserExerciseArgs = {
+  input: UpdateUserExerciseInput;
+};
+
+
+export type MutationDeleteUserExerciseArgs = {
+  exerciseId: Scalars['String'];
+};
+
 export type UserResponse = {
   __typename?: 'UserResponse';
   errors?: Maybe<Array<FieldError>>;
@@ -489,6 +514,31 @@ export type UpdateGeneralWorkoutInfoInput = {
   date?: Maybe<Scalars['DateTime']>;
   startTime?: Maybe<Scalars['DateTime']>;
   endTime?: Maybe<Scalars['DateTime']>;
+};
+
+export type CreateUserExerciseInput = {
+  name: Scalars['String'];
+  primaryMuscles: Array<Scalars['String']>;
+  secondaryMuscles?: Maybe<Array<Scalars['String']>>;
+  force: Scalars['String'];
+  level: Scalars['String'];
+  mechanic?: Maybe<Scalars['String']>;
+  equipment: Scalars['String'];
+  category: Scalars['String'];
+  instructions?: Maybe<Array<Scalars['String']>>;
+};
+
+export type UpdateUserExerciseInput = {
+  exerciseId: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
+  primaryMuscles?: Maybe<Array<Scalars['String']>>;
+  secondaryMuscles?: Maybe<Array<Scalars['String']>>;
+  force?: Maybe<Scalars['String']>;
+  level?: Maybe<Scalars['String']>;
+  mechanic?: Maybe<Scalars['String']>;
+  equipment?: Maybe<Scalars['String']>;
+  category?: Maybe<Scalars['String']>;
+  instructions?: Maybe<Array<Scalars['String']>>;
 };
 
 export type RegularCommonExerciseFragment = (
@@ -648,6 +698,19 @@ export type ConfirmUserMutationVariables = Exact<{
 export type ConfirmUserMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'confirmUser'>
+);
+
+export type CreateUserExerciseMutationVariables = Exact<{
+  input: CreateUserExerciseInput;
+}>;
+
+
+export type CreateUserExerciseMutation = (
+  { __typename?: 'Mutation' }
+  & { createUserExercise: (
+    { __typename?: 'UserExercise' }
+    & Pick<UserExercise, 'id'>
+  ) }
 );
 
 export type CreateWorkoutMutationVariables = Exact<{
@@ -1319,6 +1382,38 @@ export function useConfirmUserMutation(baseOptions?: Apollo.MutationHookOptions<
 export type ConfirmUserMutationHookResult = ReturnType<typeof useConfirmUserMutation>;
 export type ConfirmUserMutationResult = Apollo.MutationResult<ConfirmUserMutation>;
 export type ConfirmUserMutationOptions = Apollo.BaseMutationOptions<ConfirmUserMutation, ConfirmUserMutationVariables>;
+export const CreateUserExerciseDocument = gql`
+    mutation CreateUserExercise($input: CreateUserExerciseInput!) {
+  createUserExercise(input: $input) {
+    id
+  }
+}
+    `;
+export type CreateUserExerciseMutationFn = Apollo.MutationFunction<CreateUserExerciseMutation, CreateUserExerciseMutationVariables>;
+
+/**
+ * __useCreateUserExerciseMutation__
+ *
+ * To run a mutation, you first call `useCreateUserExerciseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUserExerciseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUserExerciseMutation, { data, loading, error }] = useCreateUserExerciseMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateUserExerciseMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserExerciseMutation, CreateUserExerciseMutationVariables>) {
+        return Apollo.useMutation<CreateUserExerciseMutation, CreateUserExerciseMutationVariables>(CreateUserExerciseDocument, baseOptions);
+      }
+export type CreateUserExerciseMutationHookResult = ReturnType<typeof useCreateUserExerciseMutation>;
+export type CreateUserExerciseMutationResult = Apollo.MutationResult<CreateUserExerciseMutation>;
+export type CreateUserExerciseMutationOptions = Apollo.BaseMutationOptions<CreateUserExerciseMutation, CreateUserExerciseMutationVariables>;
 export const CreateWorkoutDocument = gql`
     mutation CreateWorkout($input: CreateWorkoutInput!) {
   createWorkout(input: $input) {
