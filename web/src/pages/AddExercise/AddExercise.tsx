@@ -7,6 +7,8 @@ import { AppState } from "../../redux/rootReducer";
 import Model from "react-body-highlighter";
 import * as navActions from "../../redux/dashboardNavbar/dashboardNavbarActions";
 import { ReactComponent as ResetIcon } from "../../assets/svg/reset.svg";
+import { ReactComponent as PlusIcon } from "../../assets/svg/plusCircle.svg";
+import { ReactComponent as TrashIcon } from "../../assets/svg/trash.svg";
 import { ADD_EXERCISE } from "../../constants/routes";
 import { Button, Heading } from "../../components/UI";
 import {
@@ -19,6 +21,12 @@ import {
   Legend,
   LegendText,
   ResetIconWrapper,
+  OptionalSpan,
+  StepNumber,
+  TrashIconWrapper,
+  PlusIconWrapper,
+  TextArea,
+  AddInstructionButton,
 } from "./styles";
 import { useFormik } from "formik";
 import { CreateExerciseSchema } from "../../utils/formSchemas";
@@ -42,6 +50,7 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
     "primaryMuscle" | "secondaryMuscle"
   >("primaryMuscle");
 
+  const [instructions, setInstructions] = useState<string[]>([""]);
   // ! FOR MANIPULATING THE MODEL
   const [dataForModel, setDataForModel] = useState<any>([]);
 
@@ -57,7 +66,6 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
       equipment: "body only",
       category: "strength",
       level: "beginner",
-      instructions: [],
     },
     validationSchema: CreateExerciseSchema,
     onSubmit: ({}) => {
@@ -74,9 +82,21 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
         }
       });
 
-      console.log({ primaryMuscles, secondaryMuscles });
+      console.log({ primaryMuscles, secondaryMuscles, instructions });
     },
   });
+
+  const checkIfUserSelectedPrimaryMuscles = () => {
+    const primaryMuscles: string[] = [];
+
+    dataForModel.forEach((el: any) => {
+      if (el.type === "primaryMuscle") {
+        primaryMuscles.push(el.name);
+      }
+    });
+
+    return !!primaryMuscles.length;
+  };
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     formik.handleChange(e);
@@ -155,6 +175,29 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
 
   const handleResetModels = () => {
     setDataForModel([]);
+  };
+
+  const handleInstructionChange = (e: any, idx: number) => {
+    const newInstructions = [...instructions];
+    newInstructions[idx] = e.target.value;
+    setInstructions(newInstructions);
+  };
+
+  const handleAddInstruction = () => {
+    setInstructions([...instructions, ""]);
+  };
+
+  const handleDeleteInstruction = (idx: number) => {
+    if (idx === 0) {
+      setInstructions([...instructions].slice(1, instructions.length));
+      return;
+    }
+
+    const newArr = [...instructions];
+    const leftPart = newArr.splice(0, idx);
+    const updatedArr = [...leftPart, ...newArr.splice(idx, newArr.length)];
+    console.log(updatedArr);
+    setInstructions(updatedArr);
   };
 
   useEffect(() => {
@@ -301,11 +344,47 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
                 justifyContent="center"
                 alignItems="flex-start"
                 gap="0.8em"
-                margin="2em 0"
+                margin="2em 0 1em 0"
                 flexDirection="column"
               >
-                <Heading size="h3">Instructions</Heading>
+                <Heading size="h3">
+                  Instructions <OptionalSpan>(optional)</OptionalSpan>
+                </Heading>
+                {!instructions.length ? (
+                  <AddInstructionButton>
+                    <Button onClick={handleAddInstruction}>
+                      Add new Instruction
+                    </Button>
+                  </AddInstructionButton>
+                ) : (
+                  instructions.map((instruction, idx) => (
+                    <FlexWrapperDiv
+                      key={idx}
+                      justifyContent="center"
+                      alignItems="center"
+                      gap="0.8em"
+                      margin="0.5em  0"
+                      flexDirection="row"
+                    >
+                      <StepNumber>{idx + 1}</StepNumber>
+                      <TextArea
+                        value={instruction}
+                        onChange={e => handleInstructionChange(e, idx)}
+                      />
+                      <TrashIconWrapper>
+                        <TrashIcon
+                          onClick={() => handleDeleteInstruction(idx)}
+                        />
+                      </TrashIconWrapper>
+                    </FlexWrapperDiv>
+                  ))
+                )}
               </FlexWrapperDiv>
+              {!instructions.length ? null : (
+                <PlusIconWrapper>
+                  <PlusIcon onClick={handleAddInstruction} />
+                </PlusIconWrapper>
+              )}
             </BottomContentWrapper>
           </FlexWrapperDiv>
           <ButtonsWrapper>
@@ -313,7 +392,11 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
               bColor={theme.colors.successTextColor}
               fontSize="1rem"
               type="submit"
-              disabled={!formik.isValid || !formik.values.name}
+              disabled={
+                !formik.isValid ||
+                !formik.values.name ||
+                !checkIfUserSelectedPrimaryMuscles()
+              }
             >
               Create
             </Button>

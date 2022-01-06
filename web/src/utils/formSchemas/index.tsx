@@ -182,5 +182,4 @@ export const CreateExerciseSchema = Yup.object().shape({
   mechanic: Yup.string(),
   equipment: Yup.string().required("Required"),
   category: Yup.string().required("Required"),
-  instructions: Yup.array().of(Yup.string()),
 });
