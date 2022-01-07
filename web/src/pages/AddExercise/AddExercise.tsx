@@ -46,6 +46,7 @@ import {
   Mechanic,
 } from "../../constants/exercises";
 import { convertSVGNamesToDBNames } from "../../utils/converters";
+import { createRefetchQueriesArray } from "../../utils/graphQLHelpers";
 
 interface AddExerciseProps {}
 
@@ -70,6 +71,7 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
         );
       }, 4000);
     },
+    refetchQueries: createRefetchQueriesArray(["getAllCommonExercises"]),
   });
   const [selectedMuscle, setSelectedMuscle] = useState<
     "primaryMuscle" | "secondaryMuscle"

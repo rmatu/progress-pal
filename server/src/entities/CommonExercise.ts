@@ -158,8 +158,8 @@ export class CommonExercise extends BaseEntity {
   })
   category: Category;
 
-  @Field(() => [String])
-  @Column({ type: "text", array: true })
+  @Field(() => [String], { nullable: true })
+  @Column({ type: "text", array: true, nullable: true })
   instructions: string[];
 
   @Field(() => String)

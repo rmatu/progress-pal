@@ -4,6 +4,7 @@ import { getRepository } from "typeorm";
 import { UserMetrics } from "../entities/UserMetrics";
 import { isAuthenticated } from "../middleware/isAuthenticated";
 import { CommonExercise } from "../entities/CommonExercise";
+import { UserExercise } from "../entities/UserExercise";
 
 @Resolver(UserMetrics)
 export class CommonExerciseResolver {
@@ -17,14 +18,25 @@ export class CommonExerciseResolver {
   @Query(() => [CommonExercise], { nullable: true })
   @UseMiddleware(isAuthenticated)
   async getAllCommonExercises(@Ctx() { req }: MyContext) {
-    const exerciseRepo = await getRepository(CommonExercise);
+    const { userId } = req.session;
 
-    const workout = await exerciseRepo.find();
+    try {
+      const exerciseRepo = await getRepository(CommonExercise);
+      const userExerciseRepo = await getRepository(UserExercise);
 
-    if (!workout) {
-      return null;
+      const commonExercises = await exerciseRepo.find();
+      const userExercises = await userExerciseRepo.find({
+        where: { user: userId },
+      });
+
+      console.log(userExercises);
+
+      const allExercises = [...commonExercises, ...userExercises];
+
+      return allExercises;
+    } catch (e) {
+      console.log(e);
+      return new Error("Something went wrong");
     }
-
-    return workout;
   }
 }
