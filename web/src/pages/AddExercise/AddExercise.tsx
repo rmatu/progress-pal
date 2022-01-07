@@ -46,6 +46,7 @@ import {
   Mechanic,
 } from "../../constants/exercises";
 import { convertSVGNamesToDBNames } from "../../utils/converters";
+import { createRefetchQueriesArray } from "../../utils/graphQLHelpers";
 
 interface AddExerciseProps {}
 
@@ -70,6 +71,7 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
         );
       }, 4000);
     },
+    refetchQueries: createRefetchQueriesArray(["getAllCommonExercises"]),
   });
   const [selectedMuscle, setSelectedMuscle] = useState<
     "primaryMuscle" | "secondaryMuscle"
@@ -117,7 +119,8 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
       };
 
       if (secondaryMuscles.length) {
-        variables.secondaryMuscles = convertSVGNamesToDBNames(secondaryMuscles);
+        variables.input.secondaryMuscles =
+          convertSVGNamesToDBNames(secondaryMuscles);
       }
 
       if (instructions.length) {
@@ -240,7 +243,6 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
     const newArr = [...instructions];
     const leftPart = newArr.splice(0, idx);
     const updatedArr = [...leftPart, ...newArr.splice(idx, newArr.length)];
-    console.log(updatedArr);
     setInstructions(updatedArr);
   };
 

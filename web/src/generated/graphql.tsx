@@ -127,7 +127,7 @@ export type UserExercise = {
   mechanic?: Maybe<Scalars['String']>;
   equipment?: Maybe<Scalars['String']>;
   category: Scalars['String'];
-  instructions: Array<Scalars['String']>;
+  instructions?: Maybe<Array<Scalars['String']>>;
   updatedAt: Scalars['String'];
   createdAt: Scalars['String'];
   user: User;
@@ -180,7 +180,7 @@ export type CommonExercise = {
   mechanic?: Maybe<Scalars['String']>;
   equipment?: Maybe<Scalars['String']>;
   category: Scalars['String'];
-  instructions: Array<Scalars['String']>;
+  instructions?: Maybe<Array<Scalars['String']>>;
   updatedAt: Scalars['String'];
   createdAt: Scalars['String'];
   workoutExercise: Array<WorkoutExercise>;
@@ -248,7 +248,7 @@ export type GetExerciseInfoResponse = {
   name: Scalars['String'];
   primaryMuscles: Array<Scalars['String']>;
   secondaryMuscles: Array<Scalars['String']>;
-  instructions: Array<Scalars['String']>;
+  instructions?: Maybe<Array<Scalars['String']>>;
   force?: Maybe<Scalars['String']>;
   level?: Maybe<Scalars['String']>;
   mechanic?: Maybe<Scalars['String']>;
@@ -726,6 +726,19 @@ export type CreateWorkoutMutation = (
   )> }
 );
 
+export type DeleteUserExerciseMutationVariables = Exact<{
+  exerciseId: Scalars['String'];
+}>;
+
+
+export type DeleteUserExerciseMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteUserExercise: (
+    { __typename?: 'UserExercise' }
+    & Pick<UserExercise, 'id'>
+  ) }
+);
+
 export type DeleteWeightMutationVariables = Exact<{
   weightId: Scalars['Float'];
 }>;
@@ -903,6 +916,19 @@ export type UpdateGeneralWorkoutInfoMutation = (
   & { updateGeneralWorkoutInfo: (
     { __typename?: 'Workout' }
     & RegularWorkoutFragment
+  ) }
+);
+
+export type UpdateUserExerciseMutationVariables = Exact<{
+  input: UpdateUserExerciseInput;
+}>;
+
+
+export type UpdateUserExerciseMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUserExercise: (
+    { __typename?: 'UserExercise' }
+    & Pick<UserExercise, 'id'>
   ) }
 );
 
@@ -1446,6 +1472,38 @@ export function useCreateWorkoutMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateWorkoutMutationHookResult = ReturnType<typeof useCreateWorkoutMutation>;
 export type CreateWorkoutMutationResult = Apollo.MutationResult<CreateWorkoutMutation>;
 export type CreateWorkoutMutationOptions = Apollo.BaseMutationOptions<CreateWorkoutMutation, CreateWorkoutMutationVariables>;
+export const DeleteUserExerciseDocument = gql`
+    mutation DeleteUserExercise($exerciseId: String!) {
+  deleteUserExercise(exerciseId: $exerciseId) {
+    id
+  }
+}
+    `;
+export type DeleteUserExerciseMutationFn = Apollo.MutationFunction<DeleteUserExerciseMutation, DeleteUserExerciseMutationVariables>;
+
+/**
+ * __useDeleteUserExerciseMutation__
+ *
+ * To run a mutation, you first call `useDeleteUserExerciseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUserExerciseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUserExerciseMutation, { data, loading, error }] = useDeleteUserExerciseMutation({
+ *   variables: {
+ *      exerciseId: // value for 'exerciseId'
+ *   },
+ * });
+ */
+export function useDeleteUserExerciseMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUserExerciseMutation, DeleteUserExerciseMutationVariables>) {
+        return Apollo.useMutation<DeleteUserExerciseMutation, DeleteUserExerciseMutationVariables>(DeleteUserExerciseDocument, baseOptions);
+      }
+export type DeleteUserExerciseMutationHookResult = ReturnType<typeof useDeleteUserExerciseMutation>;
+export type DeleteUserExerciseMutationResult = Apollo.MutationResult<DeleteUserExerciseMutation>;
+export type DeleteUserExerciseMutationOptions = Apollo.BaseMutationOptions<DeleteUserExerciseMutation, DeleteUserExerciseMutationVariables>;
 export const DeleteWeightDocument = gql`
     mutation DeleteWeight($weightId: Float!) {
   deleteWeight(weightId: $weightId) {
@@ -1921,6 +1979,38 @@ export function useUpdateGeneralWorkoutInfoMutation(baseOptions?: Apollo.Mutatio
 export type UpdateGeneralWorkoutInfoMutationHookResult = ReturnType<typeof useUpdateGeneralWorkoutInfoMutation>;
 export type UpdateGeneralWorkoutInfoMutationResult = Apollo.MutationResult<UpdateGeneralWorkoutInfoMutation>;
 export type UpdateGeneralWorkoutInfoMutationOptions = Apollo.BaseMutationOptions<UpdateGeneralWorkoutInfoMutation, UpdateGeneralWorkoutInfoMutationVariables>;
+export const UpdateUserExerciseDocument = gql`
+    mutation UpdateUserExercise($input: UpdateUserExerciseInput!) {
+  updateUserExercise(input: $input) {
+    id
+  }
+}
+    `;
+export type UpdateUserExerciseMutationFn = Apollo.MutationFunction<UpdateUserExerciseMutation, UpdateUserExerciseMutationVariables>;
+
+/**
+ * __useUpdateUserExerciseMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserExerciseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserExerciseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserExerciseMutation, { data, loading, error }] = useUpdateUserExerciseMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateUserExerciseMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserExerciseMutation, UpdateUserExerciseMutationVariables>) {
+        return Apollo.useMutation<UpdateUserExerciseMutation, UpdateUserExerciseMutationVariables>(UpdateUserExerciseDocument, baseOptions);
+      }
+export type UpdateUserExerciseMutationHookResult = ReturnType<typeof useUpdateUserExerciseMutation>;
+export type UpdateUserExerciseMutationResult = Apollo.MutationResult<UpdateUserExerciseMutation>;
+export type UpdateUserExerciseMutationOptions = Apollo.BaseMutationOptions<UpdateUserExerciseMutation, UpdateUserExerciseMutationVariables>;
 export const UpdateWeightDocument = gql`
     mutation UpdateWeight($weight: Float!, $weightId: Float!, $date: DateTime) {
   updateWeight(weight: $weight, weightId: $weightId, date: $date) {

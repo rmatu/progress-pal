@@ -1,0 +1,5 @@
+mutation UpdateUserExercise($input: UpdateUserExerciseInput!) {
+  updateUserExercise(input: $input) {
+    id
+  }
+}

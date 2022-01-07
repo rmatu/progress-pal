@@ -80,8 +80,8 @@ export class GetExerciseInfoResponse {
   @Field(() => [String])
   secondaryMuscles: string[];
 
-  @Field(() => [String])
-  instructions: string[];
+  @Field(() => [String], { nullable: true })
+  instructions?: string[];
 
   @Field(() => String, { nullable: true })
   force?: string;

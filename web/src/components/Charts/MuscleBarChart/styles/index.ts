@@ -9,6 +9,7 @@ export const Wrapper = styled.div<{ width: string }>`
   margin-left: 1em;
   border-radius: 0.5em;
   position: relative;
+  min-height: 350px;
 
   tspan {
     fill: #9b9b9b;

@@ -30,6 +30,8 @@ const MuscleBarChart: React.FC<MuscleBarChartProps> = () => {
   const data =
     muscleBarChartData?.getMuscleBarChartData?.muscleBarChartData ?? [];
 
+  console.log(data);
+
   // Data for muscle heatmap
   const [heatmapData, setHeatmapData] = useState([
     {

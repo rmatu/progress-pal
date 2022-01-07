@@ -90,11 +90,13 @@ const ExerciseInstructionModal: React.FC<ExerciseInstructionModalProps> = ({
           <HumanBackSVG />
         </ExerciseSVG>
       </Row>
-      <Heading size="h4" textAlign="left" padding="0">
-        Instructions
-      </Heading>
+      {exerciseInfo?.instructions?.length ? (
+        <Heading size="h4" textAlign="left" padding="0">
+          Instructions
+        </Heading>
+      ) : null}
       <Instructions>
-        {exerciseInfo?.instructions.map(info => (
+        {exerciseInfo?.instructions?.map(info => (
           <Instruction key={info}>{info}</Instruction>
         ))}
       </Instructions>
