@@ -1,0 +1,5 @@
+mutation DeleteUserExercise($exerciseId: String!) {
+  deleteUserExercise(exerciseId: $exerciseId) {
+    id
+  }
+}

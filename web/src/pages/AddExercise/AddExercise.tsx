@@ -119,7 +119,8 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
       };
 
       if (secondaryMuscles.length) {
-        variables.secondaryMuscles = convertSVGNamesToDBNames(secondaryMuscles);
+        variables.input.secondaryMuscles =
+          convertSVGNamesToDBNames(secondaryMuscles);
       }
 
       if (instructions.length) {
@@ -242,7 +243,6 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
     const newArr = [...instructions];
     const leftPart = newArr.splice(0, idx);
     const updatedArr = [...leftPart, ...newArr.splice(idx, newArr.length)];
-    console.log(updatedArr);
     setInstructions(updatedArr);
   };
 

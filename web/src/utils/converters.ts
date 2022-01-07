@@ -35,6 +35,7 @@ export const convertMusclesToSVGNames = (muscleNames: string[]) => {
   if (muscleNames.includes(`"lower back"`)) newArr.push("lower-back");
   if (muscleNames.includes("middleBack")) newArr.push("upper-back");
   if (muscleNames.includes(`"middle back"`)) newArr.push("upper-back");
+  if (muscleNames.includes("middle back")) newArr.push("upper-back");
   if (muscleNames.includes("neck")) newArr.push("trapezius");
   if (muscleNames.includes("quadriceps")) newArr.push("quadriceps");
   if (muscleNames.includes("shoulders"))
@@ -64,6 +65,34 @@ export const convertSVGNamesToDBNames = (muscleArr: string[]) => {
     if (muscleName === "obliques") return "abdominals";
 
     return muscleName;
+  });
+
+  return newArr;
+};
+
+export const convertMuscleNamesForExercisePage = (
+  muscleArr: string[],
+  type: "primaryMuscle" | "secondaryMuscle",
+) => {
+  const newArr: { name: string; muscles?: string[]; type: string }[] = [];
+
+  muscleArr.forEach(muscleName => {
+    if (type === "primaryMuscle") {
+      newArr.push({
+        name: muscleName,
+        type,
+        muscles: convertMusclesToSVGNames([muscleName]),
+      });
+    } else {
+      newArr.push({
+        name: muscleName,
+        type,
+        muscles: [
+          ...convertMusclesToSVGNames([muscleName]),
+          ...convertMusclesToSVGNames([muscleName]),
+        ],
+      });
+    }
   });
 
   return newArr;

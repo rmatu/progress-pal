@@ -21,6 +21,7 @@ import { Heading } from "../../../components/UI";
 import DateRangePickerModal from "../../../components/UI/DateRangePickerModal/DateRangePickerModal";
 import { getDateXMonthsBefore } from "../../../utils/dateHelpers";
 import { EXERCISE } from "../../../constants/routes";
+import UserExercise from "./subcomponents/UserExercise/UserExercise";
 
 interface ExerciseProps {}
 
@@ -133,6 +134,7 @@ const Exercise: React.FC<ExerciseProps> = ({}) => {
             }
           />
         </ChartWrapper>
+        {ex && !ex?.isCommonExercise && <UserExercise exercise={ex} />}
       </RightContent>
       <DateRangePickerModal
         show={showModal}
