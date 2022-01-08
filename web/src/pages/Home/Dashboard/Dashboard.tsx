@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MuscleBarChart from "../../../components/Charts/MuscleBarChart/MuscleBarChart";
 import UserWeightChart from "../../../components/Charts/UserWeightChart/UserWeightChart";
+import DashboardExercisesList from "../../../components/DashboardExercisesList/DashboardExercisesList";
 import { FlexWrapperDiv } from "../../../components/FlexElements";
 import MuscleHeatmapModel from "../../../components/UI/MuscleHeatmapModel/MuscleHeatmapModel";
 import WorkoutCard from "../../../components/UI/WorkoutsList/WorkoutCard/WorkoutCard";
@@ -98,8 +99,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             <MuscleBarChart />
           </FlexWrapperDiv>
           <FlexWrapperDiv flexDirection="row">
-            <Row>
+            <Row id="bottomRow">
               <UserWeightChart version="gradient" />
+              <DashboardExercisesList />
             </Row>
           </FlexWrapperDiv>
         </RightContentWrapper>

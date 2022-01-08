@@ -3,7 +3,6 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
-  Legend,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -29,8 +28,6 @@ const MuscleBarChart: React.FC<MuscleBarChartProps> = () => {
 
   const data =
     muscleBarChartData?.getMuscleBarChartData?.muscleBarChartData ?? [];
-
-  console.log(data);
 
   // Data for muscle heatmap
   const [heatmapData, setHeatmapData] = useState([
@@ -71,7 +68,7 @@ const MuscleBarChart: React.FC<MuscleBarChartProps> = () => {
 
   if (!data.length) {
     return (
-      <Wrapper width="930">
+      <Wrapper width="910">
         <LoaderWrapper>
           <Loader />
         </LoaderWrapper>
@@ -80,7 +77,7 @@ const MuscleBarChart: React.FC<MuscleBarChartProps> = () => {
   }
 
   return (
-    <Wrapper width="930">
+    <Wrapper width="910">
       <ResponsiveContainer height="99%">
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
