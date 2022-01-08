@@ -591,7 +591,7 @@ export type RegularUpdateOnboardingResponseFragment = (
 
 export type RegularUserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'username' | 'email' | 'isPremium' | 'emailVerified' | 'subscriptionStart' | 'onboardingStep'>
+  & Pick<User, 'id' | 'username' | 'email' | 'isPremium' | 'emailVerified' | 'subscriptionStart' | 'onboardingStep' | 'gender'>
 );
 
 export type RegularUserExerciseFragment = (
@@ -1147,6 +1147,7 @@ export const RegularUserFragmentDoc = gql`
   emailVerified
   subscriptionStart
   onboardingStep
+  gender
 }
     `;
 export const RegularUpdateOnboardingResponseFragmentDoc = gql`

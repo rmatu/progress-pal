@@ -61,6 +61,7 @@ const DashboardExercisesList: React.FC<DashboardExercisesListProps> = ({}) => {
     <Wrapper>
       {workouts?.map(el => (
         <WorkoutWrapper
+          key={el.id}
           onClick={() => {
             handleRedirect(el.id);
           }}
