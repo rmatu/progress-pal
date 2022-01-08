@@ -42,11 +42,25 @@ export const Wrapper = styled.nav<{ open?: boolean }>`
   }
 `;
 
-export const Avatar = styled.div`
+export const Avatar = styled.div<{ gender?: string }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: ${convertPxToRem(80)};
   height: ${convertPxToRem(80)};
   border-radius: 50%;
   background-color: pink;
+  text-transform: capitalize;
+  font-size: 4.5rem;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  outline: 0;
+  opacity: 0.75;
+  background-color: ${({ theme }) => theme.colors.orange};
 `;
 
 export const Name = styled.span`

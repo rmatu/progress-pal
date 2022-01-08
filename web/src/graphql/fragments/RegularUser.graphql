@@ -6,4 +6,5 @@ fragment RegularUser on User {
   emailVerified
   subscriptionStart
   onboardingStep
+  gender
 }

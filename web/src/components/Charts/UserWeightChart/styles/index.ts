@@ -9,6 +9,8 @@ export const Wrapper = styled.div`
   padding: 0.5em 2em;
   position: relative;
   padding-bottom: 4em;
+  min-height: 450px;
+  height: 100%;
 
   tspan {
     fill: #9b9b9b;

@@ -50,7 +50,9 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user }) => {
         flexDirection="column"
         alignItems="center"
       >
-        <Avatar />
+        <Avatar gender={user?.gender as string}>
+          {user?.username.slice(0, 1)}
+        </Avatar>
         <Name>{user?.username}</Name>
       </FlexWrapperDiv>
       <FlexWrapperUl
