@@ -80,5 +80,10 @@ export const RightContentWrapper = styled.div`
       display: flex;
       flex-direction: column;
     }
+
+    #bottomRow {
+      display: flex;
+      flex-direction: column;
+    }
   }
 `;
