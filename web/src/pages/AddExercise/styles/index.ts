@@ -1,7 +1,9 @@
 import styled from "styled-components/macro";
 import { convertPxToRem } from "../../../utils/cssHelpers";
 
-export const FormWrapper = styled.form``;
+export const FormWrapper = styled.form`
+  position: relative;
+`;
 
 export const ButtonsWrapper = styled.div`
   display: flex;

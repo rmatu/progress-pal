@@ -3,6 +3,10 @@ import { convertPxToRem } from "../../../../utils/cssHelpers";
 
 export const ContentWrapper = styled.div`
   padding: 0 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const Date = styled.h3`
@@ -12,7 +16,8 @@ export const Date = styled.h3`
 `;
 
 export const WorkoutHeadingWrapper = styled.div<{ margin?: string }>`
-  flex: 1 0 100%;
+  max-width: ${convertPxToRem(500)};
+  width: 100%;
   margin: ${({ margin }) => margin};
 `;
 

@@ -398,7 +398,7 @@ const Workout: React.FC<WorkoutProps> = () => {
             </ButtonsWrapper>
           )}
 
-          <WorkoutHeadingWrapper margin="2em 0">
+          <WorkoutHeadingWrapper margin="2em 2em">
             <WorkoutHeading>Exercises</WorkoutHeading>
           </WorkoutHeadingWrapper>
 

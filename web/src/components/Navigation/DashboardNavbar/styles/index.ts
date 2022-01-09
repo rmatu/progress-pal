@@ -51,7 +51,7 @@ export const Avatar = styled.div<{ gender?: string }>`
   border-radius: 50%;
   background-color: pink;
   text-transform: capitalize;
-  font-size: 4.5rem;
+  font-size: 3.5rem;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
