@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useMeQuery } from "../../generated/graphql";
+import {
+  useGetAccountPageDataQuery,
+  useMeQuery,
+} from "../../generated/graphql";
 import DashbordLayoutHOC from "../../hoc/DashbordLayoutHOC";
 import { RightContent } from "../../hoc/styles";
 import { AppState } from "../../redux/rootReducer";
@@ -25,6 +28,7 @@ interface AccountProps {}
 
 const Account: React.FC<AccountProps> = () => {
   const { data: userData } = useMeQuery();
+  const { data: pageData } = useGetAccountPageDataQuery();
 
   const [disableInput, setDisableInput] = useState(true);
   const { open } = useSelector((state: AppState) => state.dashboardNavbar);
@@ -37,7 +41,10 @@ const Account: React.FC<AccountProps> = () => {
 
   const formik = useFormik({
     initialValues: {
-      username: userData?.me?.username,
+      username: "",
+      gender: "",
+      weightGoal: "",
+      activityLevel: "",
     },
     validationSchema: AccountSchema,
     onSubmit: values => {},
@@ -60,6 +67,77 @@ const Account: React.FC<AccountProps> = () => {
   useEffect(() => {
     dispatch(navActions.changeItem(ACCOUNT));
   }, []);
+
+  const convertGenderFromDB = (gender: string) => {
+    if (gender === "female") {
+      return Gender.FEMALE;
+    }
+
+    if (gender === "male") {
+      return Gender.MALE;
+    }
+
+    return Gender.OTHER;
+  };
+
+  const convertWeightGoalFromDB = (weightGoal: string) => {
+    if (weightGoal === "gainWeight") {
+      return WeightGoal.GAIN_WEIGHT;
+    }
+
+    if (weightGoal === "loseWeight") {
+      return WeightGoal.LOSE_WEIGHT;
+    }
+
+    return WeightGoal.MAINTAIN_WEIGHT;
+  };
+
+  const convertActivityLevelFromDB = (activityLevel: string) => {
+    if (activityLevel === "active") {
+      return ActivityLevel.ACTIVE;
+    }
+
+    if (activityLevel === "sedentary") {
+      return ActivityLevel.SEDENTARY;
+    }
+
+    if (activityLevel === "lightlyActive") {
+      return ActivityLevel.LIGHTLY_ACTIVE;
+    }
+
+    return ActivityLevel.VERY_ACTIVE;
+  };
+
+  useEffect(() => {
+    if (pageData?.getAccountPageData?.user?.username) {
+      formik.setFieldValue(
+        "username",
+        pageData?.getAccountPageData?.user?.username,
+        false,
+      );
+      formik.setFieldValue(
+        "gender",
+        convertGenderFromDB(pageData?.getAccountPageData?.user?.gender!),
+        false,
+      );
+      formik.setFieldValue(
+        "weightGoal",
+        convertWeightGoalFromDB(
+          pageData?.getAccountPageData?.userMetrics?.weightGoal!,
+        ),
+        false,
+      );
+      formik.setFieldValue(
+        "activityLevel",
+        convertActivityLevelFromDB(
+          pageData?.getAccountPageData?.userMetrics?.activityLevel!,
+        ),
+        false,
+      );
+    }
+  }, [pageData]);
+
+  console.log(formik.values);
 
   return (
     <DashbordLayoutHOC user={userData?.me}>
@@ -95,6 +173,7 @@ const Account: React.FC<AccountProps> = () => {
             <Select
               options={[...Object.values(Gender)]}
               formik={formik}
+              value={formik.values.gender}
               handleSelectChange={handleSelectChange}
               disabled={disableInput}
               name="gender"
@@ -110,6 +189,7 @@ const Account: React.FC<AccountProps> = () => {
           >
             <Select
               options={[...Object.values(WeightGoal)]}
+              value={formik.values.weightGoal}
               formik={formik}
               handleSelectChange={handleSelectChange}
               disabled={disableInput}
@@ -127,6 +207,7 @@ const Account: React.FC<AccountProps> = () => {
             <Select
               options={[...Object.values(ActivityLevel)]}
               formik={formik}
+              value={formik.values.activityLevel}
               handleSelectChange={handleSelectChange}
               disabled={disableInput}
               name="activityLevel"
@@ -150,7 +231,7 @@ const Account: React.FC<AccountProps> = () => {
                 bColor={theme.colors.errorTextColor}
                 fontSize="1rem"
                 type="button"
-                onClick={() => setDisableInput(false)}
+                onClick={() => setDisableInput(true)}
               >
                 Cancel
               </Button>
@@ -171,7 +252,7 @@ const Account: React.FC<AccountProps> = () => {
       </RightContent>
       <Modal opened={showModal} close={handleModalClose} maxWidth={"40em"}>
         <Heading size="h4">
-          Are you sure you want to delete this exercise?
+          Are you sure you want to delete your account?
         </Heading>
         <EditButtonsWrapper>
           <Button
