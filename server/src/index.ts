@@ -1,6 +1,8 @@
 require("dotenv").config();
 import { ApolloServer } from "apollo-server-express";
 import connectRedis from "connect-redis";
+import fs from "fs";
+import https from "https";
 import cors from "cors";
 import express from "express";
 import session from "express-session";
@@ -53,6 +55,14 @@ const main = async () => {
   });
 
   const app = express();
+
+  const sslServer = https.createServer(
+    {
+      key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
+      cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
+    },
+    app,
+  );
 
   const RedisStore = connectRedis(session);
 
@@ -108,7 +118,7 @@ const main = async () => {
     cors: { credentials: true, origin: process.env.CORS_ORIGIN },
   });
 
-  app.listen(parseInt(process.env.PORT as string), () => {
+  sslServer.listen(parseInt(process.env.PORT as string), () => {
     console.log(`Server started on ${process.env.PORT} port`);
   });
 };

@@ -92,6 +92,7 @@ const SignIn: React.FC<SignInProps> = () => {
           });
         }
       } catch (e) {
+        console.log(e);
         setShowErrorPopup(true);
         setTimeout(() => {
           setShowErrorPopup(false);
@@ -172,7 +173,7 @@ const SignIn: React.FC<SignInProps> = () => {
               )}
               buttonText="Login"
               onSuccess={responseGoogle}
-              onFailure={responseGoogle}
+              onFailure={e => console.log(e)}
               cookiePolicy={"single_host_origin"}
             />
           </SocialIcons>
