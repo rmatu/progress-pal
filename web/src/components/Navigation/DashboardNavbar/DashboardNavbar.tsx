@@ -102,12 +102,12 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user }) => {
         >
           Exercises
         </NavListItem>
-        <NavListItem
+        {/* <NavListItem
           selected={selectedItem === "donate"}
           onClick={() => handleClick("donate")}
         >
           Donate
-        </NavListItem>
+        </NavListItem> */}
       </FlexWrapperUl>
       <FlexWrapperUl
         flexDirection="column"

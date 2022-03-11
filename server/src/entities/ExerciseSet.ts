@@ -1,9 +1,8 @@
-import { Field, Int, ObjectType } from "type-graphql";
+import { Field, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
   Entity,
-  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
@@ -12,7 +11,6 @@ import { WorkoutExercise } from "./WorkoutExercise";
 @ObjectType()
 @Entity()
 export class ExerciseSet extends BaseEntity {
-  // SQL
   @Field()
   @PrimaryGeneratedColumn("uuid")
   id!: string;

@@ -74,6 +74,7 @@ export const SVGWrapper = styled.div`
 
 export const FirstColum = styled.div`
   margin-right: 5em;
+  width: 180px;
 
   @media screen and (max-width: 1000px) {
     margin-right: 0;

@@ -29,8 +29,6 @@ export const populateColorsForMuscleHeatmap = (
     return ["rgb(229, 64, 64)"];
   }
 
-  colorArr.push("rgb(229, 180, 180)");
-
   for (let i = amount; i > 0; i--) {
     colorArr.push(
       `rgb(${startColorR}, ${

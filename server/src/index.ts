@@ -4,8 +4,6 @@ import connectRedis from "connect-redis";
 import cors from "cors";
 import express from "express";
 import session from "express-session";
-import fs from "fs";
-import https from "https";
 import path from "path";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
@@ -34,7 +32,7 @@ import { CommonExerciseResolver } from "./resolvers/commonExercise";
 const main = async () => {
   oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
 
-  const conn = await createConnection({
+  await createConnection({
     type: "postgres",
     database: process.env.DB_DATABASE_NAME,
     username: process.env.DB_USERNAME,
@@ -54,17 +52,7 @@ const main = async () => {
     ],
   });
 
-  // await conn.runMigrations();
-
   const app = express();
-
-  const sslServer = https.createServer(
-    {
-      key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
-      cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
-    },
-    app,
-  );
 
   const RedisStore = connectRedis(session);
 
@@ -75,6 +63,7 @@ const main = async () => {
       credentials: true,
     }),
   );
+
   app.use(
     session({
       name: COOKIE_NAME,
@@ -85,8 +74,8 @@ const main = async () => {
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
         httpOnly: true,
-        sameSite: "lax", // csrf
-        secure: __prod__, // cookie only works in https
+        sameSite: "lax",
+        secure: __prod__,
       },
       saveUninitialized: false,
       secret: process.env.SESSION_SECRET as string,
@@ -120,7 +109,7 @@ const main = async () => {
   });
 
   app.listen(parseInt(process.env.PORT as string), () => {
-    console.log("server started on http://localhost:4000/graphql");
+    console.log(`Server started on ${process.env.PORT} port`);
   });
 };
 
