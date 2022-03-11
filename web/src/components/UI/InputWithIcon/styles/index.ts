@@ -20,6 +20,10 @@ export const Input = styled.input<{ width?: string }>`
   width: ${({ width }) => width};
   opacity: 1;
 
+  :disabled {
+    opacity: 0.7;
+  }
+
   :-webkit-autofill,
   :-webkit-autofill:hover,
   :-webkit-autofill:focus,

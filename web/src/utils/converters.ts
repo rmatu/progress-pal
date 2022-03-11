@@ -226,12 +226,14 @@ export const getThemostTraineMuscleAmountFromWorkout = (workout: Workout) => {
   musclesArr.forEach(el => {
     if (!counts[el]) {
       counts[el] = 1;
-      max = 1;
     } else {
       counts[el] += 1;
-      max += 1;
     }
   });
+
+  for (const [key, value] of Object.entries(counts)) {
+    if (value > max) max = value;
+  }
 
   return max;
 };

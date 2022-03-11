@@ -200,12 +200,12 @@ export class WorkoutResolver {
       relations: ["workoutExercise"],
       where: {
         user: userId,
-        updatedAt: Between(cStartDate, cEndDate),
+        createdAt: Between(cStartDate, cEndDate),
       },
     });
 
     // Format the dates
-    const dates = workout.map(el => moment(el.updatedAt).format("YYYY-MM-DD"));
+    const dates = workout.map(el => moment(el.createdAt).format("YYYY-MM-DD"));
 
     // Date here will look like this
     // {YYYY-MM-DD: number}

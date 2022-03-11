@@ -38,6 +38,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const [startDate, setStartDate] = useState(
     moment().set({ month: 0, date: 1 }).format("YYYY-MM-DD"),
   );
+
   const [endDate, setEndDate] = useState(
     moment().set({ month: 11, date: 31 }).format("YYYY-MM-DD"),
   );

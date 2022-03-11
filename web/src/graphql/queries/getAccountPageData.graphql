@@ -1,0 +1,13 @@
+query GetAccountPageData {
+  getAccountPageData {
+    userMetrics {
+      weightGoal
+      activityLevel
+    }
+
+    user {
+      username
+      gender
+    }
+  }
+}

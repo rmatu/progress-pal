@@ -183,3 +183,10 @@ export const CreateExerciseSchema = Yup.object().shape({
   equipment: Yup.string().required("Required"),
   category: Yup.string().required("Required"),
 });
+
+export const AccountSchema = Yup.object().shape({
+  username: Yup.string().required("Required"),
+  gender: Yup.string().required("Required"),
+  weightGoal: Yup.string().required("Required"),
+  activityLevel: Yup.string().required("Required"),
+});

@@ -10,9 +10,11 @@ import {
   Root,
   FieldResolver,
   UseMiddleware,
+  InputType,
 } from "type-graphql";
 import { MyContext } from "../types";
 import { User } from "../entities/User";
+import { UserMetrics } from "../entities/UserMetrics";
 import argon2 from "argon2";
 import { UsernamePasswordInput } from "./UsernamePasswordInput";
 import { validateRegister } from "../utils/validateRegister";
@@ -43,6 +45,30 @@ class UserResponse {
 
   @Field(() => User, { nullable: true })
   user?: User;
+}
+
+@ObjectType()
+class GetAccountPageDataResponse {
+  @Field(() => UserMetrics, { nullable: true })
+  userMetrics?: UserMetrics;
+
+  @Field(() => User, { nullable: true })
+  user?: User;
+}
+
+@InputType()
+class UpdateUserDataInput {
+  @Field(() => String)
+  username: string;
+
+  @Field(() => String)
+  gender: string;
+
+  @Field(() => String)
+  weightGoal: string;
+
+  @Field(() => String)
+  activityLevel: string;
 }
 
 @Resolver(User)
@@ -79,6 +105,33 @@ export class UserResolver {
     }
 
     return await User.findOne(req.session.userId);
+  }
+
+  @Query(() => GetAccountPageDataResponse, { nullable: true })
+  @UseMiddleware(isAuthenticated)
+  async getAccountPageData(@Ctx() { req }: MyContext) {
+    const user = await User.findOne(req.session.userId);
+    const userMetrics = await UserMetrics.findOne({
+      where: {
+        user: req.session.userId,
+      },
+      order: {
+        updatedAt: "DESC",
+      },
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    if (!userMetrics) {
+      return null;
+    }
+
+    return {
+      user,
+      userMetrics,
+    };
   }
 
   // ===========================
@@ -526,5 +579,50 @@ export class UserResolver {
     await User.save(user);
 
     return user;
+  }
+
+  @Mutation(() => User)
+  @UseMiddleware(isAuthenticated)
+  async updateUserData(
+    @Ctx() { req }: MyContext,
+    @Arg("input") input: UpdateUserDataInput,
+  ): Promise<User | null | Error> {
+    const user = await User.findOne(req.session.userId);
+
+    if (!user) {
+      return new Error("This user does not exist");
+    }
+
+    for (const [key, value] of Object.entries(input)) {
+      //@ts-ignore
+      user[key] = value;
+    }
+
+    const updatedUser = await user.save();
+
+    return updatedUser;
+  }
+
+  @Mutation(() => Boolean)
+  async deleteAccount(@Ctx() { req, res }: MyContext) {
+    const user = await User.findOne(req.session.userId);
+
+    if (!user) {
+      return new Error("This user does not exist");
+    }
+
+    await user.delete();
+
+    return new Promise(resolve =>
+      req.session.destroy(err => {
+        res.clearCookie(COOKIE_NAME);
+        if (err) {
+          console.log(err);
+          resolve(false);
+          return;
+        }
+        resolve(true);
+      }),
+    );
   }
 }

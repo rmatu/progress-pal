@@ -15,6 +15,7 @@ interface SelectProps {
   title?: string;
   margin?: string;
   width?: string;
+  value?: string;
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -29,6 +30,7 @@ const Select: React.FC<SelectProps> = ({
   padding = "0.7em 0.7em",
   margin,
   width,
+  value,
 }) => {
   return (
     <Wrapper margin={margin}>
@@ -42,7 +44,7 @@ const Select: React.FC<SelectProps> = ({
         padding={padding}
         bColor={bColor}
         onChange={handleSelectChange || formik.handleChange}
-        value={formik.values.bodyCategory}
+        value={value || formik.values.bodyCategory}
         name={name}
         disabled={disabled}
         width={width}

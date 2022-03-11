@@ -114,8 +114,8 @@ const Exercise: React.FC<ExerciseProps> = ({}) => {
         </CalendarWrapper>
         <DateWrapper>
           <p>Selected Time: </p>
-          {moment(calendarData[0].startDate).format("DD-MM-YYYY")} -{" "}
-          {moment(calendarData[0].endDate).format("DD-MM-YYYY")}
+          {moment(calendarData[0].startDate).format("DD MMM YYYY")} -{" "}
+          {moment(calendarData[0].endDate).format("DD MMM YYYY")}
         </DateWrapper>
         <ChartWrapper>
           <WeightSetChart
