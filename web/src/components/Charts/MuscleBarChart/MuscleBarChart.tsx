@@ -32,7 +32,7 @@ const MuscleBarChart: React.FC<MuscleBarChartProps> = () => {
   // Data for muscle heatmap
   const [heatmapData, setHeatmapData] = useState([
     {
-      startDate: getDateXMonthsBefore(new Date(), 1, 1),
+      startDate: getDateXMonthsBefore(new Date(), 3, 1),
       endDate: new Date(),
       key: "selection",
     },
@@ -51,7 +51,7 @@ const MuscleBarChart: React.FC<MuscleBarChartProps> = () => {
 
   useEffect(() => {
     const muscleHeatMapStartDate = moment(
-      getDateXMonthsBefore(new Date(), 1, 1),
+      getDateXMonthsBefore(new Date(), 3, 1),
     ).format("YYYY-MM-DD");
 
     const muscleHeatMapEndDate = moment().format("YYYY-MM-DD");

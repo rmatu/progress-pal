@@ -76,7 +76,6 @@ const MuscleHeatmapModel: React.FC<MuscleHeatmapModelProps> = ({}) => {
       <ModelWrapper>
         <Model
           highlightedColors={[
-            "rgb(229, 180, 180)",
             ...populateColorsForMuscleHeatmap(
               getTheMostTrainedMuscleAmount(
                 dataForMuscleHeatmap?.getDataForMuscleHeatmap,
@@ -86,7 +85,6 @@ const MuscleHeatmapModel: React.FC<MuscleHeatmapModelProps> = ({}) => {
               180,
               8,
             ),
-            "rgb(229, 8, 8)",
           ]}
           data={[
             {
@@ -104,7 +102,6 @@ const MuscleHeatmapModel: React.FC<MuscleHeatmapModelProps> = ({}) => {
         <Model
           type="posterior"
           highlightedColors={[
-            "rgb(229, 180, 180)",
             ...populateColorsForMuscleHeatmap(
               getTheMostTrainedMuscleAmount(
                 dataForMuscleHeatmap?.getDataForMuscleHeatmap,
@@ -114,7 +111,6 @@ const MuscleHeatmapModel: React.FC<MuscleHeatmapModelProps> = ({}) => {
               180,
               8,
             ),
-            "rgb(229, 8, 8)",
           ]}
           data={[
             {

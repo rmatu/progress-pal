@@ -137,8 +137,6 @@ const Account: React.FC<AccountProps> = () => {
     }
   }, [pageData]);
 
-  console.log(formik.values);
-
   return (
     <DashbordLayoutHOC user={userData?.me}>
       <RightContent open={open}>

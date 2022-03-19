@@ -65,6 +65,7 @@ export const Avatar = styled.div<{ gender?: string }>`
 
 export const Name = styled.span`
   margin-top: 0.5em;
+  margin-bottom: 0.5em;
 `;
 
 export const Category = styled.h4`

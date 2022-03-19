@@ -35,12 +35,11 @@ export const AMOUNT_WORKOUTS_TO_ADD = 16;
 
 const Workouts: React.FC<WorkoutsProps> = ({}) => {
   const { data: user } = useMeQuery();
-  const history = useHistory();
   const dispatch = useDispatch();
 
   // https://medium.com/@galen.corey/understanding-apollo-fetch-policies-705b5ad71980
   const [getUserWorkouts, { data: workoutsData, loading: workoutsLoading }] =
-    useGetUserWorkoutsLazyQuery({ fetchPolicy: "cache-and-network" });
+    useGetUserWorkoutsLazyQuery();
 
   const [fetchedWorkouts, setFetchedWorkouts] =
     useState<GetUserWorkoutsQuery["getUserWorkouts"]>();
@@ -109,9 +108,9 @@ const Workouts: React.FC<WorkoutsProps> = ({}) => {
     getUserWorkouts({
       variables: {
         startDate: moment(getDateXMonthsBefore(new Date(), 3, 1)).format(
-          "YYYY MM DD",
+          "YYYY-MM-DD",
         ),
-        endDate: moment(new Date()).format("YYYY MM DD"),
+        endDate: moment(new Date()).format("YYYY-MM-DD"),
       },
     });
   }, []);
