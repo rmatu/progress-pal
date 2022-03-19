@@ -175,6 +175,8 @@ export class WorkoutExerciseResolver {
         ],
       });
 
+      console.log(workoutExercises);
+
       const muscleBarChartData = [
         { volume: 0, name: "Shoulder" },
         { volume: 0, name: "Glutes" },

@@ -31,7 +31,6 @@ const DashboardExercisesList: React.FC<DashboardExercisesListProps> = ({}) => {
   const [getUserWorkouts, { data: workoutsData, loading: workoutsLoading }] =
     useGetUserWorkoutsLazyQuery();
 
-  console.log(workoutsData);
   const workouts = workoutsData?.getUserWorkouts?.slice(0, 7);
 
   const history = useHistory();
