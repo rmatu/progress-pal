@@ -31,7 +31,7 @@ const updateMuscleBarChartDataObject = (
   const idx = muscleBarChartData.findIndex(
     el => el.name === muscleBarChartMuscleName,
   );
-  volume /= 100; // in kg
+  volume /= 1000; // in kg
   muscleBarChartData[idx].volume += volume;
 };
 

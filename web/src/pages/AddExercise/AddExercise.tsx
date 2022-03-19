@@ -71,7 +71,10 @@ const AddExercise: React.FC<AddExerciseProps> = () => {
         );
       }, 4000);
     },
-    refetchQueries: createRefetchQueriesArray(["getAllCommonExercises"]),
+    refetchQueries: createRefetchQueriesArray([
+      "getAllCommonExercises",
+      "getUserWorkouts",
+    ]),
   });
   const [selectedMuscle, setSelectedMuscle] = useState<
     "primaryMuscle" | "secondaryMuscle"

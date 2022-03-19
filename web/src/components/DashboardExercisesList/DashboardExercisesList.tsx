@@ -23,6 +23,7 @@ import {
 } from "./styles";
 import { useHistory } from "react-router-dom";
 import { WORKOUTS } from "../../constants/routes";
+import { getDateXMonthsBefore } from "../../utils/dateHelpers";
 
 interface DashboardExercisesListProps {}
 
@@ -30,6 +31,7 @@ const DashboardExercisesList: React.FC<DashboardExercisesListProps> = ({}) => {
   const [getUserWorkouts, { data: workoutsData, loading: workoutsLoading }] =
     useGetUserWorkoutsLazyQuery();
 
+  console.log(workoutsData);
   const workouts = workoutsData?.getUserWorkouts?.slice(0, 7);
 
   const history = useHistory();
@@ -41,8 +43,10 @@ const DashboardExercisesList: React.FC<DashboardExercisesListProps> = ({}) => {
   useEffect(() => {
     getUserWorkouts({
       variables: {
-        startDate: "2020-11-21T20:25:32.000Z",
-        endDate: "2022-11-21T20:25:32.000Z",
+        startDate: moment(getDateXMonthsBefore(new Date(), 3, 1)).format(
+          "YYYY-MM-DD",
+        ),
+        endDate: moment().format("YYYY-MM-DD"),
       },
     });
   }, []);
@@ -53,6 +57,14 @@ const DashboardExercisesList: React.FC<DashboardExercisesListProps> = ({}) => {
         <LoaderWrapper>
           <Loader />
         </LoaderWrapper>
+      </Wrapper>
+    );
+  }
+
+  if (!workouts?.length) {
+    return (
+      <Wrapper>
+        <LoaderWrapper>You don't have any trainings yet</LoaderWrapper>
       </Wrapper>
     );
   }

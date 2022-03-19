@@ -134,8 +134,8 @@ const UserWeightChart: React.FC<UserWeightChartProps> = ({ version }) => {
   useEffect(() => {
     getWeightChartData({
       variables: {
-        startDate: heatmapData[0].startDate,
-        endDate: heatmapData[0].endDate,
+        startDate: moment(heatmapData[0].startDate).format("YYYY-MM-DD"),
+        endDate: moment(heatmapData[0].endDate).format("YYYY-MM-DD"),
       },
     });
   }, []);
