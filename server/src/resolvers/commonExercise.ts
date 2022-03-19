@@ -29,8 +29,6 @@ export class CommonExerciseResolver {
         where: { user: userId },
       });
 
-      console.log(userExercises);
-
       const allExercises = [...commonExercises, ...userExercises];
 
       return allExercises;
