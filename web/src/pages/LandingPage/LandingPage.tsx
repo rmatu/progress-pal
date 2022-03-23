@@ -12,7 +12,7 @@ const LandingPage: React.FC<LandingPageProps> = () => {
       </HeaderWrapper>
       <RestContent>
         <Heading marginB="0" color="#FFF" size="h3">
-          Here will be all the info about ProgressPal
+          Confirm your email
         </Heading>
       </RestContent>
     </>

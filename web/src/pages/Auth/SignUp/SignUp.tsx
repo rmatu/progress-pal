@@ -116,12 +116,12 @@ const SignUp: React.FC<SignUpProps> = () => {
 
   return (
     <Wrapper>
-      <NavLink to={ROUTES.LANDING_PAGE}>
+      <NavLink to={ROUTES.MAIN_PAGE}>
         <LogoContainer>
           <Logo />
         </LogoContainer>
       </NavLink>
-      <NavLink to={ROUTES.LANDING_PAGE}>
+      <NavLink to={ROUTES.MAIN_PAGE}>
         <GoBack>
           <Cancel />
         </GoBack>

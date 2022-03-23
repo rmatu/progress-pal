@@ -63,9 +63,7 @@ export class WorkoutResolver {
     const workoutRepo = await getRepository(Workout);
 
     // Between clause wouldn't include these dates so we need to extend them
-    const cStartDate = moment(startDate)
-      .subtract(1, "days")
-      .format("YYYY-MM-DD");
+    const cStartDate = moment(startDate).format("YYYY-MM-DD");
     const cEndDate = moment(endDate).add(1, "days").format("YYYY-MM-DD");
 
     const { userId } = req.session;
@@ -80,7 +78,7 @@ export class WorkoutResolver {
       order: {
         createdAt: "DESC",
       },
-      where: { user: userId, updatedAt: Between(cStartDate, cEndDate) },
+      where: { user: userId, createdAt: Between(cStartDate, cEndDate) },
     });
 
     if (!workout) {

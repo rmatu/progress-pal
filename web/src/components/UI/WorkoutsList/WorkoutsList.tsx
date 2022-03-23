@@ -2,6 +2,7 @@ import moment from "moment";
 import React from "react";
 import { GetUserWorkoutsQuery, Workout } from "../../../generated/graphql";
 import { AMOUNT_WORKOUTS_TO_ADD } from "../../../pages/Workouts/Workouts";
+import { convertDataForMuscleHeatmap } from "../../../utils/converters";
 import { isNewMonthTimeStamp } from "../../../utils/dateHelpers";
 import {
   MonthAndYear,
@@ -50,7 +51,7 @@ const WorkoutsList: React.FC<WorkoutsListProps> = ({
           {idx === 0 ? (
             <MonthAndYearWrapper>
               <MonthAndYear>
-                {moment(el.updatedAt, "x").format("MMMM YYYY")}
+                {moment(el.createdAt, "x").format("MMMM YYYY")}
               </MonthAndYear>
             </MonthAndYearWrapper>
           ) : (
@@ -63,7 +64,7 @@ const WorkoutsList: React.FC<WorkoutsListProps> = ({
                 ) && (
                   <MonthAndYearWrapper>
                     <MonthAndYear>
-                      {moment(el.updatedAt, "x").format("MMMM YYYY")}
+                      {moment(el.createdAt, "x").format("MMMM YYYY")}
                     </MonthAndYear>
                   </MonthAndYearWrapper>
                 )}

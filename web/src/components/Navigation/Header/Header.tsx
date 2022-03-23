@@ -29,7 +29,7 @@ const Header: React.FC<HeaderProps> = ({ dashboardHeader }) => {
   return (
     <FixedWrapper>
       <LogoWrapper>
-        <NavLink to={ROUTES.LANDING_PAGE}>
+        <NavLink to={ROUTES.MAIN_PAGE}>
           <Logo />
         </NavLink>
       </LogoWrapper>

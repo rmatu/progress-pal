@@ -139,15 +139,10 @@ const SignIn: React.FC<SignInProps> = () => {
           }, 4000);
         }}
       />
-      <NavLink to={ROUTES.LANDING_PAGE}>
+      <NavLink to={ROUTES.MAIN_PAGE}>
         <LogoContainer>
           <Logo />
         </LogoContainer>
-      </NavLink>
-      <NavLink to={ROUTES.LANDING_PAGE}>
-        <GoBack>
-          <Cancel />
-        </GoBack>
       </NavLink>
       <AuthWrapper>
         <Wave id="wave" />

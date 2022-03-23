@@ -9,6 +9,7 @@ import { CgLogOut } from "react-icons/cg";
 import { useLogoutMutation, useMeQuery } from "../../../generated/graphql";
 import { useApolloClient } from "@apollo/client";
 import { Button } from "../../UI";
+import { useHistory } from "react-router-dom";
 
 interface MenuProps {}
 
@@ -18,6 +19,7 @@ const Menu: React.FC<MenuProps> = () => {
   const { data } = useMeQuery();
   const [logout] = useLogoutMutation();
   const dispatch = useDispatch();
+  const history = useHistory();
 
   // If the user is not logged in
   if (!data?.me) {
@@ -50,6 +52,7 @@ const Menu: React.FC<MenuProps> = () => {
             await logout();
             dispatch(toggleNavbar());
             await client.cache.reset();
+            history.push("/");
           }}
           to={ROUTES.SIGN_IN}
         >
