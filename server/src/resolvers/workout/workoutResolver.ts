@@ -147,7 +147,7 @@ export class WorkoutResolver {
           "workoutExercise.exerciseSet",
         ],
         where: { user: userId },
-        order: { updatedAt: "DESC" },
+        order: { createdAt: "DESC" },
       });
 
       if (!workout) {
@@ -161,10 +161,10 @@ export class WorkoutResolver {
         //@ts-ignore
         .map(el => el)
         .sort((a: WorkoutExercise, b: WorkoutExercise) => {
-          if (moment(a.updatedAt).unix() > moment(b.updatedAt).unix()) {
+          if (moment(a.createdAt).unix() > moment(b.createdAt).unix()) {
             return 1;
           }
-          if (moment(a.updatedAt).unix() < moment(b.updatedAt).unix()) {
+          if (moment(a.createdAt).unix() < moment(b.createdAt).unix()) {
             return -1;
           }
           return 0;
